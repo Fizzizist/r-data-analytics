@@ -1,0 +1,152 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+%% Welcome to Overleaf!
+%% If this is your first time using LaTeX, it might be worth going through this brief presentation:
+%% https://www.overleaf.com/latex/learn/free-online-introduction-to-latex-part-1
+
+%% Researchers have been using LaTeX for decades to typeset their papers, producing beautiful, crisp documents in the process. By learning LaTeX, you are effectively following in their footsteps, and learning a highly valuable skill!
+
+%% The \usepackage commands below can be thought of as analogous to importing libraries into Python, for instance. We've pre-formatted this for you, so you can skip right ahead to the title below.
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+%% Title
+\title{
+		%\vspace{-1in} 	
+		\usefont{OT1}{bch}{b}{n}
+		\normalfont \normalsize \textsc{BIF713 PROJECT PROPOSAL} \\ [14pt]
+		\huge Building a Data Analysis and Visualization Web App for Mitronite INC. \\
+}
+
+\usepackage{authblk}
+
+\author{Minoru Nakano}
+\author{Peter Vlasveld}
+\author{Christoper Eeles}
+
+\begin{document}
+\maketitle
+
+\selectlanguage{english}
+
+\section*{Summary}
+A brief description of this project.
+
+\section{Personnel:}
+    	
+    	What are the roles of each group member?
+        
+            \subsection{Roles}
+            
+            TEST! As a group we decided that it is important to ensure each member can independently create a functional full stack web app using the R Shiny framework. Thus we have agreed to complete a brief prototype app independently, at which point we will reconvene to compare our results and incorporate the best ideas into the working version of our software. 
+            
+            Given the scope of this project, we have also decided to take on specialized software development roles to ensure that we can bring the appropriate depth of knowledge to the table for each of the apps' layers.
+            While we will all play a role in development of the database, back end, front end, statistical analysis and visualization, the sub-specialties of each group member are as follows:
+            
+                \subsubsection*{Minoru Nakano}
+                
+                UI and visualization.
+            
+                \subsubsection*{Peter Vlasveld}
+                
+                Mechanical back-end.
+            
+                \subsubsection*{Christopher Eeles}
+                
+                Biological background, biological interpretation of data, statistical analysis and programming. \\
+            
+            Quality control and project management responsibilities will be shared between members. We will be enabling development collaboration and version control via BitBucket while implementing an AGILE development-cycle using the online SCRUM tool Trello for project management and task assignment. 
+            
+            Ultimately we will develop a professional quality Web App which maximizes utility to our project sponsor, Mitronite Inc, while also providing a meaningful and industry relevant learning experience for all team members. 
+            
+            \subsection{Sponsor}
+            
+            Project sponsor or principle investigator (PI). Who is the project sponsor and where are they from? How will you contact them and how often do you play to meet?
+        
+		\section{Definition of Project:}
+        
+        Specify the aims and goals of your project!
+        
+            \subsection{Background}
+            
+            In this project we will be assisting Mitronite Inc and our PI, Dr Frank Merante, by developing and implementing a full stack application for data cleaning, storage, annotation, analysis and visualization through an interactive, browser based UI. The research team is interested in studying changes in the mineral content of sweat in a time-series over the course of exercise. This data will be used to infer the rates of mineral depletion in muscle tissue and surrounding extra-cellular fluid, in hopes of developing a product able to reduce or eliminate these losses and thereby increase exercise performance and recovery rate. 
+            
+            Given the low concentrations of these trace minerals in sweat, it was necessary to employ high accuracy ICP-SE technology---originally developed for archaeological analyses---to gather data for this study. The ICP-SE instrument allows for high-throughput mineral quantification, generating large volumes of data which need to be curated and interpreted to draw useful conclusions about the physiological impacts of mineral depletion and the efficacy of potential interventions. 
+            
+            Currently this data is being output as .csv files, which are manually curated, stored and visualized in Excel. With the constant influx of new data, such processes take significant time and resources away from more productive research and development activities and therefore constitute a considerable cost to the company. 
+            
+            Through our application, we will be able to remove this data processing bottleneck thus enabling research and development limited only by the rate of sample collection. Moreover, by embedding data visualization tools coupled to statistical metrics within our software we will facilitate rapid data interpretation; Thereby empowering researchers and decision makers with the information they need to efficiently direct research while expediting the the development and release of Mitronite's product to market.
+            
+            \subsection{Goal}
+            
+            Our goal is to automate and streamline the process of data input, curation, storage, annotation and analysis while developing visualization tools which allow rapid interpretation of biological data. In doing so we will provide Mitronite with the information necessary to efficiently allocate resources in the development of an effective solution to mineral depletion in athletes and active lifestyle enthusiasts alike. 
+            
+            Ideally our product will remove the technical and administrative burdens of data analysis, freeing up Mitronite's research team to draw meaningful conclusions from the mineral concentration data. This information can then be used to formulate and implement experimental interventions to find correlation between mineral depletion and the physiology of muscle cells. Such studies will contribute to their goal of providing evidence based neutraceutical solutions to health and exercise problems in both the consumers and professional health and wellness markets.
+            
+            \subsection{Scope}
+            
+            What is the scope of the project. What is the end point?
+            
+            \subsection{Target audience}
+            
+            Who is your target audience?
+            
+            \subsection{Skills}
+            
+            Describe skills required and training necessary.
+        
+	   	\section{Approach:}
+        
+        How do you plan to execute the project?
+        
+            \subsection{Plan}
+            
+            How do you plan to solve this problem?
+            
+            \subsection{Resources}
+            
+            What are the resources you will need?
+            
+            \subsection{Sub-tasks}
+            
+            What are your sub-tasks and who will be assigned to which task?
+            
+            \subsection{Time-line}
+            
+            Our project will utilize an AGILE framework to develop software in multi week 'sprints' after which the software will be implemented to generate feedback from our sponsors. The current goal is to conclude the planning stage of our project life-cycle by December 12 th and begin our first sprint to.
+            
+            \subsection{Roadblocks}
+            
+            What are some potential roadblocks and how will you handle them.
+        
+    	\section{Deliverable:}
+        
+        What is will be the final deliverable.
+        
+            \subsection{Final Product}
+            
+            What is the final product? How will you deliver them?
+            
+            \subsection{Product Demo}
+            
+            How/when will you demo the product/present the results to the class and to your PI?
+        
+        \noindent You can create bullets by doing:
+        
+        \begin{itemize}
+        	\item this is a bullet
+            \item and this is a bullet
+        \end{itemize}
+
+\end{document}
