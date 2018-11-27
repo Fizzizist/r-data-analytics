@@ -46,107 +46,123 @@ A brief description of this project.
 \section{Personnel:}
     	
     	What are the roles of each group member?
-        
+
             \subsection{Roles}
-            
-            TEST! As a group we decided that it is important to ensure each member can independently create a functional full stack web app using the R Shiny framework. Thus we have agreed to complete a brief prototype app independently, at which point we will reconvene to compare our results and incorporate the best ideas into the working version of our software. 
-            
+
+            TEST! As a group we decided that it is important to ensure each member can independently create a functional full stack web app using the R Shiny framework. Thus we have agreed to complete a brief prototype app independently, at which point we will reconvene to compare our results and incorporate the best ideas into the working version of our software.
+
             Given the scope of this project, we have also decided to take on specialized software development roles to ensure that we can bring the appropriate depth of knowledge to the table for each of the apps' layers.
             While we will all play a role in development of the database, back end, front end, statistical analysis and visualization, the sub-specialties of each group member are as follows:
-            
+
                 \subsubsection*{Minoru Nakano}
-                
+
                 UI and visualization.
-            
+
                 \subsubsection*{Peter Vlasveld}
-                
+
                 Mechanical back-end.
-            
+
                 \subsubsection*{Christopher Eeles}
-                
+
                 Biological background, biological interpretation of data, statistical analysis and programming. \\
-            
-            Quality control and project management responsibilities will be shared between members. We will be enabling development collaboration and version control via BitBucket while implementing an AGILE development-cycle using the online SCRUM tool Trello for project management and task assignment. 
-            
-            Ultimately we will develop a professional quality Web App which maximizes utility to our project sponsor, Mitronite Inc, while also providing a meaningful and industry relevant learning experience for all team members. 
-            
+
+            Quality control and project management responsibilities will be shared between members. We will be enabling development collaboration and version control via BitBucket while implementing an AGILE development-cycle using the online SCRUM tool Trello for project management and task assignment.
+
+            Ultimately we will develop a professional quality Web App which maximizes utility to our project sponsor, Mitronite Inc, while also providing a meaningful and industry relevant learning experience for all team members.
+
             \subsection{Sponsor}
-            
+
             Project sponsor or principle investigator (PI). Who is the project sponsor and where are they from? How will you contact them and how often do you play to meet?
-        
+
 		\section{Definition of Project:}
-        
+
         Specify the aims and goals of your project!
-        
+
             \subsection{Background}
-            
-            In this project we will be assisting Mitronite Inc and our PI, Dr Frank Merante, by developing and implementing a full stack application for data cleaning, storage, annotation, analysis and visualization through an interactive, browser based UI. The research team is interested in studying changes in the mineral content of sweat in a time-series over the course of exercise. This data will be used to infer the rates of mineral depletion in muscle tissue and surrounding extra-cellular fluid, in hopes of developing a product able to reduce or eliminate these losses and thereby increase exercise performance and recovery rate. 
-            
-            Given the low concentrations of these trace minerals in sweat, it was necessary to employ high accuracy ICP-SE technology---originally developed for archaeological analyses---to gather data for this study. The ICP-SE instrument allows for high-throughput mineral quantification, generating large volumes of data which need to be curated and interpreted to draw useful conclusions about the physiological impacts of mineral depletion and the efficacy of potential interventions. 
-            
-            Currently this data is being output as .csv files, which are manually curated, stored and visualized in Excel. With the constant influx of new data, such processes take significant time and resources away from more productive research and development activities and therefore constitute a considerable cost to the company. 
-            
+
+            In this project we will be assisting Mitronite Inc and our PI, Dr Frank Merante, by developing and implementing a full stack application for data cleaning, storage, annotation, analysis and visualization through an interactive, browser based UI. The research team is interested in studying changes in the mineral content of sweat in a time-series over the course of exercise. This data will be used to infer the rates of mineral depletion in muscle tissue and surrounding extra-cellular fluid, in hopes of developing a product able to reduce or eliminate these losses and thereby increase exercise performance and recovery rate.
+
+            Given the low concentrations of these trace minerals in sweat, it was necessary to employ high accuracy ICP-SE technology---originally developed for archaeological analyses---to gather data for this study. The ICP-SE instrument allows for high-throughput mineral quantification, generating large volumes of data which need to be curated and interpreted to draw useful conclusions about the physiological impacts of mineral depletion and the efficacy of potential interventions.
+
+            Currently this data is being output as .csv files, which are manually curated, stored and visualized in Excel. With the constant influx of new data, such processes take significant time and resources away from more productive research and development activities and therefore constitute a considerable cost to the company.
+
             Through our application, we will be able to remove this data processing bottleneck thus enabling research and development limited only by the rate of sample collection. Moreover, by embedding data visualization tools coupled to statistical metrics within our software we will facilitate rapid data interpretation; Thereby empowering researchers and decision makers with the information they need to efficiently direct research while expediting the the development and release of Mitronite's product to market.
-            
+
             \subsection{Goal}
-            
-            Our goal is to automate and streamline the process of data input, curation, storage, annotation and analysis while developing visualization tools which allow rapid interpretation of biological data. In doing so we will provide Mitronite with the information necessary to efficiently allocate resources in the development of an effective solution to mineral depletion in athletes and active lifestyle enthusiasts alike. 
-            
+
+            Our goal is to automate and streamline the process of data input, curation, storage, annotation and analysis while developing visualization tools which allow rapid interpretation of biological data. In doing so we will provide Mitronite with the information necessary to efficiently allocate resources in the development of an effective solution to mineral depletion in athletes and active lifestyle enthusiasts alike.
+
             Ideally our product will remove the technical and administrative burdens of data analysis, freeing up Mitronite's research team to draw meaningful conclusions from the mineral concentration data. This information can then be used to formulate and implement experimental interventions to find correlation between mineral depletion and the physiology of muscle cells. Such studies will contribute to their goal of providing evidence based neutraceutical solutions to health and exercise problems in both the consumers and professional health and wellness markets.
-            
+
             \subsection{Scope}
-            
+
             What is the scope of the project. What is the end point?
-            
+
             \subsection{Target audience}
-            
+
             Who is your target audience?
-            
+
             \subsection{Skills}
-            
+
             Describe skills required and training necessary.
-        
+
 	   	\section{Approach:}
-        
-        How do you plan to execute the project?
-        
+
+        How do you plan to execute the project? 
+
             \subsection{Plan}
-            
-            How do you plan to solve this problem?
-            
+            Our project is comprised of four major phases: Initiation, Planning, Execution and Closure. Action plan for each of these phases is outlined as follows:
+                \subsubsection{Initiation}
+                During the initiation phase, we will gather and identify key requirements for the project. We will study a sample data set provided by our PI, in order to derive an appropriate database scheme, and to implement meaningful statistical analytic functionalities in the web application. We will also explore available database and web application framework, and choose the most appropriate technology stack for this project. Upon completion of the initiation phase, we will have derived a prototype database design, and chosen a web application framework to work with.
+                \subsubsection{Planning}
+                During the planning phase, we will organize the key requirements into two subcategories: "baseline" and "additional". The baseline requirements are the items that must be completed in order to successfully deliver the project, while the additional requirements will be individually implemented time and resource-permitting. We will also define use cases by examining the requirements, in order to outline the interactions between the users and the system. We will derive system sequence diagram(s) to visualize how the system executes and responds to the user inputs.
+                \subsubsection{Execution}
+                During the execution phase, we will develop the web application by implementing the use cases identified in the planning phase. Agile development methodology will be used for this purpose, which takes an iterative approach to the development. We will begin the process by developing a functional prototype, provide it to the client to receive feedback. The client will be given an access to the prototype application which will be hosted in our testing server. We will then start next iteration of the development to implement additional use cases, or make modifications to the existing implementations based on the feedback. Our plan is to perform three to four iterations of two- to three-week development cycles to complete the execution phase.
+                \subsubsection{Closure}
+                During the closure phase, the application will be installed and set up in the client's system environment. We will perform functional and installation testing to ensure that the application functions as expected. Any issues found after the testing will be resolved before the end of the closure phase. We will also finalize an installation and user documentations for the client.
             \subsection{Resources}
-            
-            What are the resources you will need?
-            
+
+            The following resources will be required to complete the project, and will be provided by either the client or the team:
+                \subsubsection{Resources Provided by the clients}
+                \begin{itemize}
+                  \item ICP data output to be used for testing and development.
+                  \item Information on any other data that needs to be inserted int the database.
+                  \item A production server environment at the client's location to install the web application.
+                \end{itemize}
+                \subsubsection{Resources Provided by the team}
+                \begin{itemize}
+                  \item A testing server environment to host the prototype application, and to perform testing for each iteration.
+                  \item Appropriate development environment and hardware to develop the application.
+                \end{itemize}
             \subsection{Sub-tasks}
-            
+
             What are your sub-tasks and who will be assigned to which task?
-            
+
             \subsection{Time-line}
-            
+
             Our project will utilize an AGILE framework to develop software in multi week 'sprints' after which the software will be implemented to generate feedback from our sponsors. The current goal is to conclude the planning stage of our project life-cycle by December 12 th and begin our first sprint to.
-            
+
             \subsection{Roadblocks}
-            
+
             What are some potential roadblocks and how will you handle them.
-        
+
     	\section{Deliverable:}
-        
+
         What is will be the final deliverable.
-        
+
             \subsection{Final Product}
-            
+
             What is the final product? How will you deliver them?
-            
+
             \subsection{Product Demo}
-            
+
             How/when will you demo the product/present the results to the class and to your PI?
-        
+
         \noindent You can create bullets by doing:
-        
+
         \begin{itemize}
         	\item this is a bullet
             \item and this is a bullet
         \end{itemize}
 
-\end{document}
+\end{document} 
