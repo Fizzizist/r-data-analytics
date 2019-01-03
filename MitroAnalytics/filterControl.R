@@ -1,4 +1,4 @@
-source("plotcontrol.R")
+source("plotControl.R")
 
 renderHistSessionFilter <- function(output, sessions){
   dfSessions = data.frame(names = sessions$name, values = sessions$file)
