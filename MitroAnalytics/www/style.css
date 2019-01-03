@@ -1,0 +1,76 @@
+.skin-black .main-header .navbar {
+  background-color: #222d32;
+}
+.skin-black .main-header .navbar .sidebar-toggle {
+  color: #ffffff;
+}
+.skin-black .main-header .navbar-brand {
+  color: #ffffff;
+}
+.skin-black .sidebar-menu > li > a {
+  border: none;
+}
+.skin-black .sidebar-menu > li:hover > a,
+.skin-black .sidebar-menu > li.active > a {
+  color: #ffffff;
+  background: #1e282c;
+  border:none;
+}
+
+.skin-black .main-header .navbar > .sidebar-toggle {
+  color: #ffffff;
+  border-right: none;
+}
+
+.skin-black .main-header .navbar .sidebar-toggle:hover {
+  color: #ffffff;
+  background: #1e282c;
+}
+
+.skin-black .main-header .navbar .navbar-nav > li > a {
+  border-right: none;
+}
+
+.skin-black .main-header > .logo {
+  background-color: #222d32;
+  color: #ffffff;
+  border-bottom: 0 solid transparent;
+  border-right: none;
+}
+
+.skin-black .main-header > .logo:hover {
+  background-color: #222d32;
+}
+
+.header-title{
+	background-color: #222d32;
+	color: #ffffff;
+}
+
+.header-logo{
+	margin-top: -3px;
+	margin-left: -20px;
+}
+
+.content-wrapper{
+	background-color: #ffffff;
+}
+
+.btn-warning{
+	color: #ffffff;
+	font-weight: bold;
+	width: 150px;
+}
+
+.btn-primary{
+	color: #ffffff;
+	font-weight: bold;
+	width: 150px;
+}
+
+.center{
+	width: 50%;
+	margin-top: 10%;
+	margin-right: auto;
+	margin-left: auto;
+}
