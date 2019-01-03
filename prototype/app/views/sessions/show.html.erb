@@ -1,6 +1,0 @@
-<% javascript_include_tag "application" %>
-<body>
-<h1>This is session <%= @num %>!<h1>
-<%= bar_chart SolutionElement.getKLabelData(@num), ytitle: "Label", xtitle: "Solid Conc" %>
-<%= button_to "Back Home", sessions_path, :method => :get %>
-<body>
