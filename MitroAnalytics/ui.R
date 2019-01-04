@@ -15,7 +15,8 @@ ui <- dashboardPage(
     sidebarMenu(id="sidebarMenu",
       menuItem("Home", tabName='home', icon=icon('home')),
       menuItem("File Upload", tabName='fileUpload', icon=icon('file-upload')),
-      menuItem("Histogram", tabName='statHistogram', icon=icon('chart-bar'))
+      menuItem("Histogram", tabName='statHistogram', icon=icon('chart-bar')),
+	menuItem("File Download", tabName='fileDownload', icon=icon('download'))
     )
   ),
   dashboardBody(
@@ -40,7 +41,9 @@ ui <- dashboardPage(
         ),
         fluidRow(
           tags$div(class='center',
-            fileInput("fileUpload", "", multiple=FALSE, accept=c("text/csv"), width='100%')
+            fileInput("file1", "", multiple=FALSE, accept=c("text/csv","text/comma-separated-values","text/plain",".csv"), 
+		width='100%'),
+		verbatimTextOutput("uploaded")
           )
         )
       ),
@@ -70,6 +73,27 @@ ui <- dashboardPage(
           ),
           column(width=2,
             actionButton("btnBuild", "Build", class = "btn-primary")
+          )
+        )
+      ),
+	tabItem(tabName='fileDownload',
+        fluidRow(
+          column(width=3,
+            h2('Download files')
+          )
+        ),
+        fluidRow(
+          tags$div(class='center',
+           #Downloader
+		selectInput("tableChecks", "Choose a dataset:",
+			c("Solutions" = "solutions",
+			"Elements per solution" = "solution_elements",
+			"replicates" = "replicates")),
+		uiOutput("sessionChecks"),
+		selectInput("dlFormat", "Choose a format:",
+			c("CSV" = "csv",
+			"Excel" = "xlsx")),
+		uiOutput("dlButton") 
           )
         )
       )
