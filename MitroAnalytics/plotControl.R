@@ -21,7 +21,7 @@ elem <- c("Al","As","Ba","Ca","Cd","Cu","Co","Cr","Cu","Fe","K","Mg","Mn","Mo","
 
 drawDotplot <- function(i){
   
-  if(is.null(samp.elem)) {
+  if(!exists("samp.elem")) {
     samp.elem <- getPTValues()
   }else{ break }
 
