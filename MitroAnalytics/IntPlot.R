@@ -1,12 +1,12 @@
 library(ggplot2)
-library(Cairo)   # For nicer ggplot2 output when deployed on Linux
+#library(Cairo)   # For nicer ggplot2 output when deployed on Linux
 
 ui <- fluidPage(#fluidRow(),
   
   fluidRow(tagList(
     column(
       width = 5,
-      height = 400,
+      height = 300,
       class = "well",
       fluidRow(column(
         width = 4,
@@ -45,7 +45,7 @@ ui <- fluidPage(#fluidRow(),
       class = "well",
       h4("Left plot controls right plot"),
       fluidRow(column(
-        width = 4,
+        width = 5,
         plotOutput(
           "plot1",
           height = 300,
@@ -53,7 +53,7 @@ ui <- fluidPage(#fluidRow(),
                             resetOnNew = TRUE)
         )
       ),
-      column(width = 4,
+      column(width = 5,
              plotOutput("plot2", height = 300)))
     )
   )))
