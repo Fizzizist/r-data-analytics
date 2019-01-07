@@ -1,3 +1,4 @@
+library(dplyr)
 library(ggplot2)
 
 drawHistogram <- function(output, df){
@@ -19,7 +20,7 @@ elem <- c("Al","As","Ba","Ca","Cd","Cu","Co","Cr","Cu","Fe","K","Mg","Mn","Mo","
 # Function to construct a dot-plot based on an element symbol.
 # Not sure if my renderPlot syntax is correct, feel free modify as needed.
 
-drawDotplot <- function(i){
+drawDotplot <- function(i='Al'){
   
   if(!exists("samp.elem")) {
     samp.elem <- getPTValues()
@@ -32,7 +33,7 @@ drawDotplot <- function(i){
   }else{
     output$dotPlot <- renderPlot({
       ggplot(samp.elem[[i]], aes(x=i, y=solid_conc)) +
-        stat_summary_bin() +
+        stat_summary() +
         geom_dotplot(aes(colour=factor(element_id)),binaxis='y',stackdir='center', dotsize = 0.25) +
         labs(x="Element",y="Solid Concentration (ppm)",colour="Emission Wavelength")
     })
