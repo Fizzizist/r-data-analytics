@@ -1,5 +1,7 @@
 library(DBI)
 library(anytime)
+library(digest)
+library(openssl)
 
 source("queries.R")
 
@@ -23,6 +25,16 @@ getOneQuery <- function (str) {
 	ret <- dbGetQuery(conn, str)
 	dbDisconnect(conn)
 	return(ret)
+}
+
+#sends a query to database such as an insert update or delete
+#(anything that does not require a return value)
+sendOneQuery <- function(str) {
+        conn <- getConnect()
+        query <- dbSendQuery(conn, str)
+        dbClearResult(query)
+        dbDisconnect(conn)
+        return
 }
 
 #get number of sessions
@@ -78,6 +90,39 @@ getSampleData <- function (){
 	query <- getOneQuery("SELECT * FROM sample_data;")
 	return(query)
 }
+
+#Takes in username and password, and outputs either a TRUE boolean value or a string indicating the
+#error that took place.
+getAuthentication <- function(username, password){
+        #get db row for username
+        credRow <- getOneQuery(
+                paste0("SELECT username, password, failed_attempts FROM usernames WHERE username = '",
+                username, "';"))
+        print(credRow)  
+        #if username doesn't exist, send error message
+        if (is.na(credRow[1,"username"])){
+                return("The username does not appear in our database")
+        #else if failed attempts is creater than 3, send error message
+        } else if (credRow[1,"failed_attempts"] > 3){ 
+                return("You have attempted to log in too many times with the wrong password.\n
+                        Please contact the database administrator.")
+        #otherwise check the password and authenticate (clearing failed attempts),
+        #or at 1 to failed attempts and return error message
+        } else {
+                if (sha512(password) == credRow[1, "password"]){
+                        sendOneQuery(paste0("UPDATE usernames SET failed_attempts = 0 WHERE username = '",
+                                username, "';"))
+                        return(TRUE)
+                } else {
+                        sendOneQuery(
+				paste0("UPDATE usernames SET failed_attempts = failed_attempts + 1 WHERE username = '",
+                                	username, "';"))
+                        return("The username and password do not match")
+                }
+        }
+        return
+}
+	
 
 #-------Functions to INSERT into database---------------
 #insert data from csv
