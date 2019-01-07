@@ -1,93 +1,116 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
-library(shiny)
 library(ggplot2)
+library(Cairo)   # For nicer ggplot2 output when deployed on Linux
 
-# Define UI for application that draws a histogram
-ui <- fluidPage(
-   
-   # Application title
-   titlePanel("Element Loss Dot-plot"),
-   
-   # Sidebar with a slider input for number of bins 
-   sidebarLayout(
-     
-      # Sidebar layout for inputs ----
-      sidebarPanel(
-        
-        # Input: Selector for choosing dataset ----
-        # Copy the line below to make a select box 
-
-        selectInput("elemChoice", h3("Select an element:"), 
-                    choices = c("Al","As","Ba","Ca","Cd",
-                                "Cu","Co","Cr","Cu","Fe",
-                                "K","Mg","Mn","Mo","Ni",
-                                "Pb","Se","Sr","Y","Zn"),
-                    selected = "Zn")
-        
+ui <- fluidPage(#fluidRow(),
+  
+  fluidRow(tagList(
+    column(
+      width = 5,
+      height = 400,
+      class = "well",
+      fluidRow(column(
+        width = 4,
+        selectInput(
+          "elemChoice",
+          h4("Choose an element:"),
+          choices = c(
+            "Al",
+            "As",
+            "Ba",
+            "Ca",
+            "Cd",
+            "Cu",
+            "Co",
+            "Cr",
+            "Cu",
+            "Fe",
+            "K",
+            "Mg",
+            "Mn",
+            "Mo",
+            "Ni",
+            "Pb",
+            "Se",
+            "Sr",
+            "Y",
+            "Zn"
+          ),
+          selected = "Zn"
+        )
+      ))
+    ),
+    
+    column(
+      width = 10,
+      class = "well",
+      h4("Left plot controls right plot"),
+      fluidRow(column(
+        width = 4,
+        plotOutput(
+          "plot1",
+          height = 300,
+          brush = brushOpts(id = "plot1_brush",
+                            resetOnNew = TRUE)
+        )
       ),
-      
-      # Show a plot of the generated distribution
-      mainPanel(
-        
-        verbatimTextOutput("summary"),
-        tableOutput("view"),
-        plotOutput("dotPlot")
+      column(width = 4,
+             plotOutput("plot2", height = 300)))
+    )
+  )))
 
-      )
-   )
-)
-
-# Define server logic required to draw a histogram
-server <- function(input, output) {
-  
-  #### Function to draw plot. 
-  drawDotplot <- function(i="Zn"){
-    
-    ##### Creating samp.elem if it doesn't exist.
-    if(!exists("samp.elem")) {
-        samp.elem <- readRDS("samp.elem.rds")
-    else { break }
-    
-    #### samp.elem already exists
-    if(dim(samp.elem[[elem]]) %in% c(0,NULL)){
-      output$dotPlot <- renderText({
-        paste('No statistically significant data points for ',i,'!\n')
-    }else{
-      output$dotPlot <- renderPlot({
-        ggplot(samp.elem[[elem]], aes(x=i, y=solid_conc)) +
-          stat_summary(data = samp.elem[[i]]) +
-          geom_dotplot(aes(colour=factor(element_id)),binaxis='y',stackdir='center', dotsize = 0.25) +
-          labs(x="Element",y="Solid Concentration (ppm)",colour="Emission Wavelength")
-        })
-      })
-    }
+server <- function(input, output) { 
+  #---------------------------------------------------------------------
+  # Initialize samp.elems 
+  if(!exists("samp.elem")) {
+    samp.elem <- getPTValues() # Need to source Peter's function.
   }
-}
   
-  # Generate a summary of the dataset ----
-  output$summary <- renderPrint({
-    elem <- datasetInput()
-    summary(elemChoice)
+  # -------------------------------------------------------------------
+  # Linked plots (left and right)
+  ranges <- reactiveValues(x = NULL, y = NULL)
+  
+  output$plot1 <- renderPlot({
+    ggplot(samp.elem[[input$elemChoice]], aes(x = input$elemChoice, y = solid_conc)) +
+      stat_summary() +
+      geom_dotplot(
+        aes(colour = factor(element_id)),
+        binaxis = 'y',
+        stackdir = 'center',
+        dotsize = 0.25
+      ) +
+      labs(x = "Element", y = "Solid Concentration (ppm)", colour = "Emission Wavelength")
   })
   
-  # Show the first "n" observations ----
-  output$view <- renderTable({
-    head(datasetInput(), n = 1000)
+  output$plot2 <- renderPlot({
+    ggplot(samp.elem[[input$elemChoice]], aes(x = input$elemChoice, y = solid_conc)) +
+      stat_summary() +
+      geom_dotplot(
+        aes(colour = factor(element_id)),
+        binaxis = 'y',
+        stackdir = 'center',
+        dotsize = 0.25
+      ) +
+      labs(x = "Element", y = "Solid Concentration (ppm)", colour = "Emission Wavelength") +
+      coord_cartesian(xlim = ranges$x,
+                      ylim = ranges$y,
+                      expand = FALSE)
   })
   
-  i = input$elemChoice
-  drawDotplot(i)
+  
+  # When a double-click happens, check if there's a brush on the plot.
+  # If so, zoom to the brush bounds; if not, reset the zoom.
+  observe({
+    brush <- input$plot1_brush
+    if (!is.null(brush)) {
+      ranges$x <- c(brush$xmin, brush$xmax)
+      ranges$y <- c(brush$ymin, brush$ymax)
+      
+    } else {
+      ranges$x <- NULL
+      ranges$y <- NULL
+    }
+  })
   
 }
 
-# Run the application 
-shinyApp(ui = ui, server = server)
-
+shinyApp(ui, server)
