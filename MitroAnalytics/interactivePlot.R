@@ -1,3 +1,4 @@
+library(shiny)
 library(ggplot2)
 library(Cairo)   # For nicer ggplot2 output when deployed on Linux
 
@@ -5,8 +6,8 @@ ui <- fluidPage(#fluidRow(),
   
   fluidRow(tagList(
     column(
-      width = 5,
-      height = 400,
+      width = 4,
+      height = 300,
       class = "well",
       fluidRow(column(
         width = 4,
@@ -36,8 +37,10 @@ ui <- fluidPage(#fluidRow(),
             "Zn"
           ),
           selected = "Zn"
+          ),
+        verbatimTextOutput("info")
         )
-      ))
+      )
     ),
     
     column(
@@ -50,11 +53,19 @@ ui <- fluidPage(#fluidRow(),
           "plot1",
           height = 300,
           brush = brushOpts(id = "plot1_brush",
-                            resetOnNew = TRUE)
+                            resetOnNew = TRUE),
+          click = "plot1_click"
         )
       ),
       column(width = 4,
-             plotOutput("plot2", height = 300)))
+             plotOutput("plot2", height = 300))),
+      fixedRow(
+        # left side actual dataset and right side the rows for datapoints selected by brush
+        # defined the width of each column and also some styling (bold & italics) using tags
+        
+        column(width= 5, tags$b(tags$i("Actual Dataset")),  tableOutput("data1"))#,
+        #column(width = 5, tags$b(tags$i("Updated Dataset")), tableOutput("data2"), offset = 2)
+      )
     )
   )))
 
@@ -94,6 +105,10 @@ server <- function(input, output) {
       coord_cartesian(xlim = ranges$x,
                       ylim = ranges$y,
                       expand = FALSE)
+    ## Returns the actual dataset
+    output$data1 <- renderTable({
+      samp.elem[[input$elemChoice]]
+    })
   })
   
   
