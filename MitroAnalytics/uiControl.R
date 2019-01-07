@@ -1,5 +1,5 @@
-source("plotControl.R")
-source("filterControl.R")
+source("uiPlotControl.R")
+source("uiFilterControl.R")
 
 loadUI <- function(input, output, session){
   loadFlags <- reactiveValues(
