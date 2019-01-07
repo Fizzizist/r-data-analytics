@@ -27,8 +27,8 @@ ui <- dashboardPage(
     )
   ),
   dashboardBody(
-    #useShinyjs(),
-    #extendShinyjs(text = jsCode, functions = c("hideMenu")),
+    useShinyjs(),
+    extendShinyjs(text = jsCode, functions = c("hideMenu")),
     tags$head(
       tags$title("MitroAnalytics"),
       tags$link(rel="shortcut icon", type="", href="favicon.ico"),
@@ -85,16 +85,22 @@ ui <- dashboardPage(
           )
         )
       ),
-      # 2. Add tabItem.
+      # 2. Add tabItem, organize output
       tabItem(tabName='statIntPlot',
         fluidRow(
           column(width=3,
             h1('Interactive Plot')
+          ),
+          column(width=3,
+            uiOutput('selectIntElement')
           )
         ),
         fluidRow(
-          column(width=10,
-            plotOutput("interactivePlot")
+          column(width = 5,
+            plotOutput("statIntPlot1", height = 300, brush = brushOpts(id = "plot1_brush", resetOnNew = TRUE))
+          ),
+          column(width = 5,
+            plotOutput("statIntPlot2", height = 300)
           )
         )
       ),

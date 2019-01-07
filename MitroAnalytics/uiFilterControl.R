@@ -1,5 +1,6 @@
 source("uiPlotControl.R")
 
+# Fiter functions for Histogram
 renderHistSessionFilter <- function(output, sessions){
   dfSessions = data.frame(names = sessions$name, values = sessions$file)
   sessionChoices <- as.list(dfSessions$values)
@@ -60,4 +61,18 @@ observeHistSelectSessionEvent <- function(input, output, session){
       observeHistResetEvent(input, output, session, histData, solutionNames, elementNames, solutionNames[3], elementNames)
     }
   )
+}
+
+# 4. Filter functions for Interactive Plot 
+# The selectInput to be populated with the database data.
+# Need another select input to select which session, and maybe have the elements as radio buttons?
+renderIntPlotElemFilter <- function(output){
+  output$selectIntElement <- renderUI({
+    selectInput(
+      "intElemChoice",
+      "Choose an element:",
+      choices = c("Al", "As", "Ba", "Ca", "Cd", "Cu", "Co", "Cr", "Cu", "Fe", "K", "Mg", "Mn", "Mo", "Ni", "Pb", "Se", "Sr", "Y", "Zn"),
+      selected = "Zn"
+    )
+  })
 }

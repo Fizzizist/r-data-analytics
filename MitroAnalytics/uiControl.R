@@ -27,14 +27,19 @@ loadUI <- function(input, output, session){
     }
   )
   
-  # 3. Add tab click event to prevent autoloading
+  # 3. Add tab click event observer to prevent autoloading
   observeEvent(input$sidebarMenu, 
     {
       if(input$sidebarMenu != "statIntPlot") return()
       if(uiReactValues$loadedIntPlot) return()
       uiReactValues$loadedIntPlot <- TRUE
       print("inside intPlot")
-      #draw interactiveplot
+      # Initialize samp.elems 
+      if(!exists("samp.elem")) {
+        samp.elem <- readRDS("data/samp.elem.rds") # To be replaced with a database call.
+      }
+      renderIntPlotElemFilter(output)
+      drawInteractivePlot(input, output, samp.elem)
     }
   )
 }
