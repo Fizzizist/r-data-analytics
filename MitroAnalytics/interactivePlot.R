@@ -62,7 +62,7 @@ server <- function(input, output) {
   #---------------------------------------------------------------------
   # Initialize samp.elems 
   if(!exists("samp.elem")) {
-    samp.elem <- getPTValues() # Need to source Peter's function.
+    samp.elem <- readRDS("samp.elem.rds")
   }
   
   # -------------------------------------------------------------------
