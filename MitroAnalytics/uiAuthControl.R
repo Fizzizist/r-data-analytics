@@ -1,4 +1,5 @@
 source("mockDBAuth.R")
+source("io.R")
 
 getUIAuthJS <- function(){
   return("shinyjs.hideMenu = function(display){$('header').css('display', display);}")
@@ -13,7 +14,7 @@ displayLoginView <- function(output, session, message=""){
       textInput("username", "Username:"),
       passwordInput("password", "Password:"),
       actionButton("login", "Log In"),
-      div(message)
+      div(message, style="color:red")
     )
   })
 }
@@ -40,11 +41,11 @@ observeUserLogin <- function(input, output, session, authenticated){
       
       auth = authenticate(user, password) #To be replaced with a backend call
       
-      if(auth[["isAuth"]]){
+      if(auth == TRUE){
         authenticated <- TRUE
         displayWelcomeView(output, authenticated)
       }else{
-        displayLoginView(output, session, auth[["message"]])
+        displayLoginView(output, session, auth)
       }
     }
   )
