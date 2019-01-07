@@ -21,13 +21,14 @@ ui <- dashboardPage(
       menuItem("Home", tabName='home', icon=icon('home')),
       menuItem("File Upload", tabName='fileUpload', icon=icon('file-upload')),
       menuItem("Histogram", tabName='statHistogram', icon=icon('chart-bar')),
+      menuItem("Interactive Plot", tabName='statIntPlot', icon=icon('microscope')), # 1. Add menu item.
 	    menuItem("File Download", tabName='fileDownload', icon=icon('download')),
 	    uiOutput("logout")
     )
   ),
   dashboardBody(
-    useShinyjs(),
-    extendShinyjs(text = jsCode, functions = c("hideMenu")),
+    #useShinyjs(),
+    #extendShinyjs(text = jsCode, functions = c("hideMenu")),
     tags$head(
       tags$title("MitroAnalytics"),
       tags$link(rel="shortcut icon", type="", href="favicon.ico"),
@@ -50,9 +51,8 @@ ui <- dashboardPage(
         ),
         fluidRow(
           tags$div(class='center',
-            fileInput("file1", "", multiple=FALSE, accept=c("text/csv","text/comma-separated-values","text/plain",".csv"), 
-		width='100%'),
-		verbatimTextOutput("uploaded")
+            fileInput("file1", "", multiple=FALSE, accept=c("text/csv","text/comma-separated-values","text/plain",".csv"), width='100%'),
+		        verbatimTextOutput("uploaded")
           )
         )
       ),
@@ -85,7 +85,20 @@ ui <- dashboardPage(
           )
         )
       ),
-	tabItem(tabName='fileDownload',
+      # 2. Add tabItem.
+      tabItem(tabName='statIntPlot',
+        fluidRow(
+          column(width=3,
+            h1('Interactive Plot')
+          )
+        ),
+        fluidRow(
+          column(width=10,
+            plotOutput("interactivePlot")
+          )
+        )
+      ),
+	    tabItem(tabName='fileDownload',
         fluidRow(
           column(width=3,
             h2('Download files')
@@ -94,15 +107,15 @@ ui <- dashboardPage(
         fluidRow(
           tags$div(class='center',
            #Downloader
-		selectInput("tableChecks", "Choose a dataset:",
-			c("Solutions" = "solutions",
-			"Elements per solution" = "solution_elements",
-			"replicates" = "replicates")),
-		uiOutput("sessionChecks"),
-		selectInput("dlFormat", "Choose a format:",
-			c("CSV" = "csv",
-			"Excel" = "xlsx")),
-		uiOutput("dlButton") 
+      		selectInput("tableChecks", "Choose a dataset:",
+      			c("Solutions" = "solutions",
+      			"Elements per solution" = "solution_elements",
+      			"replicates" = "replicates")),
+      		uiOutput("sessionChecks"),
+      		selectInput("dlFormat", "Choose a format:",
+      			c("CSV" = "csv",
+      			"Excel" = "xlsx")),
+      		  uiOutput("dlButton") 
           )
         )
       )

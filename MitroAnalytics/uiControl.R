@@ -5,6 +5,7 @@ source("uiAuthControl.R")
 loadUI <- function(input, output, session){
   uiReactValues <- reactiveValues(
     loadedStatHist = FALSE,
+    loadedIntPlot = FALSE,
     authenticated = FALSE
   )
   
@@ -12,7 +13,8 @@ loadUI <- function(input, output, session){
   observeUserLogin(input, output, session, uiReactValues$authenticated)
   observeUserLogout(input, output, session, uiReactValues$authenticated)
   
-  observeEvent(input$sidebarMenu, {
+  observeEvent(input$sidebarMenu, 
+    {
       if(input$sidebarMenu != "statHistogram") return()
       if(uiReactValues$loadedStatHist) return()
       uiReactValues$loadedStatHist <- TRUE
@@ -22,6 +24,17 @@ loadUI <- function(input, output, session){
       
       renderHistSessionFilter(output, sessions)
       observeHistSelectSessionEvent(input, output, session)
+    }
+  )
+  
+  # 3. Add tab click event to prevent autoloading
+  observeEvent(input$sidebarMenu, 
+    {
+      if(input$sidebarMenu != "statIntPlot") return()
+      if(uiReactValues$loadedIntPlot) return()
+      uiReactValues$loadedIntPlot <- TRUE
+      print("inside intPlot")
+      #draw interactiveplot
     }
   )
 }
