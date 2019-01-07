@@ -38,13 +38,13 @@ observeUserLogin <- function(input, output, session, authenticated){
       user <- input$username
       password <- input$password
       
-      auth = authenticate(user, password) #replace with a backend call
+      auth = authenticate(user, password) #To be replaced with a backend call
       
       if(auth[["isAuth"]]){
         authenticated <- TRUE
         displayWelcomeView(output, authenticated)
       }else{
-        displayLoginView(output, sesion, auth[["message"]])
+        displayLoginView(output, session, auth[["message"]])
       }
     }
   )

@@ -1,5 +1,10 @@
 library(shiny)
 library(shinydashboard)
+library(shinyjs)
+
+source("uiAuthControl.R")
+
+jsCode <- getUIAuthJS()
 
 header <- dashboardHeader()
 header$children[[2]]$children <- tags$div(class='header-title', 
@@ -16,10 +21,13 @@ ui <- dashboardPage(
       menuItem("Home", tabName='home', icon=icon('home')),
       menuItem("File Upload", tabName='fileUpload', icon=icon('file-upload')),
       menuItem("Histogram", tabName='statHistogram', icon=icon('chart-bar')),
-	menuItem("File Download", tabName='fileDownload', icon=icon('download'))
+	    menuItem("File Download", tabName='fileDownload', icon=icon('download')),
+	    uiOutput("logout")
     )
   ),
   dashboardBody(
+    useShinyjs(),
+    extendShinyjs(text = jsCode, functions = c("hideMenu")),
     tags$head(
       tags$title("MitroAnalytics"),
       tags$link(rel="shortcut icon", type="", href="favicon.ico"),
@@ -28,8 +36,9 @@ ui <- dashboardPage(
     tabItems(
       tabItem(tabName='home',
         fluidRow(
-          column(width=10,
-            h1('Welcome to MitroAnalytics!')
+          tags$div(class='center',
+                   div(id='home-title', img(class='header-logo', src='favicon.ico', width='100px'), "MitroAnalytics"),
+                   uiOutput('authentication')
           )
         )
       ),
