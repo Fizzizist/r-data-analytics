@@ -1,9 +1,11 @@
 library(shiny)
+library(shinyBS)
 library(ggplot2)
-library(Cairo)   # For nicer ggplot2 output when deployed on Linux
+library(DT)
+library(Cairo) # For nicer ggplot2 output when deployed on Linux
 
 ui <- fluidPage(
-  
+
   fluidRow(
     column(
       width = 12,
@@ -58,7 +60,7 @@ ui <- fluidPage(
             )
           ),
           column(width = 4,
-                 plotOutput("plot2", height = 300), 
+                 plotOutput("plot2", height = 300),
                  offset = 2
           )
         )
@@ -70,31 +72,31 @@ ui <- fluidPage(
       class = "well",
       fluidRow(
         column(
-          width= 4, ("Unedited Dataset"),  tableOutput("data1")
+          width = 4, ("Unedited Dataset"), DT::dataTableOutput("data1")
         ),
         column(
-          width = 4,("Edited Dataset"), tableOutput("data2"), offset = 2
-        )#,
-        #column(width=2, "SE", tableOutput("test")
-        #)
+          width = 4, ("Edited Dataset"), DT::dataTableOutput("data2"), offset = 2
+        ) #,
+#column(width=2, "SE", tableOutput("test")
+#)
       )
     )
   )
 )
 
-server <- function(input, output) { 
+server <- function(input, output) {
   #---------------------------------------------------------------------
   # Initialize samp.elems 
-  if(!exists("samp.elem")) {
+  if (!exists("samp.elem")) {
     samp.elem <- readRDS("samp.elem.rds")
   }
-  
+
   # -------------------------------------------------------------------
   # Linked plots (left and right)
-  
+
   # Defining reactive values.
   ranges <- reactiveValues(x = NULL, y = NULL)
-  
+
   # Interactive plot.
   output$plot1 <- renderPlot({
     ggplot(samp.elem[[input$elemChoice]], aes(x = input$elemChoice, y = solid_conc)) +
@@ -107,7 +109,7 @@ server <- function(input, output) {
       ) +
       labs(x = "Element", y = "Solid Concentration (ppm)", colour = "Emission Wavelength")
   })
-  
+
   # Reactive plot.
   output$plot2 <- renderPlot({
     ggplot(samp.elem[[input$elemChoice]], aes(x = input$elemChoice, y = solid_conc)) +
@@ -121,33 +123,38 @@ server <- function(input, output) {
       coord_cartesian(xlim = ranges$x,
                       ylim = ranges$y,
                       expand = FALSE)
-    })
+  })
   ## Returns the actual dataset.
-  output$data1 <- renderTable({
+  output$data1 <- DT::renderDataTable({
     samp.elem[[input$elemChoice]]
   })
-  
+
   ## Returns the updated dataset.
-  output$data2 <- renderTable({
-    if (is.null(input$plot1_brush)) return("Select a subset.")
+  output$data2 <- DT::renderDataTable({
+    if (is.null(input$plot1_brush)) return("")
     else {
-      brushedPoints(df = samp.elem[[input$elemChoice]], brush = input$plot1_brush, xvar = 'element_id', yvar = "solid_conc")
-      }
+      brushedPoints(
+        df = samp.elem[[input$elemChoice]],
+        brush = input$plot1_brush,
+        xvar = 'element_id',
+        yvar = "solid_conc"
+        )
+    }
   })
-  
+
   # Sets x and y co-ordinates for brush input.
-  observe({   
+  observe({
     brush <- input$plot1_brush
     if (!is.null(brush)) {
       ranges$x <- c(brush$xmin, brush$xmax)
       ranges$y <- c(brush$ymin, brush$ymax)
-      
+
     } else {
       ranges$x <- NULL
       ranges$y <- NULL
     }
   })
-  
+
 }
 
 # Run app.
