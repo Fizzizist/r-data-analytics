@@ -69,8 +69,8 @@ getPTValues <- function() {
 
 	# Summary statistics for each element.
 
-	print(samp.elem)
-	return(samp.elem)
+	#print(samp.elem)
+	#return(samp.elem)
 }
 # Now we can pass each set of sold_conc to the front end in response to selecting an element. 
 # It will display a box-plot of that element and some summary statistics.

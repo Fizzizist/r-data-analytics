@@ -2,14 +2,15 @@ library(shiny)
 library(ggplot2)
 library(Cairo)   # For nicer ggplot2 output when deployed on Linux
 
-ui <- fluidPage(#fluidRow(),
+ui <- fluidPage(
   
-  fluidRow(tagList(
+  fluidRow(
     column(
-      width = 4,
+      width = 12,
       height = 300,
       class = "well",
-      fluidRow(column(
+      fluidRow(
+        column(
         width = 4,
         selectInput(
           "elemChoice",
@@ -37,37 +38,49 @@ ui <- fluidPage(#fluidRow(),
             "Zn"
           ),
           selected = "Zn"
+          )
+        )
+      )
+    )
+  ),
+  fluidRow(
+    column(
+      width = 12,
+        class = "well",
+        h4("Left plot controls right plot"),
+          fluidRow(
+            column(
+            width = 4,
+            plotOutput(
+              "plot1",
+              height = 300,
+              brush = brushOpts(id = "plot1_brush", resetOnNew = TRUE)
+            )
           ),
-        verbatimTextOutput("info")
+          column(width = 4,
+                 plotOutput("plot2", height = 300), 
+                 offset = 2
+          )
         )
       )
     ),
-    
+  fluidRow(
     column(
-      width = 10,
+      width = 12,
       class = "well",
-      h4("Left plot controls right plot"),
-      fluidRow(column(
-        width = 4,
-        plotOutput(
-          "plot1",
-          height = 300,
-          brush = brushOpts(id = "plot1_brush",
-                            resetOnNew = TRUE),
-          click = "plot1_click"
-        )
-      ),
-      column(width = 4,
-             plotOutput("plot2", height = 300))),
-      fixedRow(
-        # left side actual dataset and right side the rows for datapoints selected by brush
-        # defined the width of each column and also some styling (bold & italics) using tags
-        
-        column(width= 5, tags$b(tags$i("Actual Dataset")),  tableOutput("data1"))#,
-        #column(width = 5, tags$b(tags$i("Updated Dataset")), tableOutput("data2"), offset = 2)
+      fluidRow(
+        column(
+          width= 4, ("Unedited Dataset"),  tableOutput("data1")
+        ),
+        column(
+          width = 4,("Edited Dataset"), tableOutput("data2"), offset = 2
+        )#,
+        #column(width=2, "SE", tableOutput("test")
+        #)
       )
     )
-  )))
+  )
+)
 
 server <- function(input, output) { 
   #---------------------------------------------------------------------
@@ -78,8 +91,11 @@ server <- function(input, output) {
   
   # -------------------------------------------------------------------
   # Linked plots (left and right)
+  
+  # Defining reactive values.
   ranges <- reactiveValues(x = NULL, y = NULL)
   
+  # Interactive plot.
   output$plot1 <- renderPlot({
     ggplot(samp.elem[[input$elemChoice]], aes(x = input$elemChoice, y = solid_conc)) +
       stat_summary() +
@@ -92,9 +108,9 @@ server <- function(input, output) {
       labs(x = "Element", y = "Solid Concentration (ppm)", colour = "Emission Wavelength")
   })
   
+  # Reactive plot.
   output$plot2 <- renderPlot({
     ggplot(samp.elem[[input$elemChoice]], aes(x = input$elemChoice, y = solid_conc)) +
-      stat_summary() +
       geom_dotplot(
         aes(colour = factor(element_id)),
         binaxis = 'y',
@@ -105,16 +121,22 @@ server <- function(input, output) {
       coord_cartesian(xlim = ranges$x,
                       ylim = ranges$y,
                       expand = FALSE)
-    ## Returns the actual dataset
-    output$data1 <- renderTable({
-      samp.elem[[input$elemChoice]]
     })
+  ## Returns the actual dataset.
+  output$data1 <- renderTable({
+    samp.elem[[input$elemChoice]]
   })
   
+  ## Returns the updated dataset.
+  output$data2 <- renderTable({
+    if (is.null(input$plot1_brush)) return("Select a subset.")
+    else {
+      brushedPoints(df = samp.elem[[input$elemChoice]], brush = input$plot1_brush, xvar = 'element_id', yvar = "solid_conc")
+      }
+  })
   
-  # When a double-click happens, check if there's a brush on the plot.
-  # If so, zoom to the brush bounds; if not, reset the zoom.
-  observe({
+  # Sets x and y co-ordinates for brush input.
+  observe({   
     brush <- input$plot1_brush
     if (!is.null(brush)) {
       ranges$x <- c(brush$xmin, brush$xmax)
@@ -128,4 +150,5 @@ server <- function(input, output) {
   
 }
 
+# Run app.
 shinyApp(ui, server)
