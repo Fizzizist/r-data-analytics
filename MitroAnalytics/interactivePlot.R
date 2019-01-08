@@ -86,13 +86,13 @@ server <- function(input, output) {
   if (!exists("samp.elem")) {
     samp.elem <- readRDS("samp.elem.rds")
   }
-  
+
   # -------------------------------------------------------------------
   # Linked plots (left and right)
-  
+
   # Defining reactive values.
   ranges <- reactiveValues(x = NULL, y = NULL)
-  
+
   # Interactive plot.
   output$plot1 <- renderPlot({
     ggplot(samp.elem[[input$elemChoice]], aes(x = input$elemChoice, y = solid_conc)) +
@@ -105,18 +105,18 @@ server <- function(input, output) {
       ) +
       labs(x = "Element", y = "Solid Concentration (ppm)", colour = "Emission Wavelength")
   })
-  
+
   # Defines the response to hovering near a point.
   output$hover_info1 <- renderPrint({
-    if(!is.null(input$plot1_hover)){
-      hover=input$plot1_hover
-      dist=sqrt((hover$x-mtcars$mpg)^2+(hover$y-mtcars$disp)^2)
+    if (!is.null(input$plot1_hover)) {
+      hover = input$plot1_hover
+      dist = sqrt((hover$x - mtcars$mpg) ^ 2 + (hover$y - mtcars$disp) ^ 2)
       cat("Weight (lb/1000)\n")
-      if(min(dist) < 3)
+      if (min(dist) < 3)
         mtcars$wt[which.min(dist)]
     }
   })
-  
+
   # Reactive plot.
   output$plot2 <- renderPlot({
     ggplot(samp.elem[[input$elemChoice]], aes(x = input$elemChoice, y = solid_conc)) +
@@ -131,12 +131,12 @@ server <- function(input, output) {
                       ylim = ranges$y,
                       expand = FALSE)
   })
-  
+
   ## Returns the original dataset.
   output$data1 <- DT::renderDataTable({
     samp.elem[[input$elemChoice]]
   })
-  
+
   ## Returns the selected dataset.
   output$data2 <- DT::renderDataTable({
     if (is.null(input$plot1_brush))
@@ -150,21 +150,21 @@ server <- function(input, output) {
       )
     }
   })
-  
+
   # Sets x and y co-ordinates for brush input.
   observe({
     brush <- input$plot1_brush
     if (!is.null(brush)) {
       ranges$x <- c(brush$xmin, brush$xmax)
       ranges$y <- c(brush$ymin, brush$ymax)
-      
+
     } else {
       ranges$x <- NULL
       ranges$y <- NULL
     }
   })
-  
+
 }
 
 # Run app.
-shinyApp(ui, server)
+shinyApp(ui = ui, server = server)
