@@ -1,5 +1,5 @@
 library(shiny)
-#library(shinyBS)
+library(plotly)
 library(ggplot2)
 library(DT)
 library(Cairo) # For nicer ggplot2 output when deployed on Linux
@@ -46,18 +46,17 @@ fluidRow(column(
   fluidRow(
     column(
       width = 4,
-      plotOutput(
+      plotlyOutput(
         "plot1",
-        height = 400,
-        brush = brushOpts(id = "plot1_brush", resetOnNew = TRUE),
-        hover = hoverOpts(id = "plot1_hover")
+        height = 400#,
+        #brush = brushOpts(id = "plot1_brush", resetOnNew = TRUE)
       )
     ),
     column(
       width = 4,
-      plotOutput("plot2", height = 400),
-      hover = hoverOpts(id = "plot2_hover"),
-      offset = 2
+      plotlyOutput("plot2", height = 400)#,
+      #hover = hoverOpts(id = "plot2_hover"),
+      #offset = 2
     )
   )
 )),
@@ -94,16 +93,19 @@ server <- function(input, output) {
   ranges <- reactiveValues(x = NULL, y = NULL)
   
   # Interactive plot.
-  output$plot1 <- renderPlot({
-    ggplot(samp.elem[[input$elemChoice]], aes(x = input$elemChoice, y = solid_conc)) +
+  output$plot1 <- renderPlotly({
+    p1 <- ggplot(samp.elem[[input$elemChoice]], aes(x = input$elemChoice, y = solid_conc)) +
       stat_summary() +
       geom_dotplot(
         aes(colour = factor(element_id)),
-        binaxis = 'y',
-        stackdir = 'center',
-        dotsize = 0.25
-      ) +
-      labs(x = "Element", y = "Solid Concentration (ppm)", colour = "Emission Wavelength")
+        binaxis = 'y'#,
+        #stackdir = 'center',
+        #dotsize = 0.25
+      )# +
+      #labs(x = "Element", y = "Solid Concentration (ppm)", colour = "Emission Wavelength")
+  
+    ggplotly(p1) %>%
+      layout(input$plotHeight, autosize = TRUE)
   })
   
   # Defines the response to hovering near a point.
