@@ -21,8 +21,9 @@ ui <- dashboardPage(
       menuItem("Home", tabName='home', icon=icon('home')),
       menuItem("File Upload", tabName='fileUpload', icon=icon('file-upload')),
       menuItem("Histogram", tabName='statHistogram', icon=icon('chart-bar')),
-      menuItem("Interactive Plot", tabName='statIntPlot', icon=icon('microscope')), # 1. Add menu item.
+      menuItem("Interactive Plot", tabName='statIntPlot', icon=icon('microscope')), # 1. Add menu item. Icon from font awesome icons.
 	    menuItem("File Download", tabName='fileDownload', icon=icon('download')),
+      menuItem("Plotly Plot", tabName="statPlotly", icon=icon('chart-line')),
 	    uiOutput("logout")
     )
   ),
@@ -124,6 +125,9 @@ ui <- dashboardPage(
       		  uiOutput("dlButton") 
           )
         )
+      ),
+      tabItem(tabName="statPlotly",
+        h1("Plotly Graph")
       )
     )
   )

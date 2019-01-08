@@ -1,6 +1,7 @@
 source("uiPlotControl.R")
 source("uiFilterControl.R")
 source("uiAuthControl.R")
+source("stats.R")
 
 loadUI <- function(input, output, session){
   uiReactValues <- reactiveValues(
@@ -36,9 +37,10 @@ loadUI <- function(input, output, session){
       print("inside intPlot")
       # Initialize samp.elems 
       if(!exists("samp.elem")) {
-        samp.elem <- readRDS("data/samp.elem.rds") # To be replaced with a database call.
+        samp.elem <- getPTValues() # To be replaced with a database call.
+        #samp.elem <- readRDS("data/samp.elem.rds")
       }
-      renderIntPlotElemFilter(output)
+      renderIntPlotElemFilter(output, names(samp.elem))
       drawInteractivePlot(input, output, samp.elem)
     }
   )
