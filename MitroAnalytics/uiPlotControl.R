@@ -14,13 +14,10 @@ drawHistogram <- function(output, df) {
   })
 }
 
-# 5. Function to draw the plot. 
-# Might need more refactoring in the future.
-drawInteractivePlot <- function(input, output, data) {
+drawInteractivePlot <- function(input, output, data, selectedElement) {
   ranges <- reactiveValues(x = NULL, y = NULL)
-
   output$statIntPlot1 <- renderPlot({
-    ggplot(data[[input$intElemChoice]], aes(x = input$intElemChoice, y = solid_conc)) +
+    ggplot(data, aes(x = selectedElement, y = solid_conc)) +
       stat_summary() +
       geom_dotplot(
         aes(colour = factor(element_id)),
@@ -32,7 +29,7 @@ drawInteractivePlot <- function(input, output, data) {
   })
 
   output$statIntPlot2 <- renderPlot({
-    ggplot(data[[input$intElemChoice]], aes(x = input$intElemChoice, y = solid_conc)) +
+    ggplot(data, aes(x = selectedElement, y = solid_conc)) +
       stat_summary() +
       geom_dotplot(
         aes(colour = factor(element_id)),
@@ -45,7 +42,7 @@ drawInteractivePlot <- function(input, output, data) {
     })
 
     output$statIntData1 <- DT::renderDataTable({
-      datatable(data[[input$intElemChoice]],
+      datatable(data,
                 rownames = FALSE,
                 options = list(pageLength = 50))
     })
@@ -53,7 +50,7 @@ drawInteractivePlot <- function(input, output, data) {
     output$statIntData2 <- DT::renderDataTable({
       datatable(      
         brushedPoints(
-          df = data[[input$intElemChoice]],
+          df = data,
           brush = input$plot1_brush,
           xvar = 'element_id',
           yvar = "solid_conc"),
