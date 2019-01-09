@@ -1,4 +1,3 @@
-source("mockDBAuth.R")
 source("io.R")
 
 getUIAuthJS <- function(){
