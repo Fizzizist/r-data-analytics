@@ -3,15 +3,6 @@ library(RMySQL)
 library(dplyr)
 
 source("io.R")
-#### Collecting data from database.
-
-# Connect to DB.
-#igpdb = dbConnect(MySQL(),username='sqluser',password='password',dbname='igpprototype',host='localhost')
-
-# Create the view I will be using to query and write to database.
-#dbSendQuery(igpdb, "create view sample_data as select solution_id, element_id, solid_conc, SD from solution_elements")
-
-
 
 #### Defining functions for statistical tests.
 
@@ -47,18 +38,14 @@ pval <- function(du, sd, n) {
 getPTValues <- function() {
   # Read data from view into 'sample.data' data frame.
   sample.data = getSampleData()
-  #sample.data = fetch(result, n = 1000)
-  # Taking the tval and pval of each row and adding them as columns t and p to a new data 
-  #frame, 'trans.sample.data'.
-  #trans.sample.data <- transform(sample.data,t=tval(solid_conc,SD,3),p=pval(solid_conc,SD,3)) 
-  # n is three because there are three replicates for each sample.
 
-  # Removing rows with negative or infinite t values, insignificant and negative p values.
+  # Removing nonsense, control, and rinse rows.
   filt.sample.data <- filter(sample.data, solid_conc > 0, SD > 0)
 
-  # Grouping by element into a list.
+  ## Grouping by element into a list.
 
-  elem <- c("Al", "As", "Ba", "Cd", "Cu", "K", "Mn", "Ni", "Pb", "Se", "Zn")
+  #elem <- c("Al", "As", "Ba", "Cd", "Cu", "K", "Mn", "Ni", "Pb", "Se", "Zn") Are these the ones Frank said were relevant? I can't recall.
+  elem <- c("Al", "As", "Ba", "Ca", "Cd", "Cu", "Co", "Cr", "Cu", "Fe", "K", "Mg", "Mn", "Mo", "Ni", "Pb", "Se", "Sr", "Y", "Zn") # This is all available elements.
   samp.elem <- list()
   regex <- c()
 
@@ -70,17 +57,5 @@ getPTValues <- function() {
 
   names(samp.elem) <- elem
 
-  # Summary statistics for each element.
-
-  #print(samp.elem)
   return(samp.elem)
 }
-# Now we can pass each set of sold_conc to the front end in response to selecting an element. 
-# It will display a box-plot of that element and some summary statistics.
-# I played around with some histograms but the scales are too different to show all elements 
-#simultaneously. 
-# There are also some pretty bad outliers, but we need to define a criteria for removing them.
-# The box-plots can be used to visualize the distribution of the amount of each element lost for all 
-#statistically signficant samples.
-# Since the list is composed of data frames, we can call all any
-#of the information we may need about each significant result (e.g., retrieve the sample_id). 
