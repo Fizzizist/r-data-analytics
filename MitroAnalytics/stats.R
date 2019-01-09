@@ -19,58 +19,61 @@ source("io.R")
 # the null and alternative hypotheses, the standard deviation of the distribution (sd)
 # and the sample size (n).
 
-ptval <- function(du,sd,n) { # Returns both p and t values.
-  t = du / (sd/sqrt(n))
-  p = pt(q=t,df=(n-1), lower.tail=F)
-  res =c(t,p)
+ptval <- function(du, sd, n) {
+  # Returns both p and t values.
+  t = du / (sd / sqrt(n))
+  p = pt(q = t, df = (n - 1), lower.tail = F)
+  res = c(t, p)
   return(res)
 }
 
-tval <- function(du,sd,n) { # Returns just t values.
-  t = du / (sd/sqrt(n))
-  p = pt(q=t,df=(n-1), lower.tail=F)
-  res =c(t,p)
+tval <- function(du, sd, n) {
+  # Returns just t values.
+  t = du / (sd / sqrt(n))
+  p = pt(q = t, df = (n - 1), lower.tail = F)
+  res = c(t, p)
   return(t)
 }
 
-pval <- function(du,sd,n) { # Returns just p values.
-  t = du / (sd/sqrt(n))
-  p = pt(q=t,df=(n-1), lower.tail=F)
-  res =c(t,p)
+pval <- function(du, sd, n) {
+  # Returns just p values.
+  t = du / (sd / sqrt(n))
+  p = pt(q = t, df = (n - 1), lower.tail = F)
+  res = c(t, p)
   return(p)
 }
 
 #### Manipulating the data frame.
 getPTValues <- function() {
-	# Read data from view into 'sample.data' data frame.
-	sample.data = getSampleData()
-	#sample.data = fetch(result, n = 1000)
-	# Taking the tval and pval of each row and adding them as columns t and p to a new data 
-	#frame, 'trans.sample.data'.
-	trans.sample.data <- transform(sample.data,t=tval(solid_conc,SD,3),p=pval(solid_conc,SD,3)) 
-	# n is three because there are three replicates for each sample.
+  # Read data from view into 'sample.data' data frame.
+  sample.data = getSampleData()
+  #sample.data = fetch(result, n = 1000)
+  # Taking the tval and pval of each row and adding them as columns t and p to a new data 
+  #frame, 'trans.sample.data'.
+  #trans.sample.data <- transform(sample.data,t=tval(solid_conc,SD,3),p=pval(solid_conc,SD,3)) 
+  # n is three because there are three replicates for each sample.
 
-	# Removing rows with negative or infinite t values, insignificant and negative p values.
-	filt.sample.data <- filter(trans.sample.data, p < 0.05, p > 0, t > 0, t < Inf)
+  # Removing rows with negative or infinite t values, insignificant and negative p values.
+  filt.sample.data <- filter(sample.data, solid_conc > 0, SD > 0)
 
-	# Grouping by element into a list.
+  # Grouping by element into a list.
 
-	elem <- c("Al","As","Ba","Cd","Cu","K","Mn","Ni","Pb","Se","Zn")
-	samp.elem <- list()
-	regex <- c()
+  elem <- c("Al", "As", "Ba", "Cd", "Cu", "K", "Mn", "Ni", "Pb", "Se", "Zn")
+  samp.elem <- list()
+  regex <- c()
 
-	for (i in 1:length(elem)) {
-	  regex[i] <- paste("^",elem[i],".*",sep='')
-	  samp.elem[[i]] <- data.frame(filt.sample.data[grep(regex[i], filt.sample.data[,2], 
-	  	perl = TRUE), ])
-	}
+  for (i in 1:length(elem)) {
+    regex[i] <- paste("^", elem[i], ".*", sep = '')
+    samp.elem[[i]] <- data.frame(filt.sample.data[grep(regex[i], filt.sample.data[, 2],
+      perl = TRUE),])
+  }
 
-	names(samp.elem) <- elem
+  names(samp.elem) <- elem
 
-	# Summary statistics for each element.
+  # Summary statistics for each element.
 
-	#print(samp.elem)
-	return(samp.elem)
+  #print(samp.elem)
+  return(samp.elem)
 }
 # Now we can pass each set of sold_conc to the front end in response to selecting an element. 
 # It will display a box-plot of that element and some summary statistics.
