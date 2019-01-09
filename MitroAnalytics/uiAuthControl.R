@@ -39,7 +39,7 @@ observeUserLogin <- function(input, output, session, authenticated){
       user <- input$username
       password <- input$password
       
-      auth = authenticate(user, password) #To be replaced with a backend call
+      auth = getAuthentication(user, password)
       
       if(auth == TRUE){
         authenticated <- TRUE
