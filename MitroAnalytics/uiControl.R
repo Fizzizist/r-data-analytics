@@ -33,8 +33,7 @@ loadUI <- function(input, output, session){
     {
       # Initialize samp.elems 
       if(!exists("samp.elem")) {
-        samp.elem <- getPTValues() # To be replaced with a database call.
-        #samp.elem <- readRDS("data/samp.elem.rds")
+        samp.elem <- getPTValues() 
       if(input$sidebarMenu != "statIntPlot") return()
       if(uiReactValues$loadedIntPlot) return()
       uiReactValues$loadedIntPlot <- TRUE
