@@ -61,16 +61,20 @@ observeHistSelectSessionEvent <- function(input, output, session){
   )
 }
 
-# 4. Filter functions for Interactive Plot 
-# The selectInput to be populated with the database data.
-# Need another select input to select which session, and maybe have the elements as radio buttons?
+
+
+# Filter functions for Interactive Plot
 renderIntPlotElemFilter <- function(output, selectItems){
   output$selectIntElement <- renderUI({
-    selectInput(
-      "intElemChoice",
-      "Choose an element:",
-      choices = selectItems,
-      selected = "Zn"
-    )
+    selectInput("intElemChoice", "Choose an element:", choices = selectItems, selected = "Zn")
   })
+}
+
+observeIntPlotSelectElemEvent <- function(input, output, session, dataset){
+  observeEvent(
+    input$intElemChoice,
+    {
+      drawInteractivePlot(input, output, dataset[[input$intElemChoice]], input$intElemChoice)
+    }
+  )
 }
