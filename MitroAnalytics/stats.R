@@ -54,8 +54,6 @@ getPTValues <- function() {
     samp.elem[[i]] <- data.frame(filt.sample.data[grep(regex[i], filt.sample.data[, 2],
       perl = TRUE),])
   }
-
   names(samp.elem) <- elem
-
   return(samp.elem)
 }

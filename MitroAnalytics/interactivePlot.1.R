@@ -2,7 +2,9 @@ library(shiny)
 library(plotly)
 library(ggplot2)
 library(DT)
-library(Cairo) # For nicer ggplot2 output when deployed on Linux
+library(crosstalk)
+
+source("stats.R")
 
 ui <- fluidPage(
   fluidRow(column(width = 2),
@@ -44,10 +46,11 @@ ui <- fluidPage(
     column(width = 2)
   ),
   
-  fluidRow(column(width = 2),
-           column(width = 8,
-                  DTOutput("data1")),
-           column(width = 2))
+  fluidRow(
+    column(width = 2),
+    column(width = 8,
+          DTOutput("data1")),
+    column(width = 2))
 )
 
 #-----------------------------------------------------------------------
@@ -55,33 +58,71 @@ ui <- fluidPage(
 
 
 server <- function(input, output) {
+  
   #---------------------------------------------------------------------
   # Initialize samp.elems
   if (!exists("samp.elem")) {
-    samp.elem <- readRDS("samp.elem.rds")
+    samp.elem <- getPTValues()
   }
   
   # -------------------------------------------------------------------
   # Interative Object UI
   
-  # Interactive plot.
-  output$plot1 <- renderPlotly({
-    data <- samp.elem[[input$elemChoice]] 
-    
-    plot <- ggplot(data, aes(x = input$elemChoice, y = solid_conc)) +
-      geom_jitter(width = 0.01, height = 0)
-    
-    ggplotly(plot) %>%
-      group_by(element_id) %>%
-      layout(showlegend = T) 
-  })
+  # Highlight selected rows in the scatterplot
   
+  output$plot1 <- renderPlotly({
+    
+    data <- samp.elem[[input$elemChoice]] 
+    m <- data %>%
+          tibble::rownames_to_column()
+
+    shared <- SharedData$new(m, ~rowname)     
+    
+    s <- input$data_rows_selected
+    
+    if(!length(s)) {
+      
+      plot <- ggplot(shared, aes(x = input$elemChoice, y = solid_conc)) +
+        geom_jitter(width = 0.01, height = 0)
+      
+      p <- ggplotly(plot) %>%
+            layout(showLegend = T) %>%
+            highlight(
+              "ploty_selected", 
+              color = I('red'), 
+              selected = attrs_selected(name = 'Filtered')
+              )
+        
+    }else if (length(s)) {
+      pp <- m %>%
+        ggploty(plot) %>% 
+        add_trace(x = ~input$elemChoice, y = ~solid_conc, mode = "markers", color = I('black'), name = 'Unfiltered') %>%
+        layout(showlegend = T)
+      
+      # selected data
+      pp <- add_trace(pp, data = m[s, , drop = F], x = ~input$elemChoice, y = ~solid_conc, mode = "markers",
+                      color = I('red'), name = 'Filtered')
+    }
+    
+  })
+    output$x1 <- renderDT({
+    m2 <- m[data$selection(),]
+    dt <- DT::datatable(m)
+    if (NROW(m2) == 0) {
+      dt
+    } else {
+      DT::formatStyle(dt, "rowname", target = "row",
+                      color = DT::styleEqual(m2$rowname, rep("white", length(m2$rowname))),
+                      backgroundColor = DT::styleEqual(m2$rowname, rep("black", length(m2$rowname))))
+    }
+  })
   ## Interactive
   output$data1 <- renderDT({
     datatable(samp.elem[[input$elemChoice]],
               rownames = FALSE,
               options = list(pageLength = 50))
   })
+
 }
 
 # Run app.
