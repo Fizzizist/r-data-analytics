@@ -1,6 +1,5 @@
 library(DBI)
 library(anytime)
-library(digest)
 library(openssl)
 
 source("queries.R")
