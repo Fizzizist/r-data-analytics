@@ -1,9 +1,10 @@
 library(dplyr)
 library(ggplot2)
+library(DT) # Chris: Added library to draw Datatable.
 
-drawHistogram <- function(output, df){
+drawHistogram <- function(output, df) {
   output$barGraph <- renderPlot({
-    ggplot(data = df, aes(factor(Element), Soln.Conc, fill=Solution.Label)) +
+    ggplot(data = df, aes(factor(Element), Soln.Conc, fill = Solution.Label)) +
       geom_bar(stat = "identity", position = 'dodge') +
       scale_fill_brewer(palette = "Set1") +
       xlab("Element") +
@@ -15,9 +16,9 @@ drawHistogram <- function(output, df){
 
 # 5. Function to draw the plot. 
 # Might need more refactoring in the future.
-drawInteractivePlot <- function(input, output, data){
+drawInteractivePlot <- function(input, output, data) {
   ranges <- reactiveValues(x = NULL, y = NULL)
-  
+
   output$statIntPlot1 <- renderPlot({
     ggplot(data[[input$intElemChoice]], aes(x = input$intElemChoice, y = solid_conc)) +
       stat_summary() +
@@ -29,7 +30,7 @@ drawInteractivePlot <- function(input, output, data){
       ) +
       labs(x = "Element", y = "Solid Concentration (ppm)", colour = "Emission Wavelength")
   })
-  
+
   output$statIntPlot2 <- renderPlot({
     ggplot(data[[input$intElemChoice]], aes(x = input$intElemChoice, y = solid_conc)) +
       stat_summary() +
@@ -40,47 +41,34 @@ drawInteractivePlot <- function(input, output, data){
         dotsize = 0.25
       ) +
       labs(x = "Element", y = "Solid Concentration (ppm)", colour = "Emission Wavelength") +
-      coord_cartesian(xlim = ranges$x,
-                      ylim = ranges$y,
-                      expand = FALSE)
-  })
-  
-  observe({
-    brush <- input$plot1_brush
-    if (!is.null(brush)) {
-      ranges$x <- c(brush$xmin, brush$xmax)
-      ranges$y <- c(brush$ymin, brush$ymax)
-      
-    } else {
-      ranges$x <- NULL
-      ranges$y <- NULL
-    }
-  })
-}
-
-# These are the valid arguments for i. User will need to select one to show the given dot-plot.
-
-elem <- c("Al","As","Ba","Ca","Cd","Cu","Co","Cr","Cu","Fe","K","Mg","Mn","Mo","Ni","Pb","Se","Sr","Y","Zn")
-
-# Function to construct a dot-plot based on an element symbol.
-# Not sure if my renderPlot syntax is correct, feel free modify as needed.
-
-drawDotplot <- function(i='Al'){
-  
-  if(!exists("samp.elem")) {
-    samp.elem <- getPTValues()
-  }else{ break }
-
-  if(dim(samp.elem[[i]]) %in% c(0,NULL)) {
-    output$dotPlot <- renderText({
-      paste('No statistically significant data points for ',i,'!\n')
-      })    
-  }else{
-    output$dotPlot <- renderPlot({
-      ggplot(samp.elem[[i]], aes(x=i, y=solid_conc)) +
-        stat_summary() +
-        geom_dotplot(aes(colour=factor(element_id)),binaxis='y',stackdir='center', dotsize = 0.25) +
-        labs(x="Element",y="Solid Concentration (ppm)",colour="Emission Wavelength")
+     coord_cartesian(xlim = ranges$x, ylim = ranges$y, expand = FALSE)
     })
-  }
+
+    output$statIntData1 <- DT::renderDataTable({
+      datatable(data[[input$intElemChoice]],
+                rownames = FALSE,
+                options = list(pageLength = 50))
+    })
+
+    output$statIntData2 <- DT::renderDataTable({
+      datatable(      
+        brushedPoints(
+          df = data[[input$intElemChoice]],
+          brush = input$plot1_brush,
+          xvar = 'element_id',
+          yvar = "solid_conc"),
+        rownames = FALSE,
+        options = list(pageLength = 50))
+    })
+
+    observe({
+      brush <- input$plot1_brush
+      if (!is.null(brush)) {
+        ranges$x <- c(brush$xmin, brush$xmax)
+        ranges$y <- c(brush$ymin, brush$ymax)
+      } else {
+        ranges$x <- NULL
+        ranges$y <- NULL
+      }
+    })
 }

@@ -69,7 +69,7 @@ fluidRow(column(
     column(
       width = 4,
       ("Selected Data"),
-      DT::dataTableOutput("data2"),
+      ,
       offset = 2
     )
   )
@@ -104,17 +104,6 @@ server <- function(input, output) {
         dotsize = 0.25
       ) +
       labs(x = "Element", y = "Solid Concentration (ppm)", colour = "Emission Wavelength")
-  })
-
-  # Defines the response to hovering near a point.
-  output$hover_info1 <- renderPrint({
-    if (!is.null(input$plot1_hover)) {
-      hover = input$plot1_hover
-      dist = sqrt((hover$x - mtcars$mpg) ^ 2 + (hover$y - mtcars$disp) ^ 2)
-      cat("Weight (lb/1000)\n")
-      if (min(dist) < 3)
-        mtcars$wt[which.min(dist)]
-    }
   })
 
   # Reactive plot.

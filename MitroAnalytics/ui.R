@@ -1,6 +1,7 @@
 library(shiny)
 library(shinydashboard)
 library(shinyjs)
+library(DT) # Chris: Added library to draw Datatable.
 
 source("uiAuthControl.R")
 
@@ -98,11 +99,25 @@ ui <- dashboardPage(
         ),
         fluidRow(
           column(width = 5,
-            plotOutput("statIntPlot1", height = 300, brush = brushOpts(id = "plot1_brush", resetOnNew = TRUE))
+            plotOutput("statIntPlot1", height = 400, brush = brushOpts(id = "plot1_brush", resetOnNew = TRUE)),
+            offset = 1
           ),
           column(width = 5,
-            plotOutput("statIntPlot2", height = 300)
-          )
+            plotOutput("statIntPlot2", height = 400),
+            offset = 1
+          ),
+        fluidRow(
+          column(width = 5,
+                 h3("All Data"),
+                 DT::dataTableOutput("statIntData1"),
+                 offset = 1
+          ),
+          column(width = 5, 
+                 h3("Selected Data"),
+                 DT::dataTableOutput("statIntData2"),
+                 offset = 1
+                 )
+        )
         )
       ),
 	    tabItem(tabName='fileDownload',
