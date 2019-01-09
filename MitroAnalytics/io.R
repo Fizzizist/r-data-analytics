@@ -261,3 +261,10 @@ insertCSV <- function (inFile) {
 	
 	return
 }
+
+getSessionSolutionConcentration <- function(session_id){
+  solConc <- getOneQuery(paste0("SELECT label, element_id, solid_conc 
+                                FROM solutions s JOIN solution_elements se ON s.solution_id = se.solution_id 
+                                WHERE s.session_id = ", session_id, ";"))
+  return(solConc)
+}

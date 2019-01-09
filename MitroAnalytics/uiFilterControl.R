@@ -1,12 +1,10 @@
 source("uiPlotControl.R")
+source("io.R")
 
 # Fiter functions for Histogram
 renderHistSessionFilter <- function(output, sessions){
-  dfSessions = data.frame(names = sessions$name, values = sessions$file)
-  sessionChoices <- as.list(dfSessions$values)
-  names(sessionChoices) <- dfSessions$names
   output$selectSession <- renderUI({
-    selectInput('selectSession', 'Select session:', sessionChoices)
+    selectInput('selectSession', 'Select session:', sessions)
   })
 }
 
@@ -24,12 +22,12 @@ observeHistBuildEvent <- function(input, output, sample){
     input$btnBuild,
     {
       df <- isolate({
-        selectedSamples <- sample[sample$Solution.Label %in% input$solutionCheckboxes,]
-        selectedSamples = selectedSamples[selectedSamples$Element %in% input$elementCheckboxes,]
+        selectedSamples <- sample[sample$label %in% input$solutionCheckboxes,]
+        selectedSamples = selectedSamples[selectedSamples$element_id %in% input$elementCheckboxes,]
         data.frame(selectedSamples)
       })
-      selectedSolution = unique(df$Solution.Label)
-      selectedElement = unique(df$Element)
+      selectedSolution = unique(df$label)
+      selectedElement = unique(df$element_id)
       drawHistogram(output, df)
     }
   )
@@ -50,15 +48,15 @@ observeHistSelectSessionEvent <- function(input, output, session){
   observeEvent(
     input$selectSession,
     {
-      sample <- read.csv(paste("data/", input$selectSession, sep=""), stringsAsFactors = FALSE) # To be replace with a call to DB or the Stat module
-      
-      solutionNames <- unique(sample$Solution.Label)
-      elementNames <- unique(sample$Element)
-      histData <- data.frame(sample[sample$Solution.Label == solutionNames[3],])
-      renderHistFilters(output, solutionNames, elementNames, solutionNames[3], elementNames)
+      dataset <- getSessionSolutionConcentration(input$selectSession)
+      solNames <- unique(dataset["label"])
+      elemNames <- unique(dataset["element_id"])
+      histData <- dataset[which(dataset$label == solNames[4,]),]
+
+      renderHistFilters(output, solNames[,], elemNames[,], solNames[4,], elemNames[,])
       drawHistogram(output, histData)
-      observeHistBuildEvent(input, output, sample)
-      observeHistResetEvent(input, output, session, histData, solutionNames, elementNames, solutionNames[3], elementNames)
+      observeHistBuildEvent(input, output, dataset)
+      observeHistResetEvent(input, output, session, histData, solNames[,], elemNames[,], solNames[4,], elemNames[,])
     }
   )
 }
@@ -71,7 +69,6 @@ renderIntPlotElemFilter <- function(output, selectItems){
     selectInput(
       "intElemChoice",
       "Choose an element:",
-      #choices = c("Al", "As", "Ba", "Ca", "Cd", "Cu", "Co", "Cr", "Cu", "Fe", "K", "Mg", "Mn", "Mo", "Ni", "Pb", "Se", "Sr", "Y", "Zn"),
       choices = selectItems,
       selected = "Zn"
     )

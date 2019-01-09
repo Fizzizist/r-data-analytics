@@ -4,7 +4,7 @@ library(DT) # Chris: Added library to draw Datatable.
 
 drawHistogram <- function(output, df) {
   output$barGraph <- renderPlot({
-    ggplot(data = df, aes(factor(Element), Soln.Conc, fill = Solution.Label)) +
+    ggplot(data = df, aes(factor(element_id), solid_conc, fill = label)) +
       geom_bar(stat = "identity", position = 'dodge') +
       scale_fill_brewer(palette = "Set1") +
       xlab("Element") +

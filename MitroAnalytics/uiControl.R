@@ -1,6 +1,7 @@
 source("uiPlotControl.R")
 source("uiFilterControl.R")
 source("uiAuthControl.R")
+source("io.R")
 source("stats.R")
 
 loadUI <- function(input, output, session){
@@ -21,9 +22,8 @@ loadUI <- function(input, output, session){
       uiReactValues$loadedStatHist <- TRUE
       print("inside hist")
       
-      sessions <- read.csv("data/sessions.csv") # To be replace with a call to DB or the Stat module
-      
-      renderHistSessionFilter(output, sessions)
+      sessions <- getSessionList()
+      renderHistSessionFilter(output, sessions[["session_id"]])
       observeHistSelectSessionEvent(input, output, session)
     }
   )
