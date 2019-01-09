@@ -42,6 +42,7 @@ ui <- fluidPage(
   fluidRow(
     column(width = 2),
     column(width = 8,
+           #("tib"),
            plotlyOutput("plot1")),
     column(width = 2)
   ),
@@ -75,37 +76,33 @@ server <- function(input, output) {
     data <- samp.elem[[input$elemChoice]] 
     m <- data %>%
           tibble::rownames_to_column()
+    
+  #output$tib <- renderPrint({
+  #    paste(m)
+  #  })
 
-    shared <- SharedData$new(m, ~rowname)     
+    d <- SharedData$new(m, ~rowname)     
     
     s <- input$data_rows_selected
     
     if(!length(s)) {
-      
-      plot <- ggplot(shared, aes(x = input$elemChoice, y = solid_conc)) +
-        geom_jitter(width = 0.01, height = 0)
-      
-      p <- ggplotly(plot) %>%
-            layout(showLegend = T) %>%
-            highlight(
-              "ploty_selected", 
-              color = I('red'), 
-              selected = attrs_selected(name = 'Filtered')
-              )
-        
+
+      p <- m %>%
+        plot_ly(x = ~solid_conc, y = ~element_id, type= "box", jitter = 0.3, pointpos = 1.8, color = ~element_id, boxpoints = "all",name = "Filtered") %>%
+        layout(boxgap = 0.5)
     }else if (length(s)) {
       pp <- m %>%
         ggploty(plot) %>% 
         add_trace(x = ~input$elemChoice, y = ~solid_conc, mode = "markers", color = I('black'), name = 'Unfiltered') %>%
         layout(showlegend = T)
       
-      # selected data
+      #selected data
       pp <- add_trace(pp, data = m[s, , drop = F], x = ~input$elemChoice, y = ~solid_conc, mode = "markers",
                       color = I('red'), name = 'Filtered')
     }
     
   })
-    output$x1 <- renderDT({
+    output$data1 <- renderDT({
     m2 <- m[data$selection(),]
     dt <- DT::datatable(m)
     if (NROW(m2) == 0) {
