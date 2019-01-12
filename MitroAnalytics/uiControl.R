@@ -22,9 +22,9 @@ loadUI <- function(input, output, session){
       uiReactValues$loadedStatHist <- TRUE
       print("inside hist")
       
-      sessions <- getSessionList()
-      renderHistSessionFilter(output, sessions[["session_id"]])
-      observeHistSelectSessionEvent(input, output, session)
+      burns <- getBurnList()
+      renderHistBurnFilter(output, burns[["burn_id"]])
+      observeHistSelectBurnEvent(input, output, session)
     }
   )
   

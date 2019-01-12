@@ -2,9 +2,9 @@ source("uiPlotControl.R")
 source("io.R")
 
 # Fiter functions for Histogram
-renderHistSessionFilter <- function(output, sessions){
-  output$selectSession <- renderUI({
-    selectInput('selectSession', 'Select session:', sessions)
+renderHistBurnFilter <- function(output, burns){
+  output$selectBurn <- renderUI({
+    selectInput('selectBurn', 'Select burn:', burns)
   })
 }
 
@@ -44,11 +44,11 @@ observeHistResetEvent <- function(input, output, session, histData, solutionName
   )
 }
 
-observeHistSelectSessionEvent <- function(input, output, session){
+observeHistSelectBurnEvent <- function(input, output, session){
   observeEvent(
-    input$selectSession,
+    input$selectBurn,
     {
-      dataset <- getSessionSolutionConcentration(input$selectSession)
+      dataset <- getBurnSolutionConcentration(input$selectBurn)
       solNames <- unique(dataset["label"])
       elemNames <- unique(dataset["element_id"])
       histData <- dataset[which(dataset$label == solNames[4,]),]

@@ -4,7 +4,7 @@
 getTableColumnNames <- function(tblName) {
 	switch(tblName,
 	solutions={
-		return("solutions.solution_id, solutions.session_id, label, type_of, date, act_wgt, act_vol, DF")
+		return("solutions.solution_id, solutions.burn_id, label, type_of, date, act_wgt, act_vol, DF")
 	},
 	solution_elements={
 		return(

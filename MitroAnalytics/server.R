@@ -21,17 +21,17 @@ server <- function(input, output, session){
                 return("Data successfully inserted into the database!")
         })
 
-	sessList <- getSessionList()[,1]
+	sessList <- getBurnList()[,1]
         #download tab checkboxes
-        output$sessionChecks <- renderUI({
-                checkboxGroupInput("sessions", "Choose session:",
+        output$burnChecks <- renderUI({
+                checkboxGroupInput("burns", "Choose burn:",
                         choiceNames = as.character(sessList),
                         choiceValues = as.character(sessList))
         })	
 
 	#render the download button upon the correct conditions
         output$dlButton <- renderUI({
-                req(input$sessions)
+                req(input$burns)
                 downloadButton("downloadData", "Download")
         })
 
@@ -46,7 +46,7 @@ server <- function(input, output, session){
                         }
                 },
                 content = function(file){
-                        dataset <- getDownloadData(input$sessions, input$tableChecks)
+                        dataset <- getDownloadData(input$burns, input$tableChecks)
                         if(input$dlFormat == "csv") {
                                 write.csv(dataset, file)
                         } else if(input$dlFormat == "xlsx") {

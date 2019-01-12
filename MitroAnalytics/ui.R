@@ -64,7 +64,7 @@ ui <- dashboardPage(
             h1('Histogram')
           ),
           column(width=3,
-            uiOutput("selectSession")
+            uiOutput("selectBurn")
           )
         ),
         fluidRow(
@@ -133,7 +133,7 @@ ui <- dashboardPage(
       			c("Solutions" = "solutions",
       			"Elements per solution" = "solution_elements",
       			"replicates" = "replicates")),
-      		uiOutput("sessionChecks"),
+      		uiOutput("burnChecks"),
       		selectInput("dlFormat", "Choose a format:",
       			c("CSV" = "csv",
       			"Excel" = "xlsx")),

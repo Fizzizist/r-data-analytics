@@ -36,15 +36,15 @@ sendOneQuery <- function(str) {
         return
 }
 
-#get number of sessions
-getNumOfSessions <- function () {
-        query <- getOneQuery("SELECT COUNT(session_id) FROM sessions;")
+#get number of burns
+getNumOfBurns <- function () {
+        query <- getOneQuery("SELECT COUNT(burn_id) FROM burns;")
 	return(query)
 }
 
-#returns a list of session IDs
-getSessionList <- function () {
-	query <- getOneQuery("SELECT session_id FROM sessions;")
+#returns a list of burn IDs
+getBurnList <- function () {
+	query <- getOneQuery("SELECT burn_id FROM burns;")
 	return(query)
 }
 
@@ -55,21 +55,21 @@ getWholeTable <- function(tblName){
 }
 
 #function that returns specific download data for download tab
-getDownloadData <- function(sessions, tblName){
+getDownloadData <- function (burns, tblName){
 	switch(tblName,
 		solutions={
 			query <- getOneQuery( 
 				paste0("SELECT ", getTableColumnNames(tblName), " FROM ", tblName, 
-					" WHERE session_id = ", paste(sessions, 
-						collapse=" or session_id = "), ";"))
+					" WHERE burn_id = ", paste(burns, 
+						collapse=" or burn_id = "), ";"))
 		},
 		solution_elements={
 			query <- getOneQuery( 
 				paste0("SELECT ", getTableColumnNames(tblName), " FROM ", tblName, 
 					" se, solutions s 
-					WHERE se.solution_id = s.solution_id and (session_id = ", 
-					paste(sessions, 
-						collapse=" or session_id = "), ");"))
+					WHERE se.solution_id = s.solution_id and (burn_id = ", 
+					paste(burns, 
+						collapse=" or burn_id = "), ");"))
 		},
 		replicates={
 			query <- getOneQuery( 
@@ -77,9 +77,9 @@ getDownloadData <- function(sessions, tblName){
 					" r, solutions s, solution_elements se 
 					WHERE se.solution_id = s.solution_id 
 					and se.solution_id = r.solution_id 
-					and se.element_id = r.element_id and (session_id = ", 
-					paste(sessions, 
-						collapse=" or session_id = "), ");"))
+					and se.element_id = r.element_id and (burn_id = ", 
+					paste(burns, 
+						collapse=" or burn_id = "), ");"))
 		}
 	)
 }
@@ -122,10 +122,10 @@ getAuthentication <- function(username, password){
         return
 }
 
-getSessionSolutionConcentration <- function(session_id){
+getBurnSolutionConcentration <- function(burn_id){
   solConc <- getOneQuery(paste0("SELECT label, element_id, solid_conc 
                                 FROM solutions s JOIN solution_elements se ON s.solution_id = se.solution_id 
-                                WHERE s.session_id = ", session_id, ";"))
+                                WHERE s.burn_id = ", burn_id, ";"))
   return(solConc)
 }
 
@@ -177,15 +177,15 @@ insertCSV <- function (inFile) {
 	
 	print(paste0("file path is: ", inFile$datapath, " tadah"))
 
-	#make a new session in sessions table
-	dbSendQuery(conn, paste0("INSERT INTO sessions (date) values (curdate());"))
+	#make a new burn in burns table
+	dbSendQuery(conn, paste0("INSERT INTO burns (date) values (curdate());"))
 
-	#get latest session
-	lastSess <- dbGetQuery(conn, "SELECT MAX(session_id) FROM sessions;")
+	#get latest burn
+	lastSess <- dbGetQuery(conn, "SELECT MAX(burn_id) FROM burns;")
 
-	#add session column to table
+	#add burn column to table
 	sessID <- c(rep(as.numeric(lastSess[1]),each=length(tbl[,1])))
-	tbl$session_id <- sessID
+	tbl$burn_id <- sessID
 	
 	
 	#contruct solutions dataframe
@@ -196,7 +196,7 @@ insertCSV <- function (inFile) {
 		act_wgt = numeric(),
 		act_vol = numeric(),
 		DF = numeric(),
-		session_id = numeric()
+		burn_id = numeric()
 	)
 	dates <- vector()
 	tempStr <- c("BLAHBLAH")
