@@ -40,57 +40,57 @@ ui <- fluidPage(
                ),
                selected = "Zn"
              )
-
+             
            )),
   fluidRow(
     column(width = 2),
     column(width = 8,
            plotlyOutput("plot1"),
            verbatimTextOutput("p1Select")),
-
+    
     column(width = 2)
   ),
-
+  
   fluidRow(
     column(width = 2),
     column(width = 8,
-          verbatimTextOutput("crosstalk1"),
-          DTOutput("data1")),
+           verbatimTextOutput("crosstalk1"),
+           DTOutput("data1")),
     column(width = 2))
-  )
+)
 
 
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------
 
 server <- function(input, output) {
-
+  
   # -------------------------------------------------------------------
   # Interative Object UI
-
+  
   # Highlight selected rows in the scatterplot
-
+  
   m <- reactiveVal(NULL)
   d <- reactiveVal(NULL)
-
+  
   observeEvent(input$elemChoice, {
     m <<- samp.elem[[input$elemChoice]] %>% tibble::remove_rownames()
     d <<- SharedData$new(m, ~solution_id)
   })
-
+  
   output$plot1 <- renderPlotly({
-
+    
     #update <- input$elemChoice
     
     s <- input$data1_rows_selected
-
+    
     if (!length(s)) {
       set.seed(1)      
       p <- d %>%
         plot_ly(x = ~solid_conc, y = ~input$elemChoice, type = 'box', boxpoints = 'all', pointpos = 2, color = I('black'), name = 'Unfiltered') %>%
         highlight(on = "plotly_selected") %>%
         layout(showlegend = T, boxgap = 0.5, dragmode = "select")
-        
+      
     } else if (length(s)) {
       set.seed(1)
       pp <- d %>%
@@ -113,7 +113,7 @@ server <- function(input, output) {
   })
   
   output$crosstalk1 <- renderPrint({
-    fromTable <- m[d$selection(), ] # Selection from data table using 'crosstalk' package.
+    fromTable <- m[input$data1_rows_selected, ] # Selection from data table using 'crosstalk' package.
     print("From Table:")
     print(fromTable) 
     print("Selected Rows:")
@@ -138,13 +138,17 @@ server <- function(input, output) {
   proxy = dataTableProxy('data1')
   
   observeEvent(d$selection(),{
+    #test <- event_data("plotly_selected")
+    #tabSelect <- test[[2]] + 1
+    #print(tabSelect)
+    #print(input$data1_rows_selected)
     tabSelect <- which(d$selection())
     tabSelect <- rbind(tabSelect,input$data1_rows_selected)
     proxy %>% selectRows(tabSelect)
   })
   
-  observeEvent("plotly_select",{
-    test <- event_data("plotly_select")
+  observeEvent("plotly_selected",{
+    test <- event_data("plotly_selected")
     if (is.null(test)) {
       proxy %>% selectRows(NULL)
     }
