@@ -96,6 +96,15 @@ ui <- dashboardPage(
           ),
           column(width=3,
             uiOutput('selectIntElement')
+          ),
+          column(width=1,
+                 actionButton("btnIntSave", "Save")
+          ),
+          column(width=1,
+                 actionButton("btnIntLoad", "Load")
+          ),
+          column(width=1,
+                 actionButton("btnIntReset", "Reset")
           )
         ),
         fluidRow(

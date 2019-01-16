@@ -272,8 +272,8 @@ insertCSV <- function (inFile) {
 saveUserDataset <- function (dataset, username){
 	dataname <- paste0(username, "sampElem")
 	tryCatch({
-		dir.create(paste0("data/",username), showWarnings=FALSE)
-		save(dataset, paste0("data/",username,"/",dataname,".RData"))
+		dir.create(paste0("data/",username), showWarnings=FALSE, recursive = TRUE)
+		save(dataset, file=paste0("data/",username,"/",dataname,".RData"))
 	}, warning = function(w){
 		print(w)
 		return("The dataset was saved with warnings")
@@ -289,7 +289,7 @@ saveUserDataset <- function (dataset, username){
 
 #load data from saved sampElem file back into the app
 getSampElem <- function (username){
-	sampElem <- get(load(paste0("data/",username,"/",username,"/sampElem.RData")))
+	sampElem <- get(load(paste0("data/",username,"/",username,"sampElem.RData")))
 	return(sampElem)
 }
 

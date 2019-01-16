@@ -18,11 +18,11 @@ displayLoginView <- function(output, session, message=""){
   })
 }
 
-displayWelcomeView <- function(output, authenticated){
+displayWelcomeView <- function(output, session, authenticated){
   js$hideMenu('')
   removeClass(selector = "body", class = "sidebar-collapse")
   output$authentication <- renderUI({
-    h1("Welcome!")
+    h1(paste0("Welcome, ", session$userData$username, "!"))
   })
   output$logout <- renderUI({
     if(authenticated){
@@ -43,7 +43,7 @@ observeUserLogin <- function(input, output, session, authenticated){
       if(auth == TRUE){
         authenticated <- TRUE
         session$userData$username <- user
-        displayWelcomeView(output, authenticated)
+        displayWelcomeView(output, session, authenticated)
       }else{
         displayLoginView(output, session, auth)
       }
@@ -56,6 +56,7 @@ observeUserLogout <- function(input, output, session, authenticated){
     input$btnLogout,
     {
       authenticated <- FALSE
+      session$userData$username <- NULL
       displayLoginView(output, session)
     }
   )
