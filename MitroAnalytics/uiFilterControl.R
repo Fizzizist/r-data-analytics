@@ -74,7 +74,7 @@ observeIntPlotSelectElemEvent <- function(input, output, session, dataset){
   observeEvent(
     input$intElemChoice,
     {
-      drawInteractivePlot(input, output, dataset[[input$intElemChoice]], input$intElemChoice)
+      drawInteractivePlot(input, output, session, dataset[[input$intElemChoice]], input$intElemChoice)
     }
   )
 }

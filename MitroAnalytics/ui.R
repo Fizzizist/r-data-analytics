@@ -34,7 +34,8 @@ ui <- dashboardPage(
     tags$head(
       tags$title("MitroAnalytics"),
       tags$link(rel="shortcut icon", type="", href="favicon.ico"),
-      tags$link(rel="stylesheet", type="text/css", href="style.css")
+      tags$link(rel="stylesheet", type="text/css", href="style.css"),
+      tags$script(src="getIP.js")
     ),
     tabItems(
       tabItem(tabName='home',
@@ -95,6 +96,15 @@ ui <- dashboardPage(
           ),
           column(width=3,
             uiOutput('selectIntElement')
+          ),
+          column(width=1,
+                 actionButton("btnIntSave", "Save")
+          ),
+          column(width=1,
+                 actionButton("btnIntLoad", "Load")
+          ),
+          column(width=1,
+                 actionButton("btnIntReset", "Reset")
           )
         ),
         fluidRow(
@@ -137,7 +147,7 @@ ui <- dashboardPage(
       		selectInput("dlFormat", "Choose a format:",
       			c("CSV" = "csv",
       			"Excel" = "xlsx")),
-      		  uiOutput("dlButton") 
+      		uiOutput("dlButton")
           )
         )
       ),

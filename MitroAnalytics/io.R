@@ -266,3 +266,34 @@ insertCSV <- function (inFile) {
 	
 	return
 }
+
+#------------Functions for saving and loading userData files and logging------------------
+#Function for saving the user data for other functions and for after logout
+saveUserDataset <- function (dataset, username){
+	dataname <- paste0(username, "sampElem")
+	tryCatch({
+		dir.create(paste0("data/",username), showWarnings=FALSE, recursive = TRUE)
+		save(dataset, file=paste0("data/",username,"/",dataname,".RData"))
+	}, warning = function(w){
+		print(w)
+		return("The dataset was saved with warnings")
+	}, error = function(e){
+		print(e)
+		return("There was an error while saving your dataset!")
+	}, finally = {
+		print("Data saved!")
+		return("Dataset was saved to the server successfully!")
+	})
+	return("Dataset has been saved!")
+}
+
+#load data from saved sampElem file back into the app
+getSampElem <- function (username){
+	sampElem <- get(load(paste0("data/",username,"/",username,"sampElem.RData")))
+	return(sampElem)
+}
+
+#write usage data to userlog.log file
+logData <- function(usage) {
+	write(usage, file="www/userlog.log", append=TRUE)
+}
