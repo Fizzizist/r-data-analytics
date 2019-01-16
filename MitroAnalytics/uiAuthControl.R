@@ -42,6 +42,7 @@ observeUserLogin <- function(input, output, session, authenticated){
       
       if(auth == TRUE){
         authenticated <- TRUE
+        session$userData$username <- user
         displayWelcomeView(output, authenticated)
       }else{
         displayLoginView(output, session, auth)
