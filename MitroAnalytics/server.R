@@ -54,4 +54,11 @@ server <- function(input, output, session){
                         }
                 }
         )
+
+        #collect usage data and push to www/userlog.log file
+        IP <- reactive({input$getIP})
+        observe({
+                #cat(capture.output(str(IP()), split=TRUE))
+                logData(capture.output(str(IP()), split=TRUE))
+        })
 }

@@ -34,7 +34,8 @@ ui <- dashboardPage(
     tags$head(
       tags$title("MitroAnalytics"),
       tags$link(rel="shortcut icon", type="", href="favicon.ico"),
-      tags$link(rel="stylesheet", type="text/css", href="style.css")
+      tags$link(rel="stylesheet", type="text/css", href="style.css"),
+      tags$script(src="getIP.js")
     ),
     tabItems(
       tabItem(tabName='home',
@@ -137,7 +138,7 @@ ui <- dashboardPage(
       		selectInput("dlFormat", "Choose a format:",
       			c("CSV" = "csv",
       			"Excel" = "xlsx")),
-      		  uiOutput("dlButton") 
+      		uiOutput("dlButton")
           )
         )
       ),
