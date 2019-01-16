@@ -266,3 +266,26 @@ insertCSV <- function (inFile) {
 	
 	return
 }
+
+#------------Functions for Saving userData files------------------
+saveUserDataset <- function (dataset, session){
+	dataname <- paste0(session$userData$username, Sys.Date(), Sys.time())
+	tryCatch({
+		save(dataset, paste0("data/",session$userData$username,"/",dataname,".RData"))
+	}, warning = function(w){
+		print(w)
+		return("The dataset was saved with warnings")
+	}, error = function(e){
+		print(e)
+		return("There was an error while saving your dataset!")
+	}, finally = {
+		print("Data saved!")
+		return("Dataset was saved to the server successfully!")
+	})
+	session$userData$datasets[[]]
+	return("Dataset has been saved!")
+}
+
+loadUserDatasets <- function (session){
+
+}

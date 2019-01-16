@@ -6,8 +6,8 @@ getUIAuthJS <- function(){
 
 displayLoginView <- function(output, session, message=""){
   updateTabItems(session, "sidebarMenu", "home")
-  addClass(selector = "body", class = "sidebar-collapse")
-  js$hideMenu('none')
+  addClass(selector = "body", class = "sidebar-collapse") 	#Comment these lines to disable login (testing)
+  js$hideMenu('none')										#Comment these lines to disable ligon (testing)
   output$authentication <- renderUI({
     tagList(
       textInput("username", "Username:"),
