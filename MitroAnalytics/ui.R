@@ -2,6 +2,7 @@ library(shiny)
 library(shinydashboard)
 library(shinyjs)
 library(DT) # Chris: Added library to draw Datatable.
+library(plotly)
 
 source("uiAuthControl.R")
 
@@ -152,8 +153,39 @@ ui <- dashboardPage(
         )
       ),
       tabItem(tabName="statPlotly",
-        h1("Plotly Graph")
-      )
+        fluidRow(
+          column(width=3,
+                 h1('Plotly Plot')
+          ),
+          column(width=3,
+                 uiOutput('selectPlotlyPlotElement')
+          )#,
+          #column(width=1,
+          #       actionButton("btnIntSave", "Save")
+          #),
+          #column(width=1,
+          #       actionButton("btnIntLoad", "Load")
+          #),
+          #column(width=1,
+          #       actionButton("btnIntReset", "Reset")
+          #)  
+        ),
+        fluidRow(
+          column(width = 2),
+          column(width = 8,
+                 plotlyOutput("plot1"),
+                 verbatimTextOutput("p1Select")),
+  
+          column(width = 2)
+          ),
+          fluidRow(
+            column(width = 2),
+            column(width = 8,
+                   verbatimTextOutput("crosstalk1"),
+                   DTOutput("data1")),
+            column(width = 2))
+            )
+        )
     )
-  )
 )
+

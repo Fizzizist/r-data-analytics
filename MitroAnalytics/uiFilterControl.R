@@ -78,3 +78,19 @@ observeIntPlotSelectElemEvent <- function(input, output, session, dataset){
     }
   )
 }
+
+# Filter functions for Plotly Plot
+renderPoltlyPlotElemFilter <- function(output, selectItems){
+  output$selectPlotlyPlotElement <- renderUI({
+    selectInput("plotlyElemChoice", "Choose an element:", choices = selectItems, selected = "Zn")
+  })
+}
+
+observePlotlyPlotSelectElemEvent <- function(input, output, session, dataset){
+  observeEvent(
+    input$plotlyElemChoice,
+    {
+      drawPlotlyPlot(input, output, session, dataset[[input$plotlyElemChoice]], input$plotlyElemChoice)
+    }
+  )
+}

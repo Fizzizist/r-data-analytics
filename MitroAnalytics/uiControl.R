@@ -8,6 +8,7 @@ loadUI <- function(input, output, session){
   uiReactValues <- reactiveValues(
     loadedStatHist = FALSE,
     loadedIntPlot = FALSE,
+    loadedPlotlyPlot = FALSE,
     loadIntRDS = FALSE,
     authenticated = FALSE
   )
@@ -74,4 +75,18 @@ loadUI <- function(input, output, session){
       observeIntPlotSelectElemEvent(input, output, session, samp.elem)
     }
   )
+
+observeEvent(input$sidebarMenu, 
+      {
+        if(input$sidebarMenu != "statPlotly") return()
+        if(uiReactValues$loadedPlotlyPlot) return()
+        uiReactValues$loadedPlotlyPlot <- TRUE
+        
+        if(!exists("samp.elem")) {
+          samp.elem <- getPTValues()
+        }
+        renderPoltlyPlotElemFilter(output, names(samp.elem))
+        observePlotlyPlotSelectElemEvent(input, output, session, samp.elem)
+      }
+    )
 }
