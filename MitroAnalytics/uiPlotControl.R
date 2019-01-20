@@ -125,6 +125,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
   
   output$crosstalk1 <- renderPrint({
     fromTable <- m[input$data1_rows_selected, ] # Selection from data table using 'crosstalk' package.
+    session$userData$sampElemPlotly <- fromTable
     print("From Table:")
     print(fromTable) 
     print("Selected Rows:")
@@ -134,7 +135,6 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
   output$data1 <- renderDT({
     
     update <- selectedElement2
-    
     m2 <- m[d$selection(),]
     dt <- DT::datatable(m, option = list(pageLength = 50, rownames = FALSE))
     if (NROW(m2) == 0) {

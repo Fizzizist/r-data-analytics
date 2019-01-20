@@ -14,9 +14,12 @@ loadUI <- function(input, output, session){
   )
   
   session$userData$username <- NULL
+  
+  # the following objects will be consolidated once the plotly save workspace implementation is finished. 
   session$userData$sampElem <- NULL
   session$userData$elemNames <- NULL
   session$userData$elemSelected <- NULL
+  session$userData$sampElemPlotly <- NULL
   
   displayLoginView(output, session)
   observeUserLogin(input, output, session, uiReactValues$authenticated)
@@ -41,12 +44,11 @@ loadUI <- function(input, output, session){
       if(uiReactValues$loadedIntPlot) return()
       uiReactValues$loadedIntPlot <- TRUE
       
-      if(!exists("samp.elem")) {
-        samp.elem <- getPTValues()
-      }
-      session$userData$elemNames <- names(samp.elem)
+      session$userData$sampElem <- getPTValues()
+      session$userData$elemNames <- names(session$userData$sampElem)
+      
       renderSelectInput(output, 'selectIntElement', "Choose an element:", session$userData$elemNames, 'Zn')
-      observeIntPlotSelectElemEvent(input, output, session, samp.elem)
+      observeIntPlotSelectElemEvent(input, output, session, session$userData$sampElem)
       observeIntPlotBtnEvent(input, output, session)
     }
   )
@@ -57,12 +59,12 @@ observeEvent(input$sidebarMenu,
         if(uiReactValues$loadedPlotlyPlot) return()
         uiReactValues$loadedPlotlyPlot <- TRUE
         
-        if(!exists("samp.elem")) {
-          samp.elem <- getPTValues()
-        }
-        session$userData$elemNames <- names(samp.elem)
+        session$userData$sampElemPlotly <- getPTValues()
+        session$userData$elemNames <- names(session$userData$sampElemPlotly)
+        
         renderSelectInput(output, 'selectPlotlyPlotElement', "Choose an element:", session$userData$elemNames, 'Zn')
-        observePlotlyPlotSelectElemEvent(input, output, session, samp.elem)
+        observePlotlyPlotSelectElemEvent(input, output, session, session$userData$sampElemPlotly)
+        observePlotlyPlotBtnEvent(input, output, session)
       }
     )
 }

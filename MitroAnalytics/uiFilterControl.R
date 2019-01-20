@@ -72,26 +72,26 @@ observeIntPlotSelectElemEvent <- function(input, output, session, dataset){
 
 observeIntPlotBtnEvent <- function(input, output, session){
   observeEvent(input$btnIntSave,
-               {
-                 saveUserDataset(sampElem, session$userData$username)
-                 drawInteractivePlot(input, output, session, session$userData$sampElem, session$userData$elemSelected)
-               }
+   {
+     saveUserDataset(session$userData$sampElem, session$userData$username)
+     drawInteractivePlot(input, output, session, session$userData$sampElem, session$userData$elemSelected)
+   }
   )
   
   observeEvent(input$btnIntLoad,
-               {
-                 sampElem <- getSampElem(session$userData$username)
-                 renderSelectInput(output, 'selectIntElement', "Choose an element:", session$userData$elemNames, session$userData$elemSelected)
-                 drawInteractivePlot(input, output, session, sampElem, session$userData$elemSelected)
-               }
+   {
+     sampElem <- getSampElem(session$userData$username)
+     renderSelectInput(output, 'selectIntElement', "Choose an element:", session$userData$elemNames, session$userData$elemSelected)
+     drawInteractivePlot(input, output, session, sampElem, session$userData$elemSelected)
+   }
   )
   
   observeEvent(input$btnIntReset,
-               {
-                 session$userData$sampElem <- getPTValues()
-                 renderSelectInput(output, 'selectIntElement', "Choose an element:", session$userData$elemNames, 'Zn')
-                 observeIntPlotSelectElemEvent(input, output, session, session$userData$sampElem)
-               }
+   {
+     session$userData$sampElem <- getPTValues()
+     renderSelectInput(output, 'selectIntElement', "Choose an element:", session$userData$elemNames, 'Zn')
+     observeIntPlotSelectElemEvent(input, output, session, session$userData$sampElem)
+   }
   )
 }
 
@@ -104,4 +104,27 @@ observePlotlyPlotSelectElemEvent <- function(input, output, session, dataset){
   )
 }
 
-
+observePlotlyPlotBtnEvent <- function(input, output, session){
+  observeEvent(input$btnPlotlySave,
+   {
+     #saveUserDataset(session$userData$sampElem, session$userData$username)
+     print(paste("save plotly data: ", session$userData$sampElemPlotly))
+     drawPlotlyPlot(input, output, session, session$userData$sampElemPlotly, 'Zn')
+   }
+  )
+  
+  observeEvent(input$btnPlotlyLoad,
+   {
+     #sampElem <- getSampElem(session$userData$username)
+     
+   }
+  )
+  
+  observeEvent(input$btnPlotlyReset,
+   {
+     session$userData$sampElemPlotly <- getPTValues()
+     renderSelectInput(output, 'selectPlotlyPlotElement', "Choose an element:", session$userData$elemNames, 'Zn')
+     observePlotlyPlotSelectElemEvent(input, output, session, session$userData$sampElemPlotly)
+   }
+  )
+}

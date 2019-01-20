@@ -159,16 +159,16 @@ ui <- dashboardPage(
           ),
           column(width=3,
                  uiOutput('selectPlotlyPlotElement')
-          )#,
-          #column(width=1,
-          #       actionButton("btnIntSave", "Save")
-          #),
-          #column(width=1,
-          #       actionButton("btnIntLoad", "Load")
-          #),
-          #column(width=1,
-          #       actionButton("btnIntReset", "Reset")
-          #)  
+          ),
+          column(width=1,
+                actionButton("btnPlotlySave", "Save")
+          ),
+          column(width=1,
+                actionButton("btnPlotlyLoad", "Load")
+          ),
+          column(width=1,
+                actionButton("btnPlotlyReset", "Reset")
+          )
         ),
         fluidRow(
           column(width = 2),
