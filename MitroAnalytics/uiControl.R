@@ -22,33 +22,6 @@ loadUI <- function(input, output, session){
   observeUserLogin(input, output, session, uiReactValues$authenticated)
   observeUserLogout(input, output, session, uiReactValues$authenticated)
   
-  observeEvent(input$btnIntSave,
-   {
-     sampElem <- session$userData$sampElem
-     saveUserDataset(sampElem, session$userData$username)
-     drawLeftInteractivePlot(output, sampElem, 'Zn')
-     drawLeftInteractiveDataTable(output, sampElem)
-     drawRightInteractivePlot(input, output, sampElem, 'Zn')
-   }
-  )
-  
-  observeEvent(input$btnIntLoad,
-   {
-     sampElem <- getSampElem(session$userData$username)
-     drawLeftInteractivePlot(output, sampElem, 'Zn')
-     drawLeftInteractiveDataTable(output, sampElem)
-     drawRightInteractivePlot(input, output, sampElem, 'Zn')
-   }
-  )
-  
-  observeEvent(input$btnIntReset,
-   {
-     session$userData$sampElem <- getPTValues()
-     renderIntPlotElemFilter(output, names(session$userData$sampElem))
-     observeIntPlotSelectElemEvent(input, output, session, session$userData$sampElem)
-   }
-  )
-  
   observeEvent(input$sidebarMenu, 
     {
       if(input$sidebarMenu != "statHistogram") return()
@@ -57,7 +30,7 @@ loadUI <- function(input, output, session){
       print("inside hist")
       
       burns <- getBurnList()
-      renderHistBurnFilter(output, burns[["burn_id"]])
+      renderSelectInput(output, 'selectBurn', 'Select burn:', burns[["burn_id"]])
       observeHistSelectBurnEvent(input, output, session)
     }
   )
@@ -71,8 +44,10 @@ loadUI <- function(input, output, session){
       if(!exists("samp.elem")) {
         samp.elem <- getPTValues()
       }
-      renderIntPlotElemFilter(output, names(samp.elem))
+      session$userData$elemNames <- names(samp.elem)
+      renderSelectInput(output, 'selectIntElement', "Choose an element:", session$userData$elemNames, 'Zn')
       observeIntPlotSelectElemEvent(input, output, session, samp.elem)
+      observeIntPlotBtnEvent(input, output, session)
     }
   )
 
@@ -85,7 +60,8 @@ observeEvent(input$sidebarMenu,
         if(!exists("samp.elem")) {
           samp.elem <- getPTValues()
         }
-        renderPoltlyPlotElemFilter(output, names(samp.elem))
+        session$userData$elemNames <- names(samp.elem)
+        renderSelectInput(output, 'selectPlotlyPlotElement', "Choose an element:", session$userData$elemNames, 'Zn')
         observePlotlyPlotSelectElemEvent(input, output, session, samp.elem)
       }
     )

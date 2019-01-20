@@ -75,61 +75,6 @@ drawInteractivePlot <- function(input, output, session, data, selectedElement) {
     })
 }
 
-drawLeftInteractivePlot <- function(output, data, selectedElement){
-  output$statIntPlot1 <- renderPlot({
-    ggplot(data, aes(x = selectedElement, y = solid_conc)) +
-      stat_summary() +
-      geom_dotplot(
-        aes(colour = factor(element_id)),
-        binaxis = 'y',
-        stackdir = 'center',
-        dotsize = 0.25
-      ) +
-      labs(x = "Element", y = "Solid Concentration (ppm)", colour = "Emission Wavelength")
-  })
-}
-
-drawRightInteractivePlot <- function(input, output, data, selectedElement){
-  
-  ranges <- reactiveValues(x = NULL, y = NULL)
-  
-  output$statIntPlot2 <- renderPlot({
-    ggplot(data, aes(x = selectedElement, y = solid_conc)) +
-      stat_summary() +
-      geom_dotplot(
-        aes(colour = factor(element_id)),
-        binaxis = 'y',
-        stackdir = 'center',
-        dotsize = 0.25
-      ) +
-      labs(x = "Element", y = "Solid Concentration (ppm)", colour = "Emission Wavelength") + 
-      coord_cartesian(xlim = ranges$x, ylim = ranges$y, expand = FALSE)
-  })
-  
-  observeInteractiveBrushChange(input, output, session, ranges)
-}
-
-drawLeftInteractiveDataTable <- function(output, data){
-  output$statIntData1 <- DT::renderDataTable({
-    datatable(data,
-              rownames = FALSE,
-              options = list(pageLength = 50))
-  })
-}
-
-observeInteractiveBrushChange <- function(input, output, session, ranges){
-  observe({
-    brush <- input$plot1_brush
-    if (!is.null(brush)) {
-      ranges$x <- c(brush$xmin, brush$xmax)
-      ranges$y <- c(brush$ymin, brush$ymax)
-    } else {
-      ranges$x <- NULL
-      ranges$y <- NULL
-    }
-  })
-}
-
 # Function to output the plotly plot
 # Can likely be split up more
 drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {

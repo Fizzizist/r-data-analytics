@@ -1,10 +1,9 @@
 source("uiPlotControl.R")
 source("io.R")
 
-# Fiter functions for Histogram
-renderHistBurnFilter <- function(output, burns){
-  output$selectBurn <- renderUI({
-    selectInput('selectBurn', 'Select burn:', burns)
+renderSelectInput <- function(output, id, inputLabel, selectOptions, selected=NULL){
+  output[[id]] <- renderUI({
+    selectInput(inputId = id, label = inputLabel, choices = selectOptions, selected = selected)
   })
 }
 
@@ -61,36 +60,48 @@ observeHistSelectBurnEvent <- function(input, output, session){
   )
 }
 
-
-
-# Filter functions for Interactive Plot
-renderIntPlotElemFilter <- function(output, selectItems){
-  output$selectIntElement <- renderUI({
-    selectInput("intElemChoice", "Choose an element:", choices = selectItems, selected = "Zn")
-  })
-}
-
 observeIntPlotSelectElemEvent <- function(input, output, session, dataset){
   observeEvent(
-    input$intElemChoice,
+    input$selectIntElement,
     {
-      drawInteractivePlot(input, output, session, dataset[[input$intElemChoice]], input$intElemChoice)
+      session$userData$elemSelected <- input$selectIntElement
+      drawInteractivePlot(input, output, session, dataset[[input$selectIntElement]], input$selectIntElement)
     }
   )
 }
 
-# Filter functions for Plotly Plot
-renderPoltlyPlotElemFilter <- function(output, selectItems){
-  output$selectPlotlyPlotElement <- renderUI({
-    selectInput("plotlyElemChoice", "Choose an element:", choices = selectItems, selected = "Zn")
-  })
+observeIntPlotBtnEvent <- function(input, output, session){
+  observeEvent(input$btnIntSave,
+               {
+                 saveUserDataset(sampElem, session$userData$username)
+                 drawInteractivePlot(input, output, session, session$userData$sampElem, session$userData$elemSelected)
+               }
+  )
+  
+  observeEvent(input$btnIntLoad,
+               {
+                 sampElem <- getSampElem(session$userData$username)
+                 renderSelectInput(output, 'selectIntElement', "Choose an element:", session$userData$elemNames, session$userData$elemSelected)
+                 drawInteractivePlot(input, output, session, sampElem, session$userData$elemSelected)
+               }
+  )
+  
+  observeEvent(input$btnIntReset,
+               {
+                 session$userData$sampElem <- getPTValues()
+                 renderSelectInput(output, 'selectIntElement', "Choose an element:", session$userData$elemNames, 'Zn')
+                 observeIntPlotSelectElemEvent(input, output, session, session$userData$sampElem)
+               }
+  )
 }
 
 observePlotlyPlotSelectElemEvent <- function(input, output, session, dataset){
   observeEvent(
-    input$plotlyElemChoice,
+    input$selectPlotlyPlotElement,
     {
-      drawPlotlyPlot(input, output, session, dataset[[input$plotlyElemChoice]], input$plotlyElemChoice)
+      drawPlotlyPlot(input, output, session, dataset[[input$selectPlotlyPlotElement]], input$selectPlotlyPlotElement)
     }
   )
 }
+
+
