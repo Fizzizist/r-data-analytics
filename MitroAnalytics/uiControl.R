@@ -20,6 +20,7 @@ loadUI <- function(input, output, session){
   session$userData$elemNames <- NULL
   session$userData$elemSelected <- NULL
   session$userData$sampElemPlotly <- NULL
+  session$userData$elemSelectedPlotly <- NULL
   
   displayLoginView(output, session)
   observeUserLogin(input, output, session, uiReactValues$authenticated)

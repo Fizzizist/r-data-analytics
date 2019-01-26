@@ -19,7 +19,6 @@ drawHistogram <- function(output, df) {
 
 drawInteractivePlot <- function(input, output, session, data, selectedElement) {
   ranges <- reactiveValues(x = NULL, y = NULL)
-  print(data)
   output$statIntPlot1 <- renderPlot({
     ggplot(data, aes(x = selectedElement, y = solid_conc)) +
       stat_summary() +
@@ -78,7 +77,7 @@ drawInteractivePlot <- function(input, output, session, data, selectedElement) {
 # Function to output the plotly plot
 # Can likely be split up more
 drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
-  
+  session$userData$elemSelectedPlotly <- selectedElement2
   #Interative Object UI
   
   # Initializing interactive dataw variables
