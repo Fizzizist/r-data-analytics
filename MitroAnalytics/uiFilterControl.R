@@ -74,7 +74,8 @@ observeIntPlotBtnEvent <- function(input, output, session){
   observeEvent(input$btnIntSave,
    {
      saveUserDataset(session$userData$sampElem, session$userData$username)
-     drawInteractivePlot(input, output, session, session$userData$sampElem, session$userData$elemSelected)
+     drawInteractivePlot(input, output, session, session$userData$sampElem, session$userData$elemSelected, saved=TRUE)
+     session$sendCustomMessage("setSavedHandler", TRUE)
    }
   )
   

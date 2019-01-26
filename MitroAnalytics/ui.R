@@ -36,7 +36,8 @@ ui <- dashboardPage(
       tags$title("MitroAnalytics"),
       tags$link(rel="shortcut icon", type="", href="favicon.ico"),
       tags$link(rel="stylesheet", type="text/css", href="style.css"),
-      tags$script(src="getIP.js")
+      tags$script(src="getIP.js"),
+      tags$script(src="onClose.js")
     ),
     tabItems(
       tabItem(tabName='home',

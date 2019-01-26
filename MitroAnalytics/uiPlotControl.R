@@ -17,7 +17,7 @@ drawHistogram <- function(output, df) {
   })
 }
 
-drawInteractivePlot <- function(input, output, session, data, selectedElement) {
+drawInteractivePlot <- function(input, output, session, data, selectedElement, saved=FALSE) {
   ranges <- reactiveValues(x = NULL, y = NULL)
   output$statIntPlot1 <- renderPlot({
     ggplot(data, aes(x = selectedElement, y = solid_conc)) +
@@ -67,6 +67,7 @@ drawInteractivePlot <- function(input, output, session, data, selectedElement) {
         ranges$x <- c(brush$xmin, brush$xmax)
         ranges$y <- c(brush$ymin, brush$ymax)
         session$userData$sampElem <- brushedPoints(df = data, brush = brush, xvar = 'element_id', yvar = "solid_conc")
+        if(!saved){session$sendCustomMessage("setSavedHandler", FALSE)}
       } else {
         ranges$x <- NULL
         ranges$y <- NULL
