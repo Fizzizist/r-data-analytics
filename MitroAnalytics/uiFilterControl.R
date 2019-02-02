@@ -7,6 +7,9 @@ renderSelectInput <- function(output, id, inputLabel, selectOptions, selected=NU
   })
 }
 
+#
+# Hist Plot tab UI filter events
+#
 renderHistFilters <- function(output, solutionNames, elementNames, selectedSolution, selectedElements){
   output$solutionCheckboxes <- renderUI({
     checkboxGroupInput("solutionCheckboxes", "Samples: ", choices=solutionNames, selected=selectedSolution)
@@ -45,9 +48,9 @@ observeHistResetEvent <- function(input, output, session, histData, solutionName
 
 observeHistSelectBurnEvent <- function(input, output, session){
   observeEvent(
-    input$selectBurn,
+    input$selectHistBurn,
     {
-      dataset <- getBurnSolutionConcentration(input$selectBurn)
+      dataset <- getBurnSolutionConcentration(input$selectHistBurn)
       solNames <- unique(dataset["label"])
       elemNames <- unique(dataset["element_id"])
       histData <- dataset[which(dataset$label == solNames[4,]),]
@@ -56,6 +59,22 @@ observeHistSelectBurnEvent <- function(input, output, session){
       drawHistogram(output, histData)
       observeHistBuildEvent(input, output, dataset)
       observeHistResetEvent(input, output, session, histData, solNames[,], elemNames[,], solNames[4,], elemNames[,])
+    }
+  )
+}
+
+#
+# Interactive Plot tab UI filter events
+#
+observeIntPlotSelectBurnEvent <- function(input, output, session){
+  observeEvent(
+    input$selectIntPlotBurn,
+    {
+      session$userData$sampElem <- getPTValues() # this needs to take in the burn id like getPTValues(input$selectPlotlyPlotBurn)
+      session$userData$elemNames <- names(session$userData$sampElem)
+      renderSelectInput(output, 'selectIntElement', "Choose an element:", session$userData$elemNames, 'Zn')
+      observeIntPlotSelectElemEvent(input, output, session, session$userData$sampElem)
+      observeIntPlotBtnEvent(input, output, session)
     }
   )
 }
@@ -93,6 +112,22 @@ observeIntPlotBtnEvent <- function(input, output, session){
      renderSelectInput(output, 'selectIntElement', "Choose an element:", session$userData$elemNames, session$userData$elemSelected)
      observeIntPlotSelectElemEvent(input, output, session, session$userData$sampElem)
    }
+  )
+}
+
+#
+# Plotly Plot tab UI filter events
+#
+observePlotlyPlotSelectBurnEvent <- function(input, output, session){
+  observeEvent(
+    input$selectPlotlyPlotBurn,
+    {
+      session$userData$sampElemPlotly <- getPTValues() # this needs to take in the burn id like getPTValues(input$selectPlotlyPlotBurn)
+      session$userData$elemNames <- names(session$userData$sampElemPlotly)
+      renderSelectInput(output, 'selectPlotlyPlotElement', "Choose an element:", session$userData$elemNames, 'Zn')
+      observePlotlyPlotSelectElemEvent(input, output, session, session$userData$sampElemPlotly)
+      observePlotlyPlotBtnEvent(input, output, session)
+    }
   )
 }
 

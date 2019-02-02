@@ -34,7 +34,7 @@ loadUI <- function(input, output, session){
       print("inside hist")
       
       burns <- getBurnList()
-      renderSelectInput(output, 'selectBurn', 'Select burn:', burns[["burn_id"]])
+      renderSelectInput(output, 'selectHistBurn', 'Select burn:', burns[["burn_id"]])
       observeHistSelectBurnEvent(input, output, session)
     }
   )
@@ -45,12 +45,9 @@ loadUI <- function(input, output, session){
       if(uiReactValues$loadedIntPlot) return()
       uiReactValues$loadedIntPlot <- TRUE
       
-      session$userData$sampElem <- getPTValues()
-      session$userData$elemNames <- names(session$userData$sampElem)
-      
-      renderSelectInput(output, 'selectIntElement', "Choose an element:", session$userData$elemNames, 'Zn')
-      observeIntPlotSelectElemEvent(input, output, session, session$userData$sampElem)
-      observeIntPlotBtnEvent(input, output, session)
+      burns <- getBurnList()
+      renderSelectInput(output, 'selectIntPlotBurn', 'Select burn:', burns[["burn_id"]])
+      observeIntPlotSelectBurnEvent(input, output, session)
     }
   )
 
@@ -60,12 +57,9 @@ observeEvent(input$sidebarMenu,
         if(uiReactValues$loadedPlotlyPlot) return()
         uiReactValues$loadedPlotlyPlot <- TRUE
         
-        session$userData$sampElemPlotly <- getPTValues()
-        session$userData$elemNames <- names(session$userData$sampElemPlotly)
-        
-        renderSelectInput(output, 'selectPlotlyPlotElement', "Choose an element:", session$userData$elemNames, 'Zn')
-        observePlotlyPlotSelectElemEvent(input, output, session, session$userData$sampElemPlotly)
-        observePlotlyPlotBtnEvent(input, output, session)
+        burns <- getBurnList()
+        renderSelectInput(output, 'selectPlotlyPlotBurn', 'Select burn:', burns[["burn_id"]])
+        observePlotlyPlotSelectBurnEvent(input, output, session)
       }
     )
 }
