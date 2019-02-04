@@ -9,7 +9,7 @@ getConnect <- function () {
         conn <- DBI::dbConnect(
                 drv = RMySQL::MySQL(),
                 dbname = "igpprototype",
-                host = "108.162.133.226",
+                host = "108.162.177.90",
                 username = "test",
                 password = "thispassword",
                 port = 3306
