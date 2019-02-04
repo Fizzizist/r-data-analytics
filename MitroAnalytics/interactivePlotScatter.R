@@ -11,52 +11,31 @@ if (!exists("samp.elem")) {
 }
 
 ui <- fluidPage(
-  fluidRow(column(width = 2),
-           column(
-             width = 2,
-             selectInput(
-               "elemChoice",
-               h4("Choose an element:"),
-               choices = c(
-                 "Al",
-                 "As",
-                 "Ba",
-                 "Ca",
-                 "Cd",
-                 "Cu",
-                 "Co",
-                 "Cr",
-                 "Cu",
-                 "Fe",
-                 "K",
-                 "Mg",
-                 "Mn",
-                 "Mo",
-                 "Ni",
-                 "Pb",
-                 "Se",
-                 "Sr",
-                 "Zn"
-               ),
-               selected = "Zn"
-             )
-             
-           )),
-  fluidRow(
-    column(width = 2),
-    column(width = 8,
-           plotlyOutput("plot1"),
-           verbatimTextOutput("p1Select")),
-    
-    column(width = 2)
-  ),
   
   fluidRow(
-    column(width = 2),
-    column(width = 8,
-           verbatimTextOutput("crosstalk1"),
-           DTOutput("data1")),
-    column(width = 2))
+    column(width=5,
+           # Save buttons here
+           DTOutput("data1")#,
+           #verbatimTextOutput("crosstalk1")
+    ),
+    column(width = 7,
+           selectInput(
+             "elemChoice",
+             h4("Choose an element:"),
+             choices = c(
+               "Ca",
+               "Cu",
+               "Fe",
+               "K",
+               "Mg",
+               "Se",
+               "Zn"),
+             selected = "Zn"),
+           plotlyOutput("plot1"),
+           plotlyOutput("plot2")#,
+           #verbatimTextOutput("p1Select")
+    )
+  )
 )
 
 
@@ -128,6 +107,34 @@ server <- function(input, output) {
     }
   })
   
+  output$plot2 <- renderPlotly({
+    
+    boxData <- m[input$data1_rows_selected, ]
+    
+    if(length(input$data1_rows_selected)){
+      b <- boxData %>%
+        plot_ly(x=~solid_conc,
+                type = "box",
+                boxpoints = "all",
+                color = I("red"),
+                jitter = 0.3,
+                pointpos = -1.5,
+                boxmean = TRUE
+        )
+    } else {
+      b <- d %>% 
+        plot_ly() %>%
+        add_trace(x=~solid_conc,
+                  type = "box",
+                  color = I('black'),
+                  boxpoints = "all",
+                  jitter = 0.3,
+                  pointpos = -1.5,
+                  boxmean = TRUE
+        )
+    }
+  })
+  
   output$p1Select <- renderPrint({
     fromGraph <<- event_data("plotly_selected",source=ctr()) # Selection from the graph using built-in Plotly 'event_data()' function.
     print("From Graph:")
@@ -160,12 +167,7 @@ server <- function(input, output) {
   proxy = dataTableProxy('data1')
   
   observeEvent(d$selection(),{
-    #test <- event_data("plotly_selected")
-    #tabSelect <- test[[2]] + 1
-    #print(tabSelect)
-    #print(input$data1_rows_selected)
     tabSelect <- which(d$selection())
-    #tabSelect <- rbind(tabSelect,input$data1_rows_selected)
     proxy %>% selectRows(tabSelect)
   })
   
