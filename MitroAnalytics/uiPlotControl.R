@@ -17,9 +17,8 @@ drawHistogram <- function(output, df) {
   })
 }
 
-drawInteractivePlot <- function(input, output, session, data, selectedElement) {
+drawInteractivePlot <- function(input, output, session, data, selectedElement, saved=FALSE) {
   ranges <- reactiveValues(x = NULL, y = NULL)
-  print(data)
   output$statIntPlot1 <- renderPlot({
     ggplot(data, aes(x = selectedElement, y = solid_conc)) +
       stat_summary() +
@@ -68,6 +67,7 @@ drawInteractivePlot <- function(input, output, session, data, selectedElement) {
         ranges$x <- c(brush$xmin, brush$xmax)
         ranges$y <- c(brush$ymin, brush$ymax)
         session$userData$sampElem <- brushedPoints(df = data, brush = brush, xvar = 'element_id', yvar = "solid_conc")
+        if(!saved){session$sendCustomMessage("setSavedHandler", FALSE)}
       } else {
         ranges$x <- NULL
         ranges$y <- NULL
@@ -78,7 +78,7 @@ drawInteractivePlot <- function(input, output, session, data, selectedElement) {
 # Function to output the plotly plot
 # Can likely be split up more
 drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
-  
+  session$userData$elemSelectedPlotly <- selectedElement2
   #Interative Object UI
   
   # Initializing interactive dataw variables

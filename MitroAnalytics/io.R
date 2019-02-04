@@ -9,7 +9,7 @@ getConnect <- function () {
         conn <- DBI::dbConnect(
                 drv = RMySQL::MySQL(),
                 dbname = "igpprototype",
-                host = "108.162.177.90",
+                host = "159.89.126.100",
                 username = "test",
                 password = "thispassword",
                 port = 3306
@@ -162,7 +162,7 @@ insertCSV <- function (inFile) {
 	
 	#slice last 3 lines off the end
 	tbl <- tbl[1:(length(tbl[,1])-3),] 
-
+	
 	#fix up column names
 	colnames(tbl)[c(1,5,6,7,8,12,20,21)] <- c("label","type_of","element_id","flag","solid_conc",
 		"intensity","act_wgt","act_vol")
@@ -172,20 +172,23 @@ insertCSV <- function (inFile) {
 	#for (con in cons)
 	#	dbDisconnect(con)
 
+	#remove all Rinse and Blank columns from tbl
+	tbl <- tbl[tbl$label!="Rinse" & tbl$label!="Blank",]
+	#print(tbl["label"])
 	#connect to database
 	conn <- getConnect()
 	
-	print(paste0("file path is: ", inFile$datapath, " tadah"))
+	#print(paste0("file path is: ", inFile$datapath, " tadah"))
 
 	#make a new burn in burns table
 	dbSendQuery(conn, paste0("INSERT INTO burns (date) values (curdate());"))
 
 	#get latest burn
-	lastSess <- dbGetQuery(conn, "SELECT MAX(burn_id) FROM burns;")
+	lastBurn <- dbGetQuery(conn, "SELECT MAX(burn_id) FROM burns;")
 
 	#add burn column to table
-	sessID <- c(rep(as.numeric(lastSess[1]),each=length(tbl[,1])))
-	tbl$burn_id <- sessID
+	burnID <- c(rep(as.numeric(lastBurn[1]),each=length(tbl[,1])))
+	tbl$burn_id <- burnID
 	
 	
 	#contruct solutions dataframe

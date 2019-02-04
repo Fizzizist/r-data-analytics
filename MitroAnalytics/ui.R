@@ -24,8 +24,8 @@ ui <- dashboardPage(
       menuItem("File Upload", tabName='fileUpload', icon=icon('file-upload')),
       menuItem("Histogram", tabName='statHistogram', icon=icon('chart-bar')),
       menuItem("Interactive Plot", tabName='statIntPlot', icon=icon('microscope')), # 1. Add menu item. Icon from font awesome icons.
-	    menuItem("File Download", tabName='fileDownload', icon=icon('download')),
       menuItem("Plotly Plot", tabName="statPlotly", icon=icon('chart-line')),
+	    menuItem("File Download", tabName='fileDownload', icon=icon('download')),
 	    uiOutput("logout")
     )
   ),
@@ -36,7 +36,8 @@ ui <- dashboardPage(
       tags$title("MitroAnalytics"),
       tags$link(rel="shortcut icon", type="", href="favicon.ico"),
       tags$link(rel="stylesheet", type="text/css", href="style.css"),
-      tags$script(src="getIP.js")
+      tags$script(src="getIP.js"),
+      tags$script(src="onClose.js")
     ),
     tabItems(
       tabItem(tabName='home',
@@ -66,7 +67,7 @@ ui <- dashboardPage(
             h1('Histogram')
           ),
           column(width=3,
-            uiOutput("selectBurn")
+            uiOutput("selectHistBurn")
           )
         ),
         fluidRow(
@@ -94,6 +95,9 @@ ui <- dashboardPage(
         fluidRow(
           column(width=3,
             h1('Interactive Plot')
+          ),
+          column(width=3,
+                 uiOutput('selectIntPlotBurn')
           ),
           column(width=3,
             uiOutput('selectIntElement')
@@ -131,31 +135,13 @@ ui <- dashboardPage(
         )
         )
       ),
-	    tabItem(tabName='fileDownload',
-        fluidRow(
-          column(width=3,
-            h2('Download files')
-          )
-        ),
-        fluidRow(
-          tags$div(class='center',
-           #Downloader
-      		selectInput("tableChecks", "Choose a dataset:",
-      			c("Solutions" = "solutions",
-      			"Elements per solution" = "solution_elements",
-      			"replicates" = "replicates")),
-      		uiOutput("burnChecks"),
-      		selectInput("dlFormat", "Choose a format:",
-      			c("CSV" = "csv",
-      			"Excel" = "xlsx")),
-      		uiOutput("dlButton")
-          )
-        )
-      ),
       tabItem(tabName="statPlotly",
         fluidRow(
           column(width=3,
                  h1('Plotly Plot')
+          ),
+          column(width=3,
+                 uiOutput('selectPlotlyPlotBurn')
           ),
           column(width=3,
                  uiOutput('selectPlotlyPlotElement')
@@ -184,8 +170,29 @@ ui <- dashboardPage(
                    verbatimTextOutput("crosstalk1"),
                    DTOutput("data1")),
             column(width = 2))
-            )
-        )
+            ),
+      tabItem(tabName='fileDownload',
+              fluidRow(
+                column(width=3,
+                       h2('Download files')
+                )
+              ),
+              fluidRow(
+                tags$div(class='center',
+                         #Downloader
+                         selectInput("tableChecks", "Choose a dataset:",
+                                     c("Solutions" = "solutions",
+                                       "Elements per solution" = "solution_elements",
+                                       "replicates" = "replicates")),
+                         uiOutput("burnChecks"),
+                         selectInput("dlFormat", "Choose a format:",
+                                     c("CSV" = "csv",
+                                       "Excel" = "xlsx")),
+                         uiOutput("dlButton")
+                )
+              )
+      )
     )
+  )
 )
 
