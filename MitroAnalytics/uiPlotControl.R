@@ -81,14 +81,17 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
   session$userData$elemSelectedPlotly <- selectedElement2
   #Interative Object UI
   
-  # Initializing interactive dataw variables
+  # Initializing interactive data variables
   
+  ctr <- reactiveVal(0) #Initializing reactive value to trigger datatable update when input$elemChoice is changed
   m <- reactiveVal(NULL)
   d <- reactiveVal(NULL)
   
   observeEvent(selectedElement2, {
     m <<- data %>% tibble::remove_rownames()
     d <<- SharedData$new(m, ~solution_id)
+    inc <- ctr() + 1
+    ctr(inc)
   })
   
   output$plot1 <- renderPlotly({
@@ -96,33 +99,79 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
     s <- input$data1_rows_selected
     
     if (!length(s)) {
-      set.seed(1)      
       p <- d %>%
-        plot_ly(x = ~solid_conc, y = ~element_id, type = 'box', boxpoints = 'all', pointpos = 2, color = I('black'), name = 'Unfiltered') %>%
-        highlight(on = "plotly_selected") %>%
-        layout(showlegend = T, boxgap = 0.5, dragmode = "select")
+        plot_ly(x = ~solid_conc, 
+                y = ~solution_id, 
+                type = 'scatter', 
+                color = I('black'), 
+                name = 'Unfiltered',
+                source = "a",
+                transforms = list(list(type='groupby',groups=selectedElement2))) %>%
+        highlight(on = "plotly_selected",off="plotly_deselect") %>%
+        layout(showlegend = T, dragmode = "select")
       
     } else if (length(s)) {
-      set.seed(1)
       pp <- d %>%
         plot_ly() %>% 
-        add_trace(x = ~solid_conc, y = ~element_id, type = 'box', boxpoints = 'all', pointpos = 2, color = I('black'), name = 'Unfiltered') %>%
-        highlight(on = "plotly_selected") %>%
-        layout(showlegend = T, boxgap = 0.5, dragmode = "select")
+        add_trace(x = ~solid_conc, 
+                  y = ~solution_id, 
+                  type = "scatter", 
+                  color = I('black'), 
+                  name = 'Unfiltered',
+                  source = "a",
+                  transforms = list(list(type='groupby',groups=selectedElement2))) %>%
+        highlight(on = "plotly_selected",off="plotly_deselect") %>%
+        layout(showlegend = T, dragmode = "select")
       
-      # Red trace for selected data
-      set.seed(1)
-      pp <- add_trace(pp, data = m[s, , drop = F], type = 'box', boxpoints = 'all', pointpos = 2, x = ~solid_conc, y = ~element_id, color = I('red'), name = 'Filtered') %>%
-        layout(showLegend = T, boxgap = 0.5)
+      # selected data
+      pp <- add_trace(pp, 
+                      data = m[s, , drop = F], 
+                      type = 'scatter', 
+                      x = ~solid_conc, 
+                      y = ~solution_id, 
+                      color = I('red'), 
+                      name = 'Filtered',
+                      transforms = list(list(type='groupby',groups=input$elemChoice))) %>%
+        layout(showLegend = T)
     }
   })
   
+  # Renders interactive boxplot
+  output$plot2 <- renderPlotly({ 
+    
+    boxData <- m[input$data1_rows_selected, ] # Stores the datatable rows which are selected
+    
+    if(length(input$data1_rows_selected)){ # Renders when there are selected rows
+      b <- boxData %>%
+        plot_ly(x=~solid_conc,
+                type = "box",
+                boxpoints = "all",
+                color = I("red"),
+                jitter = 0.3,
+                pointpos = -1.5,
+                boxmean = TRUE
+        )
+    } else if (!length(input$data1_rows_selectedm)) { # Renders when there aren't selected rows
+      bb <- d %>% 
+        plot_ly(x=~solid_conc,
+                type = "box",
+                color = I('black'),
+                boxpoints = "all",
+                jitter = 0.3,
+                pointpos = -1.5,
+                boxmean = TRUE
+        )
+    }
+  })
+  
+  # Depricated: leave in as check condition in case of data selection problems
   output$p1Select <- renderPrint({
-    fromGraph <<- event_data("plotly_selected") # Selection from the graph using built-in Plotly 'event_data()' function.
+    fromGraph <<- event_data("ploty_selected", source = "a") # Selection from the graph using built-in Plotly 'event_data()' function.
     print("From Graph:")
     fromGraph
   })
   
+  # Depricated: leave in as check condition in case of selection problems
   output$crosstalk1 <- renderPrint({
     fromTable <- m[input$data1_rows_selected, ] # Selection from data table using 'crosstalk' package.
     session$userData$sampElemPlotly <- fromTable
@@ -132,11 +181,10 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
     input$data1_rows_selected
   })
   
-  output$data1 <- renderDT({
+  output$data1 <- renderDT({ # Renders the datatable
     
-    update <- selectedElement2
     m2 <- m[d$selection(),]
-    dt <- DT::datatable(m, option = list(pageLength = 50, rownames = FALSE))
+    dt <- DT::datatable(m, option = list(pageLength = 18, rownames = FALSE))
     if (NROW(m2) == 0) {
       dt
     } else {
@@ -146,22 +194,22 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
     }
   })
   
-  proxy = dataTableProxy('data1')
+  proxy = dataTableProxy('data1') # Allows update of datatable after initial rendering
   
   observeEvent(d$selection(),{
-    #test <- event_data("plotly_selected")
-    #tabSelect <- test[[2]] + 1
-    #print(tabSelect)
-    #print(input$data1_rows_selected)
-    tabSelect <- which(d$selection())
-    tabSelect <- rbind(tabSelect,input$data1_rows_selected)
+    tabSelect <- which(d$selection()) # Returns rows for which selection is true
     proxy %>% selectRows(tabSelect)
   })
   
-  observeEvent("plotly_selected",{
-    test <- event_data("plotly_selected")
+  observeEvent("plotly_selected",{ # Observes changes in plot selections
+    test <- event_data("plotly_selected",source = "a")
     if (is.null(test)) {
       proxy %>% selectRows(NULL)
     }
   })
+  
+  observeEvent(ctr(),{ # Observes changes in input$elemChoice
+    proxy %>% selectRows(NULL)
+  })
 }
+

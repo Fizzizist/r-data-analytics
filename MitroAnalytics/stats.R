@@ -44,8 +44,8 @@ getPTValues <- function() {
 
   ## Grouping by element into a list.
 
-  #elem <- c("Al", "As", "Ba", "Cd", "Cu", "K", "Mn", "Ni", "Pb", "Se", "Zn") Are these the ones Frank said were relevant? I can't recall.
-  elem <- c("Al", "As", "Ba", "Ca", "Cd", "Cu", "Co", "Cr", "Cu", "Fe", "K", "Mg", "Mn", "Mo", "Ni", "Pb", "Se", "Sr", "Y", "Zn") # This is all available elements.
+  elem <- c("Ca","Cu","Fe", "K", "Mg", "Se", "Zn") # These were the only elements for which new values were added with the last burn set
+  #elem <- c("Al", "As", "Ba", "Ca", "Cd", "Cu", "Co", "Cr", "Cu", "Fe", "K", "Mg", "Mn", "Mo", "Ni", "Pb", "Se", "Sr", "Y", "Zn") # This is all available elements.
   samp.elem <- list()
   regex <- c()
 
