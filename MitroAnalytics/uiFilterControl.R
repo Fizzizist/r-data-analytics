@@ -143,6 +143,7 @@ observePlotlyPlotSelectElemEvent <- function(input, output, session, dataset){
 observePlotlyPlotBtnEvent <- function(input, output, session){
   observeEvent(input$btnPlotlySave,
    {
+     print(session$userData$sampElemPlotly)
      saveUserDataset(session$userData$sampElemPlotly, session$userData$username)
      drawPlotlyPlot(input, output, session, session$userData$sampElemPlotly, session$userData$elemSelectedPlotly)
    }
