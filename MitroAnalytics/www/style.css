@@ -79,3 +79,11 @@
 	font-size: 40px;
 	font-weight: bold;
 }
+
+#crosstalk1{
+	visibility: hidden;
+}
+
+#p1Select{
+	visibility: hidden;
+}

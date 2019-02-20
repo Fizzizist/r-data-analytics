@@ -62,8 +62,6 @@ server <- function(input, output) {
   
   output$plot1 <- renderPlotly({
     
-    #update <- input$elemChoice
-    
     s <- input$data1_rows_selected
     
     if (!length(s)) {
@@ -154,7 +152,7 @@ server <- function(input, output) {
     m <- samp.elem[[input$elemChoice]] %>% tibble::remove_rownames()
     
     m2 <- m[d$selection(),]
-    dt <- DT::datatable(d, option = list(pageLength = 50, rownames = FALSE))
+    dt <- DT::datatable(d, option = list(pageLength = 20, rownames = FALSE))
     if (NROW(m2) == 0) {
       dt
     } else {

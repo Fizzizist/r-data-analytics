@@ -24,8 +24,8 @@ ui <- dashboardPage(
       menuItem("File Upload", tabName='fileUpload', icon=icon('file-upload')),
       menuItem("Histogram", tabName='statHistogram', icon=icon('chart-bar')),
       menuItem("Interactive Plot", tabName='statIntPlot', icon=icon('microscope')), # 1. Add menu item. Icon from font awesome icons.
-      menuItem("Plotly Plot", tabName="statPlotly", icon=icon('chart-line')),
 	    menuItem("File Download", tabName='fileDownload', icon=icon('download')),
+      menuItem("Plotly Plot", tabName="statPlotly", icon=icon('chart-line')),
 	    uiOutput("logout")
     )
   ),
@@ -97,7 +97,7 @@ ui <- dashboardPage(
             h1('Interactive Plot')
           ),
           column(width=3,
-                 uiOutput('selectIntPlotBurn')
+                           uiOutput('selectIntPlotBurn')
           ),
           column(width=3,
             uiOutput('selectIntElement')
@@ -141,7 +141,7 @@ ui <- dashboardPage(
                  h1('Plotly Plot')
           ),
           column(width=3,
-                 uiOutput('selectPlotlyPlotBurn')
+                uiOutput('selectPlotlyPlotBurn')
           ),
           column(width=3,
                  uiOutput('selectPlotlyPlotElement')
@@ -157,20 +157,17 @@ ui <- dashboardPage(
           )
         ),
         fluidRow(
-          column(width = 2),
-          column(width = 8,
-                 plotlyOutput("plot1"),
-                 verbatimTextOutput("p1Select")),
-  
-          column(width = 2)
+          column(width=5,
+                 DTOutput("data1"),
+                 verbatimTextOutput("crosstalk1")
           ),
-          fluidRow(
-            column(width = 2),
-            column(width = 8,
-                   verbatimTextOutput("crosstalk1"),
-                   DTOutput("data1")),
-            column(width = 2))
-            ),
+          column(width = 7,
+                 plotlyOutput("plot1"),
+                 plotlyOutput("plot2"),
+                 verbatimTextOutput("p1Select")
+          )),
+                    column(width = 2)
+          ),
       tabItem(tabName='fileDownload',
               fluidRow(
                 column(width=3,
@@ -191,8 +188,8 @@ ui <- dashboardPage(
                          uiOutput("dlButton")
                 )
               )
-      )
+            )
+        )
     )
-  )
 )
 
