@@ -4,7 +4,9 @@ library(openssl)
 
 source("queries.R")
 
-#function for establishing MySQL connection.
+#' function for establishing MySQL connection.
+#'
+#' @return the connection to the DBMS
 getConnect <- function () {
         conn <- DBI::dbConnect(
                 drv = RMySQL::MySQL(),
@@ -18,7 +20,12 @@ getConnect <- function () {
 }
 
 #---------Functions to GET tables from database-----------------
-#general dbGetQuery function to reduce redundancy in code
+
+#' general dbGetQuery function to reduce redundancy in code
+#' 
+#' @param str string to be read into MySQL to query the database
+#'
+#' @return the dataframe returned from the DBMS
 getOneQuery <- function (str) {
 	conn <- getConnect()
 	ret <- dbGetQuery(conn, str)
@@ -26,8 +33,12 @@ getOneQuery <- function (str) {
 	return(ret)
 }
 
-#sends a query to database such as an insert update or delete
-#(anything that does not require a return value)
+#' sends a query to database such as an insert update or delete
+#' (anything that does not require a return value)
+#' 
+#' @param str query string to be sent to database
+#' 
+#' @return shouldn't return anything
 sendOneQuery <- function(str) {
         conn <- getConnect()
         query <- dbSendQuery(conn, str)
@@ -36,25 +47,36 @@ sendOneQuery <- function(str) {
         return
 }
 
-#get number of burns
+#' get number of burns
+#' 
+#' @return data.frame of a single number for burn count
 getNumOfBurns <- function () {
         query <- getOneQuery("SELECT COUNT(burn_id) FROM burns;")
 	return(query)
 }
 
-#returns a list of burn IDs
+#' returns a list of burn IDs
+#'
+#' @return data.frame of burn IDs
 getBurnList <- function () {
 	query <- getOneQuery("SELECT burn_id FROM burns;")
 	return(query)
 }
 
-#retreives a whole table (for testing only!)
+#' retreives a whole table (for testing only!)
+#'
+#' @param tblName name of the table to be returned
+#' 
+#' @return data.frame of table specified by tblName
 getWholeTable <- function(tblName){
 	query <- getOneQuery(paste0("SELECT * FROM ", tblName, ";"))
 	return(query)
 }
 
-#function that returns specific download data for download tab
+#' function that returns specific download data for download tab
+#' 
+#' @param burns vector of burn IDs
+#' @param tblName table to pull data from
 getDownloadData <- function (burns, tblName){
 	switch(tblName,
 		solutions={
@@ -84,14 +106,22 @@ getDownloadData <- function (burns, tblName){
 	)
 }
 
-#return sample_data view
+#' get sample data view
+#' 
+#' @return data.frame of sample_data view
 getSampleData <- function (){
 	query <- getOneQuery("SELECT * FROM sample_data;")
 	return(query)
 }
 
-#Takes in username and password, and outputs either a TRUE boolean value or a string indicating the
-#error that took place.
+#' Takes in username and password, and outputs either a TRUE boolean value or a string indicating the
+#' error that took place.
+#' 
+#' @param username username to be queried in database
+#' @param password password to be checked against username
+#' 
+#' @return an error message string indicating what went wrong
+#' @return a TRUE boolean value indicating authentication
 getAuthentication <- function(username, password){
         #get db row for username
         credRow <- getOneQuery(
@@ -122,6 +152,11 @@ getAuthentication <- function(username, password){
         return
 }
 
+#' getter for solution concentrations based on burn_id
+#' 
+#' @param burn_id which burn id to pull concentration for
+#' 
+#' @return the solid concentration for the specified burn id
 getBurnSolutionConcentration <- function(burn_id){
   solConc <- getOneQuery(paste0("SELECT label, element_id, solid_conc 
                                 FROM solutions s JOIN solution_elements se ON s.solution_id = se.solution_id 
@@ -130,7 +165,12 @@ getBurnSolutionConcentration <- function(burn_id){
 }
 
 #-------Functions to INSERT into database---------------
-#insert data from csv
+#' insert data from csv
+#'
+#' @param inFile the csv file with ICP data to be populated into database
+#'
+#' @return NA for error and NULL for warning
+#' @return Nothing if all goes well
 insertCSV <- function (inFile) {
 	
     	#error checking
@@ -271,7 +311,12 @@ insertCSV <- function (inFile) {
 }
 
 #------------Functions for saving and loading userData files and logging------------------
-#Function for saving the user data for other functions and for after logout
+#' Function for saving the user data for other functions and for after logout
+#'
+#' @param dataset R dataset to be saved for later
+#' @param username indicates which user to sabe the data for
+#'
+#' @return an error or a message indicating dataset has been saved
 saveUserDataset <- function (dataset, username){
 	dataname <- paste0(username, "sampElem")
 	tryCatch({
@@ -290,13 +335,19 @@ saveUserDataset <- function (dataset, username){
 	return("Dataset has been saved!")
 }
 
-#load data from saved sampElem file back into the app
+#' load data from saved sampElem file back into the app
+#' 
+#' @param username username to indicate which file to load
+#'
+#' @return saved R user data
 getSampElem <- function (username){
 	sampElem <- get(load(paste0("data/",username,"/",username,"sampElem.RData")))
 	return(sampElem)
 }
 
-#write usage data to userlog.log file
+#' write usage data to userlog.log file
+#' 
+#' @param usage string of data about the user to be logged
 logData <- function(usage) {
 	write(usage, file="www/userlog.log", append=TRUE)
 }
