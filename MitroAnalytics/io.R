@@ -127,6 +127,7 @@ getSolConcTreat <- function(el, burn, treat){
 			paste0("SELECT solution_id, element_id, solid_conc, treatment 
 			FROM filtered_solconc_treatment
 			WHERE element_id LIKE '", el, "%';")
+			return(query)
 	}
 }
 
