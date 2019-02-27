@@ -114,6 +114,22 @@ getSampleData <- function (){
 	return(query)
 }
 
+#' get filtered solid_conc and treatment data
+#'
+#' @param el - element being selected for 
+#' @param burn - burn_id being selected for
+#' @param treat - treatment being selected for
+#'
+#' @return - table of solid_conc, treatment, solution_id and element_id
+getSolConcTreat <- function(el, burn, treat){
+	if (!is.null(el)){
+		query <- getOneQuery(
+			paste0("SELECT solution_id, element_id, solid_conc, treatment 
+			FROM filtered_solconc_treatment
+			WHERE element_id LIKE '", el, "%';")
+	}
+}
+
 #' Takes in username and password, and outputs either a TRUE boolean value or a string indicating the
 #' error that took place.
 #' 
