@@ -137,10 +137,10 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
   })
   
   # Renders interactive boxplot
-  output$plot2 <- renderPlotly({ 
-    
+  output$plot2 <- renderPlotly({
+
     boxData <- m[input$data1_rows_selected, ] # Stores the datatable rows which are selected
-    
+
     if(length(input$data1_rows_selected)){ # Renders when there are selected rows
       b <- boxData %>%
         plot_ly(x=~solid_conc,
@@ -151,8 +151,13 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
                 pointpos = -1.5,
                 boxmean = TRUE
         )
+<<<<<<< HEAD
     } else if (!length(input$data1_rows_selected)) { # Renders when there aren't selected rows
       bb <- d %>% 
+=======
+    } else if (!length(input$data1_rows_selectedm)) { # Renders when there aren't selected rows
+      bb <- d %>%
+>>>>>>> 557eb2a469d8b8a29a9c45d72690e2b62bcbd8d7
         plot_ly(x=~solid_conc,
                 type = "box",
                 color = I('black'),
@@ -166,19 +171,19 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
   
   # Depricated: leave in as check condition in case of data selection problems
   output$p1Select <- renderPrint({
-    fromGraph <<- event_data("ploty_selected", source = "a") # Selection from the graph using built-in Plotly 'event_data()' function.
-    print("From Graph:")
-    fromGraph
+    #fromGraph <<- event_data("ploty_selected", source = "a") # Selection from the graph using built-in Plotly 'event_data()' function.
+    #print("From Graph:")
+    #fromGraph
   })
   
   # Depricated: leave in as check condition in case of selection problems
   output$crosstalk1 <- renderPrint({
     fromTable <- m[input$data1_rows_selected, ] # Selection from data table using 'crosstalk' package.
     session$userData$sampElemPlotly <- fromTable
-    print("From Table:")
-    print(fromTable) 
-    print("Selected Rows:")
-    input$data1_rows_selected
+    #print("From Table:")
+    #print(fromTable)
+    #print("Selected Rows:")
+    #input$data1_rows_selected
   })
   
   output$data1 <- renderDT({ # Renders the datatable
@@ -198,6 +203,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
   
   observeEvent(d$selection(),{
     tabSelect <- which(d$selection()) # Returns rows for which selection is true
+    print(tabSelect)
     proxy %>% selectRows(tabSelect)
   })
   

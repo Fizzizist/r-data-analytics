@@ -158,13 +158,13 @@ ui <- dashboardPage(
         ),
         fluidRow(
           column(width=5,
-                 DTOutput("data1")#,
-                 #verbatimTextOutput("crosstalk1")
+                 DTOutput("data1"),
+                 verbatimTextOutput("crosstalk1")
           ),
           column(width = 7,
                  plotlyOutput("plot1"),
-                 plotlyOutput("plot2")#,
-                 #verbatimTextOutput("p1Select")
+                 plotlyOutput("plot2"),
+                 verbatimTextOutput("p1Select")
           )),
                     column(width = 2)
           ),
