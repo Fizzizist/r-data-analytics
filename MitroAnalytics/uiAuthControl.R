@@ -57,7 +57,7 @@ observeUserLogout <- function(input, output, session, authenticated){
     {
       authenticated <- FALSE
       session$userData$username <- NULL
-      displayLoginView(output, session)
+      session$reload()
     }
   )
 }
