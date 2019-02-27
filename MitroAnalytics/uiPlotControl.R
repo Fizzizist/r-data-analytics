@@ -5,80 +5,10 @@ library(crosstalk)
 library(shiny)
 library(plotly)
 
-drawHistogram <- function(output, df) {
-  output$barGraph <- renderPlot({
-    ggplot(data = df, aes(factor(element_id), solid_conc, fill = label)) +
-      geom_bar(stat = "identity", position = 'dodge') +
-      scale_fill_brewer(palette = "Set1") +
-      xlab("Element") +
-      ylab("Concentration") +
-      labs(fill = "Sample(s)") +
-      coord_flip()
-  })
-}
-
-drawInteractivePlot <- function(input, output, session, data, selectedElement, saved=FALSE) {
-  ranges <- reactiveValues(x = NULL, y = NULL)
-  output$statIntPlot1 <- renderPlot({
-    ggplot(data, aes(x = selectedElement, y = solid_conc)) +
-      stat_summary() +
-      geom_dotplot(
-        aes(colour = factor(element_id)),
-        binaxis = 'y',
-        stackdir = 'center',
-        dotsize = 0.25
-      ) +
-      labs(x = "Element", y = "Solid Concentration (ppm)", colour = "Emission Wavelength")
-  })
-
-  output$statIntPlot2 <- renderPlot({
-    ggplot(data, aes(x = selectedElement, y = solid_conc)) +
-      stat_summary() +
-      geom_dotplot(
-        aes(colour = factor(element_id)),
-        binaxis = 'y',
-        stackdir = 'center',
-        dotsize = 0.25
-      ) +
-      labs(x = "Element", y = "Solid Concentration (ppm)", colour = "Emission Wavelength") +
-     coord_cartesian(xlim = ranges$x, ylim = ranges$y, expand = FALSE)
-    })
-
-    output$statIntData1 <- DT::renderDataTable({
-      datatable(data,
-                rownames = FALSE,
-                options = list(pageLength = 50))
-    })
-
-    output$statIntData2 <- DT::renderDataTable({
-      datatable(
-        brushedPoints(
-          df = data,
-          brush = input$plot1_brush,
-          xvar = 'element_id',
-          yvar = "solid_conc"),
-        rownames = FALSE,
-        options = list(pageLength = 50))
-    })
-
-    observe({
-      brush <- input$plot1_brush
-      if (!is.null(brush)) {
-        ranges$x <- c(brush$xmin, brush$xmax)
-        ranges$y <- c(brush$ymin, brush$ymax)
-        session$userData$sampElem <- brushedPoints(df = data, brush = brush, xvar = 'element_id', yvar = "solid_conc")
-        if(!saved){session$sendCustomMessage("setSavedHandler", FALSE)}
-      } else {
-        ranges$x <- NULL
-        ranges$y <- NULL
-      }
-    })
-}
-
 # Function to output the plotly plot
 # Can likely be split up more
-drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
-  session$userData$elemSelectedPlotly <- selectedElement2
+drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
+  session$userData$elemSelected <- selectedElement
   #Interative Object UI
   
   # Initializing interactive data variables
@@ -87,7 +17,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
   m <- reactiveVal(NULL)
   d <- reactiveVal(NULL)
   
-  observeEvent(selectedElement2, {
+  observeEvent(selectedElement, {
     m <<- data %>% tibble::remove_rownames()
     d <<- SharedData$new(m, ~solution_id)
     inc <- ctr() + 1
@@ -106,7 +36,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
                 color = I('black'), 
                 name = 'Unfiltered',
                 source = "a",
-                transforms = list(list(type='groupby',groups=selectedElement2))) %>%
+                transforms = list(list(type='groupby',groups=selectedElement))) %>%
         highlight(on = "plotly_selected",off="plotly_deselect") %>%
         layout(showlegend = T, dragmode = "select")
       
@@ -119,7 +49,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
                   color = I('black'), 
                   name = 'Unfiltered',
                   source = "a",
-                  transforms = list(list(type='groupby',groups=selectedElement2))) %>%
+                  transforms = list(list(type='groupby',groups=selectedElement))) %>%
         highlight(on = "plotly_selected",off="plotly_deselect") %>%
         layout(showlegend = T, dragmode = "select")
       
@@ -174,7 +104,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
   # Depricated: leave in as check condition in case of selection problems
   output$crosstalk1 <- renderPrint({
     fromTable <- m[input$data1_rows_selected, ] # Selection from data table using 'crosstalk' package.
-    session$userData$sampElemPlotly <- fromTable
+    session$userData$sampElem <- fromTable
     #print("From Table:")
     #print(fromTable)
     #print("Selected Rows:")

@@ -22,8 +22,6 @@ ui <- dashboardPage(
     sidebarMenu(id="sidebarMenu",
       menuItem("Home", tabName='home', icon=icon('home')),
       menuItem("File Upload", tabName='fileUpload', icon=icon('file-upload')),
-      menuItem("Histogram", tabName='statHistogram', icon=icon('chart-bar')),
-      menuItem("Interactive Plot", tabName='statIntPlot', icon=icon('microscope')), # 1. Add menu item. Icon from font awesome icons.
 	    menuItem("File Download", tabName='fileDownload', icon=icon('download')),
       menuItem("Plotly Plot", tabName="statPlotly", icon=icon('chart-line')),
 	    uiOutput("logout")
@@ -59,80 +57,6 @@ ui <- dashboardPage(
             fileInput("file1", "", multiple=FALSE, accept=c("text/csv","text/comma-separated-values","text/plain",".csv"), width='100%'),
 		        verbatimTextOutput("uploaded")
           )
-        )
-      ),
-      tabItem(tabName='statHistogram',
-        fluidRow(
-          column(width=2,
-            h1('Histogram')
-          ),
-          column(width=3,
-            uiOutput("selectHistBurn")
-          )
-        ),
-        fluidRow(
-          column(width=2,
-            uiOutput("solutionCheckboxes")
-          ),
-          column(width=2,
-            uiOutput("elementCheckboxes")
-          ),
-          column(width=8,
-            plotOutput("barGraph")
-          )
-        ),
-        fluidRow(
-          column(width=2,
-            actionButton("btnReset", "Reset", class = "btn-warning")
-          ),
-          column(width=2,
-            actionButton("btnBuild", "Build", class = "btn-primary")
-          )
-        )
-      ),
-      # 2. Add tabItem, organize output
-      tabItem(tabName='statIntPlot',
-        fluidRow(
-          column(width=3,
-            h1('Interactive Plot')
-          ),
-          column(width=3,
-                           uiOutput('selectIntPlotBurn')
-          ),
-          column(width=3,
-            uiOutput('selectIntElement')
-          ),
-          column(width=1,
-                 actionButton("btnIntSave", "Save")
-          ),
-          column(width=1,
-                 actionButton("btnIntLoad", "Load")
-          ),
-          column(width=1,
-                 actionButton("btnIntReset", "Reset")
-          )
-        ),
-        fluidRow(
-          column(width = 5,
-            plotOutput("statIntPlot1", height = 400, brush = brushOpts(id = "plot1_brush", resetOnNew = TRUE)),
-            offset = 1
-          ),
-          column(width = 5,
-            plotOutput("statIntPlot2", height = 400),
-            offset = 1
-          ),
-        fluidRow(
-          column(width = 5,
-                 h3("All Data"),
-                 DT::dataTableOutput("statIntData1"),
-                 offset = 1
-          ),
-          column(width = 5, 
-                 h3("Selected Data"),
-                 DT::dataTableOutput("statIntData2"),
-                 offset = 1
-                 )
-        )
         )
       ),
       tabItem(tabName="statPlotly",
