@@ -34,26 +34,36 @@ pval <- function(du, sd, n) {
   return(p)
 }
 
-#### Manipulating the data frame.
-getPTValues <- function() {
-  # Read data from view into 'sample.data' data frame.
-  sample.data = getSampleData()
+#### 
 
-  # Removing nonsense, control, and rinse rows.
-  filt.sample.data <- filter(sample.data, solid_conc > 0, SD > 0)
-
-  ## Grouping by element into a list.
-
-  elem <- c("Ca","Cu","Fe", "K", "Mg", "Se", "Zn") # These were the only elements for which new values were added with the last burn set
-  #elem <- c("Al", "As", "Ba", "Ca", "Cd", "Cu", "Co", "Cr", "Cu", "Fe", "K", "Mg", "Mn", "Mo", "Ni", "Pb", "Se", "Sr", "Y", "Zn") # This is all available elements.
-  samp.elem <- list()
-  regex <- c()
-
-  for (i in 1:length(elem)) {
-    regex[i] <- paste("^", elem[i], ".*", sep = '')
-    samp.elem[[i]] <- data.frame(filt.sample.data[grep(regex[i], filt.sample.data[, 2],
-      perl = TRUE),])
-  }
-  names(samp.elem) <- elem
-  return(samp.elem)
+getDatatableSampleData <- function() {
+  currentSampleData <- data
 }
+
+
+
+# DEPRICATED
+
+# #### Manipulating the data frame.
+# getPTValues <- function() {
+#   # Read data from view into 'sample.data' data frame.
+#   sample.data = getSampleData()
+
+#   # Removing nonsense, control, and rinse rows.
+#   filt.sample.data <- filter(sample.data, solid_conc > 0, SD > 0)
+
+#   ## Grouping by element into a list.
+
+#   elem <- c("Ca","Cu","Fe", "K", "Mg", "Se", "Zn") # These were the only elements for which new values were added with the last burn set
+#   #elem <- c("Al", "As", "Ba", "Ca", "Cd", "Cu", "Co", "Cr", "Cu", "Fe", "K", "Mg", "Mn", "Mo", "Ni", "Pb", "Se", "Sr", "Y", "Zn") # This is all available elements.
+#   samp.elem <- list()
+#   regex <- c()
+
+#   for (i in 1:length(elem)) {
+#     regex[i] <- paste("^", elem[i], ".*", sep = '')
+#     samp.elem[[i]] <- data.frame(filt.sample.data[grep(regex[i], filt.sample.data[, 2],
+#       perl = TRUE),])
+#   }
+#   names(samp.elem) <- elem
+#   return(samp.elem)
+# }
