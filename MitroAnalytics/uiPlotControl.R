@@ -151,7 +151,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement2) {
                 pointpos = -1.5,
                 boxmean = TRUE
         )
-    } else if (!length(input$data1_rows_selectedm)) { # Renders when there aren't selected rows
+    } else if (!length(input$data1_rows_selected)) { # Renders when there aren't selected rows
       bb <- d %>% 
         plot_ly(x=~solid_conc,
                 type = "box",
