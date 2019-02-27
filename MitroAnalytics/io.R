@@ -125,8 +125,8 @@ getSolConcTreat <- function(desc, choice){
 		query <- getOneQuery(
 			paste0("SELECT solution_id, element_id, solid_conc, treatment 
 			FROM filtered_solconc_treatment
-			WHERE ", desc, " LIKE '", choice, "%';")
-		return(query)
+			WHERE element_id LIKE '", el, "%';"))
+			return(query)
 	}
 }
 

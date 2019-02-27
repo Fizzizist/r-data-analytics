@@ -9,7 +9,7 @@ library(plotly)
 # Can likely be split up more
 drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
   session$userData$elemSelected <- selectedElement
-  #Interative Object UI
+  #Interactive Object UI
   
   # Initializing interactive data variables
   

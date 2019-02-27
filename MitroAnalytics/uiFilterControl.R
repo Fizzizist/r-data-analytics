@@ -14,7 +14,7 @@ observePlotlyPlotSelectBurnEvent <- function(input, output, session){
   observeEvent(
     input$selectPlotlyPlotBurn,
     {
-      session$userData$sampElem <- getPTValues() # this needs to take in the burn id like getPTValues(input$selectPlotlyPlotBurn)
+      session$userData$sampElem <- getSolConcTreat(input$selectPlotlyPlotElement,input$selectPlotlyPlotBurn,NULL) # this needs to take in the burn id like getPTValues(input$selectPlotlyPlotBurn)
       session$userData$elemNames <- names(session$userData$sampElem)
       renderSelectInput(output, 'selectPlotlyPlotElement', "Choose an element:", session$userData$elemNames, 'Zn')
       observePlotlyPlotSelectElemEvent(input, output, session, session$userData$sampElem)
@@ -27,7 +27,7 @@ observePlotlyPlotSelectElemEvent <- function(input, output, session, dataset){
   observeEvent(
     input$selectPlotlyPlotElement,
     {
-      drawPlotlyPlot(input, output, session, dataset[[input$selectPlotlyPlotElement]], input$selectPlotlyPlotElement)
+      drawPlotlyPlot(input, output, session, getSolConcTreat(input$selectPlotlyPlotElement,input$selectPlotlyPlotBurn,NULL), input$selectPlotlyPlotElement)
     }
   )
 }
@@ -50,7 +50,7 @@ observePlotlyPlotBtnEvent <- function(input, output, session){
   
   observeEvent(input$btnPlotlyReset,
    {
-     session$userData$sampElem <- getPTValues()
+     session$userData$sampElem <- getSolConcTreat(input$elemSelected)
      print(session$userData$sampElem)
      renderSelectInput(output, 'selectPlotlyPlotElement', "Choose an element:", session$userData$elemNames, session$userData$elemSelected)
      observePlotlyPlotSelectElemEvent(input, output, session, session$userData$sampElem)
