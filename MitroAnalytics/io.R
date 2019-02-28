@@ -147,13 +147,13 @@ getSolConcTreat <- function(el, burn, treat){
 		query <- getOneQuery(
 			paste0("SELECT solution_id, element_id, solid_conc, treatment 
 			FROM filtered_solconc_treatment
-			WHERE burn_id = ", burn, ";"))
+			WHERE burn_id LIKE '", burn, "';"))
 			return(query)
 	} else if (!is.null(treat)){
 		query <- getOneQuery(
 			paste0("SELECT solution_id, element_id, solid_conc, treatment 
 			FROM filtered_solconc_treatment
-			WHERE treatment = ", treat, ";"))
+			WHERE treatment LIKE '", treat, "';"))
 			return(query)
 	}
 }
