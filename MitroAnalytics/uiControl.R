@@ -30,7 +30,9 @@ loadUI <- function(input, output, session){
           uiReactValues$loadedPlotlyPlot <- TRUE
           
           burns <- getBurnList()
-          renderSelectInput(output, 'selectPlotlyPlotBurn', 'Select burn:', burns[["burn_id"]])
+          burnChoices <- c(c('%'),burns[['burn_id']])
+          names(burnChoices) <- c(c('All'),burns[['burn_id']])
+          renderSelectInput(output, 'selectPlotlyPlotBurn', 'Select burn:', burnChoices , '%')
           observePlotlyPlotSelectBurnEvent(input, output, session)
         }
       )

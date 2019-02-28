@@ -118,13 +118,20 @@ getDownloadData <- function (burns, tblName){
 
 ###################
 
+# #' initializes and returns burn choices for selectPlotlyPlotBurn
+# #'
+# #'@return - named vector of possible burn choices
+# getBurnChoices() <- function(){
+# 	burnOptions <- getBurnList()
+# 	print(burnOptions)
+# }
 
-#' initializes and returns element choices for plotting
+#' initializes and returns element choices for selectPlotlyPlotElement
 #'
-#' @return - vector of elemnt choices
+#' @return - vector of possible element choices
 getElemChoices <- function(){
 	if(!exists("elemChoices")) {
-		elemChoices <- c("Ca","Cu","Fe", "K", "Mg", "Se", "Zn")
+		elemChoices <- c("Zn","Se","Mg", "K", "Fe","Cu","Ca")
 	}
 	return(elemChoices)
 }
