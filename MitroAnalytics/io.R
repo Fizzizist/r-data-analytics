@@ -119,9 +119,9 @@ getDownloadData <- function (burns, tblName){
 ###################
 
 
-#' initializes list of element selections
+#' initializes and returns element choices for plotting
 #'
-
+#' @return - vector of elemnt choices
 getElemChoices <- function(){
 	if(!exists("elemChoices")) {
 		elemChoices <- c("Ca","Cu","Fe", "K", "Mg", "Se", "Zn")
