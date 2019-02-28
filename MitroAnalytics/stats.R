@@ -34,15 +34,11 @@ pval <- function(du, sd, n) {
   return(p)
 }
 
-#### 
-
 getDatatableSampleData <- function() {
-  currentSampleData <- data
+  currentSampleData <- get
 }
 
-
-
-# DEPRICATED
+#### DEPRICATED ####
 
 # #### Manipulating the data frame.
 # getPTValues <- function() {
@@ -67,3 +63,5 @@ getDatatableSampleData <- function() {
 #   names(samp.elem) <- elem
 #   return(samp.elem)
 # }
+
+################

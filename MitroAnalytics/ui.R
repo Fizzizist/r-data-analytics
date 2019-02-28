@@ -59,16 +59,19 @@ ui <- dashboardPage(
           )
         )
       ),
+      # Plotly Plot Tab
       tabItem(tabName="statPlotly",
         fluidRow(
+          # UI Elements (Reactive Values)
           column(width=3,
                  h1('Plotly Plot')
           ),
           column(width=3,
-                uiOutput('selectPlotlyPlotBurn')
+                uiOutput('selectPlotlyPlotBurn') 
           ),
           column(width=3,
-                 uiOutput('selectPlotlyPlotElement')
+                 #uiOutput('selectPlotlyPlotElement')
+                 selectInput('selectPlotlyPlotElement', 'Select an Element', getElemChoices(), 'Zn')
           ),
           column(width=1,
                 actionButton("btnPlotlySave", "Save")
@@ -80,6 +83,7 @@ ui <- dashboardPage(
                 actionButton("btnPlotlyReset", "Reset")
           )
         ),
+        # Output to Browswer (~Reactive Observers)
         fluidRow(
           column(width=5,
                  DTOutput("data1"),
@@ -92,6 +96,7 @@ ui <- dashboardPage(
           )),
                     column(width = 2)
           ),
+      # File Download Tab
       tabItem(tabName='fileDownload',
               fluidRow(
                 column(width=3,
