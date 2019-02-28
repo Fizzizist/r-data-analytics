@@ -137,25 +137,13 @@ getElemChoices <- function(){
 #'
 #' @return - table of solid_conc, treatment, solution_id and element_id
 getSolConcTreat <- function(el, burn, treat){
-	if (!is.null(el)){
-		query <- getOneQuery(
-			paste0("SELECT solution_id, element_id, solid_conc, treatment 
-			FROM filtered_solconc_treatment
-			WHERE element_id LIKE '", el, "%';"))
-			return(query)
-	} else if (!is.null(burn)){
-		query <- getOneQuery(
-			paste0("SELECT solution_id, element_id, solid_conc, treatment 
-			FROM filtered_solconc_treatment
-			WHERE burn_id LIKE '", burn, "';"))
-			return(query)
-	} else if (!is.null(treat)){
-		query <- getOneQuery(
-			paste0("SELECT solution_id, element_id, solid_conc, treatment 
-			FROM filtered_solconc_treatment
-			WHERE treatment LIKE '", treat, "';"))
-			return(query)
-	}
+	query <- getOneQuery(
+		paste0("SELECT solution_id, element_id, solid_conc, treatment 
+		FROM filtered_solconc_treatment
+		WHERE element_id LIKE '", el, "%'
+		AND burn_id LIKE '", burn, "'
+		AND treatment LIKE '", treat, "';"))
+	return(query)
 }
 
 #' Takes in username and password, and outputs either a TRUE boolean value or a string indicating the
