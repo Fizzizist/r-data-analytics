@@ -19,7 +19,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
   
   observeEvent(selectedElement, {
     m <<- data %>% tibble::remove_rownames()
-    d <<- SharedData$new(m, ~solution_id)
+    d <<- SharedData$new(m)
     inc <- ctr() + 1
     ctr(inc)
   })

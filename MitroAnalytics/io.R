@@ -106,12 +106,27 @@ getDownloadData <- function (burns, tblName){
 	)
 }
 
-#' get sample data view
-#' 
-#' @return data.frame of sample_data view
-getSampleData <- function (){
-	query <- getOneQuery("SELECT * FROM sample_data;")
-	return(query)
+#### DEPRICATED ####
+
+# #' get sample data view
+# #' 
+# #' @return data.frame of sample_data view
+# getSampleData <- function (){
+# 	query <- getOneQuery("SELECT * FROM sample_data;")
+# 	return(query)
+# }
+
+###################
+
+
+#' initializes list of element selections
+#'
+
+getElemChoices <- function(){
+	if(!exists("elemChoices")) {
+		elemChoices <- c("Ca","Cu","Fe", "K", "Mg", "Se", "Zn")
+	}
+	return(elemChoices)
 }
 
 #' get filtered solid_conc and treatment data
