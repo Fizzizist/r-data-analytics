@@ -131,16 +131,29 @@ getElemChoices <- function(){
 
 #' get filtered solid_conc and treatment data
 #'
-#' @param desc - the item that you are actually selecting for 
-#' @param choice - choice of thing that you are selecting for
+#' @param el - element being selected for
+#' @param burn - burn being selected for
+#' @param treat - treatment being selected for
 #'
 #' @return - table of solid_conc, treatment, solution_id and element_id
-getSolConcTreat <- function(desc, choice){
-	if (desc == "element_id"){
+getSolConcTreat <- function(el, burn, treat){
+	if (!is.null(el)){
 		query <- getOneQuery(
 			paste0("SELECT solution_id, element_id, solid_conc, treatment 
 			FROM filtered_solconc_treatment
 			WHERE element_id LIKE '", el, "%';"))
+			return(query)
+	} else if (!is.null(burn)){
+		query <- getOneQuery(
+			paste0("SELECT solution_id, element_id, solid_conc, treatment 
+			FROM filtered_solconc_treatment
+			WHERE burn_id = ", burn, ";"))
+			return(query)
+	} else if (!is.null(treat)){
+		query <- getOneQuery(
+			paste0("SELECT solution_id, element_id, solid_conc, treatment 
+			FROM filtered_solconc_treatment
+			WHERE treatment = ", treat, ";"))
 			return(query)
 	}
 }
