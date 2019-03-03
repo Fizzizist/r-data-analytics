@@ -33,15 +33,15 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
 
   },server=FALSE)
   
-  output$plot1 <- renderPlotly({
+  output$dataCleanScatter <- renderPlotly({
     
     s <- input$data1_rows_selected # Maybe if I make s a reactive value it will update when rows are deselected?
 
-    print("uiPlotControl.R - renderPlotly(plot1)")
+    print("uiPlotControl.R - renderPlotly(dataCleanScatter)")
     
     if (!length(s)) {
       print("uiPlotControl.R - Render p")
-      p <- dataCleaningCurrentSharedData %>%
+      scatterPlotUnselected <- dataCleaningCurrentSharedData %>%
         plot_ly(x = ~solid_conc, 
                 y = ~solution_id, 
                 type = 'scatter', 
@@ -55,7 +55,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
     } else if (length(s)) {
       print("uiPlotControl.R - Render pp")
 
-      pp <- dataCleaningCurrentTibble %>%
+      scatterPlotSelected <- dataCleaningCurrentTibble %>%
         plot_ly() %>% 
         add_trace(x = ~solid_conc, 
                   y = ~solution_id, 
@@ -68,7 +68,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
         layout(showlegend = T, dragmode = "select")
       
       # selected data
-      pp <- add_trace(pp, 
+      scatterPlotSelected <- add_trace(scatterPlotSelected, 
                       data = dataCleaningCurrentTibble[s, , drop = F], 
                       type = 'scatter', 
                       mode = 'markers',
@@ -81,13 +81,13 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
   })
   
   # Renders interactive boxplot
-  output$plot2 <- renderPlotly({
-    print("uiPlotControl.R - renderPlotly(plot2)")
+  output$dataCleanBox <- renderPlotly({
+    print("uiPlotControl.R - renderPlotly(dataCleanBox)")
     boxData <- dataCleaningCurrentTibble[input$data1_rows_selected, ] # Stores the datatable rows which are selected
 
     if(length(input$data1_rows_selected)){ # Renders when there are selected rows
       print("uiPlotControl.R - Render bb")
-      bb <- boxData %>%
+      boxSelected <- boxData %>%
         plot_ly(x=~solid_conc,
                 type = "box",
                 boxpoints = "all",
@@ -98,7 +98,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
         )
     } else { # Renders when there aren't selected rows
       print("uiPlotControl.R - Render b")
-      b <- dataCleaningCurrentTibble %>%
+      boxUnselected <- dataCleaningCurrentTibble %>%
         plot_ly(x=~solid_conc,
                 type = "box",
                 color = I('black'),
