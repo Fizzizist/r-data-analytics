@@ -24,7 +24,7 @@ ui <- dashboardPage(
       menuItem("Home", tabName='home', icon=icon('home')),
       menuItem("File Upload", tabName='fileUpload', icon=icon('file-upload')),
 	    menuItem("File Download", tabName='fileDownload', icon=icon('download')),
-      menuItem("Plotly Plot", tabName="statPlotly", icon=icon('chart-line')),
+      menuItem("Data Cleaning", tabName="statDataCleaning", icon=icon('chart-line')),
 	    uiOutput("logout")
     )
   ),
@@ -60,12 +60,12 @@ ui <- dashboardPage(
           )
         )
       ),
-      # Plotly Plot Tab
-      tabItem(tabName="statPlotly",
+      # DataCleaning Plot Tab
+      tabItem(tabName="statDataCleaning",
         fluidRow(
           # UI Elements (Reactive Values)
           column(width=3,
-                 h1('Plotly Plot')
+                 h1('Data Cleaning')
           ),
           column(width=3,
                 uiOutput('selectDataCleaningBurn')
@@ -74,13 +74,13 @@ ui <- dashboardPage(
                  uiOutput('selectDataCleaningElement')
           ),
           column(width=1,
-                actionButton("btnPlotlySave", "Save")
+                actionButton("btnDataCleaningSave", "Save")
           ),
           column(width=1,
-                actionButton("btnPlotlyLoad", "Load")
+                actionButton("btnDataCleaningLoad", "Load")
           ),
           column(width=1,
-                actionButton("btnPlotlyReset", "Reset")
+                actionButton("btnDataCleaningReset", "Reset")
           )
         ),
         # Output to Browswer (~Reactive Observers)

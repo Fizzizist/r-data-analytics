@@ -25,10 +25,10 @@ loadUI <- function(input, output, session){
 
   observeEvent(input$sidebarMenu, 
         {
-          if(input$sidebarMenu != "statPlotly") return()
+          if(input$sidebarMenu != "statDataCleaning") return()
           if(uiReactValues$loadedDataCleaning) return()
           uiReactValues$loadedDataCleaning <- TRUE
-          print("uiControl.R - Load statPlotly")
+          print("uiControl.R - Load statDataCleaning")
           
           burns <- getBurnList()
           burnChoices <- c(c('%'),burns[['burn_id']])

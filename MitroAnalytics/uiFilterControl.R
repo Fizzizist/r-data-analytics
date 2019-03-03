@@ -8,7 +8,7 @@ renderSelectInput <- function(output, id, inputLabel, selectOptions, selected=NU
 }
 
 #
-# Plotly Plot tab UI filter events
+# DataCleaning Plot tab UI filter events
 #
 observeDataCleaningSelectBurnEvent <- function(input, output, session){
   observeEvent(
@@ -40,16 +40,16 @@ observeDataCleaningSelectElemEvent <- function(input, output, session, dataset){
 # observeDataCleaningTreatmentEvent <- function(input, output, session, dataset){ }
 
 observeDataCleaningBtnEvent <- function(input, output, session){
-  observeEvent(input$btnPlotlySave,
+  observeEvent(input$btnDataCleaningSave,
    {
-     print(session$userData$sampElemPlotly)
+     print(session$userData$sampElemDataCleaning)
      saveUserDataset(session$userData$sampElem, session$userData$username)
      drawDataCleaning(input, output, session, session$userData$sampElem, session$userData$elemSelected)
      print("uiFilterControl.R - drawDataCleaning Save")
    }
   )
   
-  observeEvent(input$btnPlotlyLoad,
+  observeEvent(input$btnDataCleaningLoad,
    {
      sampElem <- getSampElem(session$userData$username) # Loading sampElem from the save file?
      drawDataCleaning(input, output, session, sampElem, session$userData$elemSelected)
@@ -57,13 +57,13 @@ observeDataCleaningBtnEvent <- function(input, output, session){
    }
   )
   
-  observeEvent(input$btnPlotlyReset,
+  observeEvent(input$btnDataCleaningReset,
    {
      session$userData$sampElem <- getSolConcTreat(input$selectDataCleaningElement,input$selectDataCleaningBurn,NULL) # I am not sure if I should be calling the input$variable values here?
      print(session$userData$sampElem)
-     renderSelectInput(output, 'selectDataCleaningElement', "Choose an element:", session$userData$elemNames, session$userData$elemSelected)
+     renderSelectInput(output, 'selectDataCleaningElement', "Select an element:", session$userData$elemNames, session$userData$elemSelected)
      observeDataCleaningSelectElemEvent(input, output, session, session$userData$sampElem)
-     #print("input$btnPlotlyReset")
+     #print("input$btnDataCleaningReset")
    }
   )
 }
