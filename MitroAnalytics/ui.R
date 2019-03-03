@@ -95,9 +95,8 @@ ui <- dashboardPage(
           verbatimTextOutput("crosstalk1")
           ),
           column(width = 7,
-                 plotlyOutput("plot1"),
-                 plotlyOutput("plot2")#,
-                 #verbatimTextOutput("p1Select")
+                 plotlyOutput("dataCleanScatter"),
+                 plotlyOutput("dataCleanBox")
           )),
                     column(width = 2)
           ),
