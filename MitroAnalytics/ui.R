@@ -2,7 +2,7 @@ library(shiny)
 library(shinydashboard)
 library(shinyjs)
 library(V8)
-library(DT) # Chris: Added library to draw Datatable.
+library(DT)
 library(plotly)
 
 source("uiAuthControl.R")
@@ -24,7 +24,7 @@ ui <- dashboardPage(
       menuItem("Home", tabName='home', icon=icon('home')),
       menuItem("File Upload", tabName='fileUpload', icon=icon('file-upload')),
 	    menuItem("File Download", tabName='fileDownload', icon=icon('download')),
-      menuItem("Plotly Plot", tabName="statPlotly", icon=icon('chart-line')),
+      menuItem("Data Cleaning", tabName="statDataCleaning", icon=icon('chart-line')),
 	    uiOutput("logout")
     )
   ),
@@ -60,27 +60,27 @@ ui <- dashboardPage(
           )
         )
       ),
-      # Plotly Plot Tab
-      tabItem(tabName="statPlotly",
+      # DataCleaning Plot Tab
+      tabItem(tabName="statDataCleaning",
         fluidRow(
           # UI Elements (Reactive Values)
           column(width=3,
-                 h1('Plotly Plot')
+                 h1('Data Cleaning')
           ),
           column(width=3,
-                uiOutput('selectPlotlyPlotBurn')
+                uiOutput('selectDataCleaningBurn')
           ),
           column(width=3,
-                 uiOutput('selectPlotlyPlotElement')
+                 uiOutput('selectDataCleaningElement')
           ),
           column(width=1,
-                actionButton("btnPlotlySave", "Save")
+                actionButton("btnDataCleaningSave", "Save")
           ),
           column(width=1,
-                actionButton("btnPlotlyLoad", "Load")
+                actionButton("btnDataCleaningLoad", "Load")
           ),
           column(width=1,
-                actionButton("btnPlotlyReset", "Reset")
+                actionButton("btnDataCleaningReset", "Reset")
           )
         ),
         # Output to Browswer (~Reactive Observers)
@@ -90,14 +90,13 @@ ui <- dashboardPage(
           # code to reset plotlys event_data("plotly_click", source="A") to NULL -> executed upon action button click
           # note that "A" needs to be replaced with plotly source string if used
           extendShinyjs(text = "shinyjs.resetSelected = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }"),
-          tags$style(HTML("table.dataTable tbody tr.selected td, table.dataTable td.selected{background-color:#f45342 !important;}")),
-          DTOutput("data1"),
-          verbatimTextOutput("crosstalk1")
+          tags$style(HTML("table.dataTable tbody tr.selected td, table.dataTable td.selected{background-color:#B40000 !important;}")),
+          DTOutput("dataCleanDT"),
+          verbatimTextOutput("dataCleanSaveData")
           ),
           column(width = 7,
-                 plotlyOutput("plot1"),
-                 plotlyOutput("plot2")#,
-                 #verbatimTextOutput("p1Select")
+                 plotlyOutput("dataCleanScatter"),
+                 plotlyOutput("dataCleanBox")
           )),
                     column(width = 2)
           ),

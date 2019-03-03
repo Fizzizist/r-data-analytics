@@ -8,7 +8,7 @@ loadUI <- function(input, output, session){
   uiReactValues <- reactiveValues(
     loadedStatHist = FALSE,
     loadedIntPlot = FALSE,
-    loadedPlotlyPlot = FALSE,
+    loadedDataCleaning = FALSE,
     loadIntRDS = FALSE,
     authenticated = FALSE
   )
@@ -25,16 +25,16 @@ loadUI <- function(input, output, session){
 
   observeEvent(input$sidebarMenu, 
         {
-          if(input$sidebarMenu != "statPlotly") return()
-          if(uiReactValues$loadedPlotlyPlot) return()
-          uiReactValues$loadedPlotlyPlot <- TRUE
-          print("uiControl.R - Load statPlotly")
+          if(input$sidebarMenu != "statDataCleaning") return()
+          if(uiReactValues$loadedDataCleaning) return()
+          uiReactValues$loadedDataCleaning <- TRUE
+          print("uiControl.R - Load statDataCleaning")
           
           burns <- getBurnList()
           burnChoices <- c(c('%'),burns[['burn_id']])
           names(burnChoices) <- c(c('All'),burns[['burn_id']])
-          renderSelectInput(output, 'selectPlotlyPlotBurn', 'Select burn:', burnChoices , '%')
-          observePlotlyPlotSelectBurnEvent(input, output, session)
+          renderSelectInput(output, 'selectDataCleaningBurn', 'Select burn:', burnChoices , '%')
+          observeDataCleaningSelectBurnEvent(input, output, session)
         }
       )
   }
