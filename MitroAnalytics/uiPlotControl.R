@@ -15,14 +15,14 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
     print("uiPlotControl.R - Initialize data")
 
     js$resetSelected()
-    dataTableProxy('data1') %>% selectRows(NULL)
+    dataTableProxy('dataCleanDT') %>% selectRows(NULL)
 
     dataCleaningCurrentTibble <<- data %>% tibble::remove_rownames()
     dataCleaningCurrentSharedData <<- SharedData$new(dataCleaningCurrentTibble, ~solution_id)
   })
 
   # Renders Datatable
-  output$data1 <- renderDT({ # Renders the datatable
+  output$dataCleanDT <- renderDT({ # Renders the datatable
     
     updateDataTable <- event_data("plotly_selected")
 
@@ -35,27 +35,15 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
   
   output$dataCleanScatter <- renderPlotly({
     
-    s <- input$data1_rows_selected # Maybe if I make s a reactive value it will update when rows are deselected?
+    selectedRowsDT <- input$dataCleanDT_rows_selected
 
     print("uiPlotControl.R - renderPlotly(dataCleanScatter)")
     
-    if (!length(s)) {
-      print("uiPlotControl.R - Render p")
-      scatterPlotUnselected <- dataCleaningCurrentSharedData %>%
-        plot_ly(x = ~solid_conc, 
-                y = ~solution_id, 
-                type = 'scatter', 
-                color = I('black'), 
-                name = 'Unfiltered',
-                mode = "markers",
-                transforms = list(list(type='groupby',groups=selectedElement))) %>%
-        highlight(on = "plotly_selected",off="plotly_deselect") %>%
-        layout(showlegend = T, dragmode = "select")
-      
-    } else if (length(s)) {
-      print("uiPlotControl.R - Render pp")
+    if (length(selectedRowsDT)) {
 
-      scatterPlotSelected <- dataCleaningCurrentTibble %>%
+      print("uiPlotControl.R - Render scatterPlotSelected")
+
+        scatterPlotSelected <- dataCleaningCurrentTibble %>%
         plot_ly() %>% 
         add_trace(x = ~solid_conc, 
                   y = ~solution_id, 
@@ -69,29 +57,44 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
       
       # selected data
       scatterPlotSelected <- add_trace(scatterPlotSelected, 
-                      data = dataCleaningCurrentTibble[s, , drop = F], 
-                      type = 'scatter', 
-                      mode = 'markers',
-                      x = ~solid_conc, 
-                      y = ~solution_id, 
-                      color = I('#B40000'), 
-                      name = 'Filtered',
-                      transforms = list(list(type='groupby',groups=selectedElement)))
+                data = dataCleaningCurrentTibble[selectedRowsDT, , drop = F], 
+                type = 'scatter', 
+                mode = 'markers',
+                x = ~solid_conc, 
+                y = ~solution_id, 
+                color = I('#B40000'), 
+                name = 'Filtered',
+                transforms = list(list(type='groupby',groups=selectedElement)))
+      
+    } else {
+      print("uiPlotControl.R - Render scatterPlotUnselected")
+
+        scatterPlotUnselected <- dataCleaningCurrentSharedData %>%
+        plot_ly(x = ~solid_conc, 
+                y = ~solution_id, 
+                type = 'scatter', 
+                color = I('black'), 
+                name = 'Unfiltered',
+                mode = "markers",
+                transforms = list(list(type='groupby',groups=selectedElement))) %>%
+        highlight(on = "plotly_selected",off="plotly_deselect") %>%
+        layout(showlegend = T, dragmode = "select")
+    
     }
   })
   
   # Renders interactive boxplot
   output$dataCleanBox <- renderPlotly({
     print("uiPlotControl.R - renderPlotly(dataCleanBox)")
-    boxData <- dataCleaningCurrentTibble[input$data1_rows_selected, ] # Stores the datatable rows which are selected
+    boxData <- dataCleaningCurrentTibble[input$dataCleanDT_rows_selected, ] # Stores the datatable rows which are selected
 
-    if(length(input$data1_rows_selected)){ # Renders when there are selected rows
+    if(length(input$dataCleanDT_rows_selected)){ # Renders when there are selected rows
       print("uiPlotControl.R - Render bb")
       boxSelected <- boxData %>%
         plot_ly(x=~solid_conc,
                 type = "box",
                 boxpoints = "all",
-                color = I("red"),
+                color = I("#B40000"),
                 jitter = 0.3,
                 pointpos = -1.5,
                 boxmean = TRUE
@@ -111,8 +114,8 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
   })
   
   # Pass current selection to save function
-  output$crosstalk1 <- renderPrint({
-    fromTable <- dataCleaningCurrentTibble[input$data1_rows_selected, ] # Selection from data table using 'crosstalk' package.
+  output$dataCleanSaveData <- renderPrint({
+    fromTable <- dataCleaningCurrentTibble[input$dataCleanDT_rows_selected, ] # Selection from data table using 'crosstalk' package.
     session$userData$sampElem <- fromTable
   })
   
@@ -120,7 +123,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
     print("uiPlotControl.R - observeEvent(selectRows(tabSelect)")
     updatePlotValues <- event_data("plotly_selected")
     tabSelect <- which(dataCleaningCurrentTibble$solution_id %in% updatePlotValues$y) # Retrieve indices of seleted rows
-    dataTableProxy('data1') %>% selectRows(as.character(tabSelect))
+    dataTableProxy('dataCleanDT') %>% selectRows(as.character(tabSelect))
   }) 
 }
 

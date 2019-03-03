@@ -90,9 +90,9 @@ ui <- dashboardPage(
           # code to reset plotlys event_data("plotly_click", source="A") to NULL -> executed upon action button click
           # note that "A" needs to be replaced with plotly source string if used
           extendShinyjs(text = "shinyjs.resetSelected = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }"),
-          tags$style(HTML("table.dataTable tbody tr.selected td, table.dataTable td.selected{background-color:#f45342 !important;}")),
-          DTOutput("data1"),
-          verbatimTextOutput("crosstalk1")
+          tags$style(HTML("table.dataTable tbody tr.selected td, table.dataTable td.selected{background-color:#B40000 !important;}")),
+          DTOutput("dataCleanDT"),
+          verbatimTextOutput("dataCleanSaveData")
           ),
           column(width = 7,
                  plotlyOutput("dataCleanScatter"),
