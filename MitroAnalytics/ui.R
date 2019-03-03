@@ -68,10 +68,10 @@ ui <- dashboardPage(
                  h1('Plotly Plot')
           ),
           column(width=3,
-                uiOutput('selectPlotlyPlotBurn')
+                uiOutput('selectDataCleaningBurn')
           ),
           column(width=3,
-                 uiOutput('selectPlotlyPlotElement')
+                 uiOutput('selectDataCleaningElement')
           ),
           column(width=1,
                 actionButton("btnPlotlySave", "Save")

@@ -119,7 +119,7 @@ getDownloadData <- function (burns, tblName){
 
 ###################
 
-# #' initializes and returns burn choices for selectPlotlyPlotBurn
+# #' initializes and returns burn choices for selectDataCleaningBurn
 # #'
 # #'@return - named vector of possible burn choices
 # getBurnChoices() <- function(){
@@ -127,7 +127,7 @@ getDownloadData <- function (burns, tblName){
 # 	print(burnOptions)
 # }
 
-#' initializes and returns element choices for selectPlotlyPlotElement
+#' initializes and returns element choices for selectDataCleaningElement
 #'
 #' @return - vector of possible element choices
 getElemChoices <- function(){

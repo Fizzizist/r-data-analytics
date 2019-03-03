@@ -7,7 +7,7 @@ library(plotly)
 
 # Function to output the plotly plot
 # Can likely be split up more
-drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
+drawDataCleaning <- function(input, output, session, data, selectedElement) {
   session$userData$elemSelected <- selectedElement
 
   # Initialize data values and reset selections
