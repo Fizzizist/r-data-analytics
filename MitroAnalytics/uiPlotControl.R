@@ -14,8 +14,9 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
   # Initializing interactive data variables
   
   ctr <- reactiveVal(0) #Initializing reactive value to trigger datatable update when input$elemChoice is changed
-  m <- NULL
+  m <- reactiveVal(NULL)
   d <- NULL
+  s <- NULL
   
   observeEvent(selectedElement, {
     print("uiPlotControl.R - Initialize data")
@@ -27,11 +28,13 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
   })
 
   output$data1 <- renderDT({ # Renders the datatable
+    
+    updateDataTable <- d$selection()
 
-    print("Rending dt")
+    print("Rendering dt")
     dt <- DT::datatable(m, option = list(pageLength = 20))
- 
-    }
+    dt
+
   },server=FALSE)
   
   output$plot1 <- renderPlotly({
@@ -55,8 +58,8 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
       
     } else if (length(s)) {
       print("uiPlotControl.R - Render pp")
-      c <- d
-      pp <- c %>%
+
+      pp <- d %>%
         plot_ly() %>% 
         add_trace(x = ~solid_conc, 
                   y = ~solution_id, 
