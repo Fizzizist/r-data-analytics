@@ -1,6 +1,7 @@
 library(shiny)
 library(shinydashboard)
 library(shinyjs)
+library(V8)
 library(DT) # Chris: Added library to draw Datatable.
 library(plotly)
 
@@ -59,8 +60,10 @@ ui <- dashboardPage(
           )
         )
       ),
+      # Plotly Plot Tab
       tabItem(tabName="statPlotly",
         fluidRow(
+          # UI Elements (Reactive Values)
           column(width=3,
                  h1('Plotly Plot')
           ),
@@ -80,18 +83,25 @@ ui <- dashboardPage(
                 actionButton("btnPlotlyReset", "Reset")
           )
         ),
+        # Output to Browswer (~Reactive Observers)
         fluidRow(
           column(width=5,
-                 DTOutput("data1"),
-                 verbatimTextOutput("crosstalk1")
+          useShinyjs(),
+          # code to reset plotlys event_data("plotly_click", source="A") to NULL -> executed upon action button click
+          # note that "A" needs to be replaced with plotly source string if used
+          extendShinyjs(text = "shinyjs.resetSelected = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }"),
+          tags$style(HTML("table.dataTable tbody tr.selected td, table.dataTable td.selected{background-color:#f45342 !important;}")),
+          DTOutput("data1"),
+          verbatimTextOutput("crosstalk1")
           ),
           column(width = 7,
                  plotlyOutput("plot1"),
-                 plotlyOutput("plot2"),
-                 verbatimTextOutput("p1Select")
+                 plotlyOutput("plot2")#,
+                 #verbatimTextOutput("p1Select")
           )),
                     column(width = 2)
           ),
+      # File Download Tab
       tabItem(tabName='fileDownload',
               fluidRow(
                 column(width=3,

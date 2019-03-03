@@ -11,7 +11,7 @@ getConnect <- function () {
         conn <- DBI::dbConnect(
                 drv = RMySQL::MySQL(),
                 dbname = "igpprototype",
-                host = "159.89.126.100",
+                host = "108.162.177.90",
                 username = "test",
                 password = "thispassword",
                 port = 3306
@@ -59,6 +59,7 @@ getNumOfBurns <- function () {
 #'
 #' @return data.frame of burn IDs
 getBurnList <- function () {
+	print("io.R - getBurnList")
 	query <- getOneQuery("SELECT burn_id FROM burns;")
 	return(query)
 }
@@ -106,28 +107,53 @@ getDownloadData <- function (burns, tblName){
 	)
 }
 
-#' get sample data view
-#' 
-#' @return data.frame of sample_data view
-getSampleData <- function (){
-	query <- getOneQuery("SELECT * FROM sample_data;")
-	return(query)
+#### DEPRICATED ####
+
+# #' get sample data view
+# #' 
+# #' @return data.frame of sample_data view
+# getSampleData <- function (){
+# 	query <- getOneQuery("SELECT * FROM sample_data;")
+# 	return(query)
+# }
+
+###################
+
+# #' initializes and returns burn choices for selectPlotlyPlotBurn
+# #'
+# #'@return - named vector of possible burn choices
+# getBurnChoices() <- function(){
+# 	burnOptions <- getBurnList()
+# 	print(burnOptions)
+# }
+
+#' initializes and returns element choices for selectPlotlyPlotElement
+#'
+#' @return - vector of possible element choices
+getElemChoices <- function(){
+	print("io.R - getElemChoices")
+	if(!exists("elemChoices")) {
+		elemChoices <- c("Zn","Se","Mg", "K", "Fe","Cu","Ca")
+	}
+	return(elemChoices)
 }
 
 #' get filtered solid_conc and treatment data
 #'
-#' @param desc - the item that you are actually selecting for 
-#' @param choice - choice of thing that you are selecting for
+#' @param el - element being selected for
+#' @param burn - burn being selected for
+#' @param treat - treatment being selected for
 #'
 #' @return - table of solid_conc, treatment, solution_id and element_id
-getSolConcTreat <- function(desc, choice){
-	if (desc == "element_id"){
-		query <- getOneQuery(
-			paste0("SELECT solution_id, element_id, solid_conc, treatment 
-			FROM filtered_solconc_treatment
-			WHERE ", desc, " LIKE '", choice, "%';")
-		return(query)
-	}
+getSolConcTreat <- function(el, burn, treat){
+	print("io.R - getSolConcTreat")
+	query <- getOneQuery(
+		paste0("SELECT solution_id, element_id, solid_conc, treatment 
+		FROM filtered_solconc_treatment
+		WHERE element_id LIKE '", el, "%'
+		AND burn_id LIKE '", burn, "'
+		AND treatment LIKE '", treat, "';"))
+	return(query)
 }
 
 #' Takes in username and password, and outputs either a TRUE boolean value or a string indicating the
