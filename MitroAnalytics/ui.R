@@ -2,7 +2,7 @@ library(shiny)
 library(shinydashboard)
 library(shinyjs)
 library(V8)
-library(DT) # Chris: Added library to draw Datatable.
+library(DT)
 library(plotly)
 
 source("uiAuthControl.R")
