@@ -19,19 +19,10 @@ server <- function(input, output, session){
                 insertCSV(f1)
 
                 return("Data successfully inserted into the database!")
-        })
-
-	sessList <- getBurnList()[,1]
-        #download tab checkboxes
-        output$burnChecks <- renderUI({
-                checkboxGroupInput("burns", "Choose burn:",
-                        choiceNames = as.character(sessList),
-                        choiceValues = as.character(sessList))
         })	
 
 	#render the download button upon the correct conditions
         output$dlButton <- renderUI({
-                req(input$burns)
                 downloadButton("downloadData", "Download")
         })
 
