@@ -44,6 +44,8 @@ observePlotlyPlotBtnEvent <- function(input, output, session){
    {
      print(session$userData$sampElemPlotly)
      saveUserDataset(session$userData$sampElem, session$userData$username)
+     print(session$userData$sampElem$solution_id)
+     session$userData$solVec <- session$userData$sampElem$solution_id
      drawPlotlyPlot(input, output, session, session$userData$sampElem, session$userData$elemSelected)
      print("uiFilterControl.R - drawPlotlyPlot Save")
    }
@@ -52,6 +54,7 @@ observePlotlyPlotBtnEvent <- function(input, output, session){
   observeEvent(input$btnPlotlyLoad,
    {
      sampElem <- getSampElem(session$userData$username) # Loading sampElem from the save file?
+     #print(sampElem)
      drawPlotlyPlot(input, output, session, sampElem, session$userData$elemSelected)
     print("uiFilterControl.R - drawPlotlyPlot Load")
    }

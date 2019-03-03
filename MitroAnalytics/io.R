@@ -76,35 +76,23 @@ getWholeTable <- function(tblName){
 
 #' function that returns specific download data for download tab
 #' 
-#' @param burns vector of burn IDs
-#' @param tblName table to pull data from
-getDownloadData <- function (burns, tblName){
-	switch(tblName,
-		solutions={
-			query <- getOneQuery( 
-				paste0("SELECT ", getTableColumnNames(tblName), " FROM ", tblName, 
-					" WHERE burn_id = ", paste(burns, 
-						collapse=" or burn_id = "), ";"))
-		},
-		solution_elements={
-			query <- getOneQuery( 
-				paste0("SELECT ", getTableColumnNames(tblName), " FROM ", tblName, 
-					" se, solutions s 
-					WHERE se.solution_id = s.solution_id and (burn_id = ", 
-					paste(burns, 
-						collapse=" or burn_id = "), ");"))
-		},
-		replicates={
-			query <- getOneQuery( 
-				paste0("SELECT ", getTableColumnNames(tblName), " FROM ", tblName, 
-					" r, solutions s, solution_elements se 
-					WHERE se.solution_id = s.solution_id 
-					and se.solution_id = r.solution_id 
-					and se.element_id = r.element_id and (burn_id = ", 
-					paste(burns, 
-						collapse=" or burn_id = "), ");"))
-		}
-	)
+#' @param solIDs vector of solution IDs
+getDownloadData <- function (solIDs){
+	print(solIDs)
+	tryCatch({
+		query <- getOneQuery( 
+			paste0("SELECT solution_id, element_id, solid_conc, treatment FROM  
+				filtered_solconc_treatment WHERE solution_id = ", 
+				paste(solIDs, collapse=" or solution_id = "), ";"))
+	},
+	error = function(cond){
+		message("SQL syntax error.")
+		return(NULL)
+	},
+	warning = function(cond){
+		message("SQL syntax error.")
+		return(NULL)
+	})
 }
 
 #### DEPRICATED ####
