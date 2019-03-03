@@ -28,6 +28,7 @@ loadUI <- function(input, output, session){
           if(input$sidebarMenu != "statPlotly") return()
           if(uiReactValues$loadedPlotlyPlot) return()
           uiReactValues$loadedPlotlyPlot <- TRUE
+          print("uiControl.R - Load statPlotly")
           
           burns <- getBurnList()
           burnChoices <- c(c('%'),burns[['burn_id']])

@@ -59,6 +59,7 @@ getNumOfBurns <- function () {
 #'
 #' @return data.frame of burn IDs
 getBurnList <- function () {
+	print("io.R - getBurnList")
 	query <- getOneQuery("SELECT burn_id FROM burns;")
 	return(query)
 }
@@ -130,6 +131,7 @@ getDownloadData <- function (burns, tblName){
 #'
 #' @return - vector of possible element choices
 getElemChoices <- function(){
+	print("io.R - getElemChoices")
 	if(!exists("elemChoices")) {
 		elemChoices <- c("Zn","Se","Mg", "K", "Fe","Cu","Ca")
 	}
@@ -144,6 +146,7 @@ getElemChoices <- function(){
 #'
 #' @return - table of solid_conc, treatment, solution_id and element_id
 getSolConcTreat <- function(el, burn, treat){
+	print("io.R - getSolConcTreat")
 	query <- getOneQuery(
 		paste0("SELECT solution_id, element_id, solid_conc, treatment 
 		FROM filtered_solconc_treatment

@@ -14,12 +14,12 @@ observePlotlyPlotSelectBurnEvent <- function(input, output, session){
   observeEvent(
     input$selectPlotlyPlotBurn,
     {
+      print("uiFilterControl.R - initialize data")
       session$userData$sampElem <- getSolConcTreat(input$selectPlotlyPlotElement,input$selectPlotlyPlotBurn,'%') # this needs to take in the burn id like getPTValues(input$selectPlotlyPlotBurn)
       session$userData$elemNames <- getElemChoices()
       renderSelectInput(output, 'selectPlotlyPlotElement', "Select an element:", session$userData$elemNames, 'Zn')
       observePlotlyPlotSelectElemEvent(input, output, session, input$selectPlotlyPlotElement)
       observePlotlyPlotBtnEvent(input, output, session)
-      #print(paste("input$selectPlotlyPlotBurn = ", input$selectPlotlyPlotBurn))
     }
   )
 }
@@ -29,7 +29,7 @@ observePlotlyPlotSelectElemEvent <- function(input, output, session, dataset){
     input$selectPlotlyPlotElement,
     {
       drawPlotlyPlot(input, output, session, getSolConcTreat(input$selectPlotlyPlotElement,input$selectPlotlyPlotBurn,'%'), input$selectPlotlyPlotElement)
-      #print(paste("observePlotlyPlotSelectElemEvent = ", input$selectPlotlyPlotElement))
+      print("uiFilterControl.R - drawPlotlyPlot")
     }
   )
 }
@@ -45,7 +45,7 @@ observePlotlyPlotBtnEvent <- function(input, output, session){
      print(session$userData$sampElemPlotly)
      saveUserDataset(session$userData$sampElem, session$userData$username)
      drawPlotlyPlot(input, output, session, session$userData$sampElem, session$userData$elemSelected)
-     #print("btnPlotlySave")
+     print("uiFilterControl.R - drawPlotlyPlot Save")
    }
   )
   
@@ -53,7 +53,7 @@ observePlotlyPlotBtnEvent <- function(input, output, session){
    {
      sampElem <- getSampElem(session$userData$username) # Loading sampElem from the save file?
      drawPlotlyPlot(input, output, session, sampElem, session$userData$elemSelected)
-     #print("btnPlotlyLoad")
+    print("uiFilterControl.R - drawPlotlyPlot Load")
    }
   )
   
