@@ -13,25 +13,31 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
   
   # Initializing interactive data variables
   
-  ctr <- reactiveVal(0) #Initializing reactive value to trigger datatable update when input$elemChoice is changed
-  m <- reactiveVal(NULL)
+  m <- NULL
   d <- NULL
-  s <- NULL
+  s <- reactiveVal(NULL)
   
   observeEvent(selectedElement, {
     print("uiPlotControl.R - Initialize data")
 
+    
     dataTableProxy('data1') %>% selectRows(NULL)
 
-    m <<- data %>% tibble::rownames_to_column()
+    m <<- data %>% tibble::remove_rownames()
+    # print(m)
     d <<- SharedData$new(m, ~solution_id)
+    js$resetSelected()
   })
 
   output$data1 <- renderDT({ # Renders the datatable
     
-    updateDataTable <- d$selection()
+    updateDataTable <- event_data("plotly_selected")
 
-    print("Rendering dt")
+    # print("Rendering dt")
+    # print("Event data")
+    # print(paste(updateDataTable$y))
+    # print(which(m$solution_id %in% updateDataTable$y))
+    # print(paste("Length of m is ", length(which(m$solution_id %in% updateDataTable$y))))
     dt <- DT::datatable(m, option = list(pageLength = 20))
     dt
 
@@ -52,6 +58,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
                 color = I('black'), 
                 name = 'Unfiltered',
                 mode = "markers",
+                source = "A",
                 transforms = list(list(type='groupby',groups=selectedElement))) %>%
         highlight(on = "plotly_selected",off="plotly_deselect") %>%
         layout(showlegend = T, dragmode = "select")
@@ -59,7 +66,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
     } else if (length(s)) {
       print("uiPlotControl.R - Render pp")
 
-      pp <- d %>%
+      pp <- m %>%
         plot_ly() %>% 
         add_trace(x = ~solid_conc, 
                   y = ~solution_id, 
@@ -88,6 +95,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
   output$plot2 <- renderPlotly({
     print("uiPlotControl.R - renderPlotly(plot2)")
     boxData <- m[input$data1_rows_selected, ] # Stores the datatable rows which are selected
+    # print(paste("Input data1: ", input$data1_rows_selected))
 
     if(length(input$data1_rows_selected)){ # Renders when there are selected rows
       print("uiPlotControl.R - Render bb")
@@ -102,7 +110,7 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
         )
     } else { # Renders when there aren't selected rows
       print("uiPlotControl.R - Render b")
-      b <- d %>%
+      b <- m %>%
         plot_ly(x=~solid_conc,
                 type = "box",
                 color = I('black'),
@@ -133,21 +141,23 @@ drawPlotlyPlot <- function(input, output, session, data, selectedElement) {
   
   observeEvent(d$selection(),{
     print("uiPlotControl.R - observeEvent(selectRows(tabSelect)")
-    tabSelect <- which(d$selection()) # Returns rows for which selection is true
+    updatePlotValues <- event_data("plotly_selected")
+    tabSelect <- which(m$solution_id %in% updatePlotValues$y)
+    # tabSelect <- which(d$selection()) # Returns rows for which selection is true
+    # print("Tab Select:")
+    # print(sort(as.numeric(tabSelect)))
     # print(tabSelect)
-    dataTableProxy('data1') %>% selectRows(tabSelect)
+    dataTableProxy('data1') %>% selectRows(as.character(tabSelect))
   })
   
   #
   # TESTING: Does this do anything important?
   #
-  # observeEvent("plotly_selected",{ # Observes changes in plot selections
-  #   print("NULL selected rows by 'plotly_selected' event")
-  #   test <- event_data("plotly_selected")
-  #   if (is.null(test)) {
-  #     proxy %>% selectRows(NULL)
-  #   }
-  # })
+  observeEvent("plotly_selected",{ # Observes changes in plot selections
+    print("Event plotly_selected")
+    test <- event_data("plotly_selected")
+    # print(test)
+  })
   
   #
   # TESTING: Does this do anything important?
