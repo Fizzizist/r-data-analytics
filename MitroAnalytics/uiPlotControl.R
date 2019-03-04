@@ -205,31 +205,25 @@ drawDataExploring <- function(input, output, session, data, selectedElement) {
   })
   
   # Renders interactive boxplot
-  output$dataExploreBox <- renderPlotly({
+  output$dataExploreHist <- renderPlotly({
     print("uiPlotControl.R - renderPlotly(dataExploreBox)")
-    boxData <- dataExploringCurrentTibble[input$dataExploreDT_rows_selected, ] # Stores the datatable rows which are selected
+    histData <- dataExploringCurrentTibble[input$dataExploreDT_rows_selected, ] # Stores the datatable rows which are selected
 
     if(length(input$dataExploreDT_rows_selected)){ # Renders when there are selected rows
       print("uiPlotControl.R - Render boxSelected")
-      boxSelected <- boxData %>%
+      histSelected <- histData %>%
         plot_ly(x=~solid_conc,
-                type = "box",
-                boxpoints = "all",
-                color = I("#B40000"),
-                jitter = 0.3,
-                pointpos = -1.5,
-                boxmean = TRUE
+                type = "histogram",
+                mode = "line + markers",
+                line = c(color= "#B40000")
         )
     } else { # Renders when there aren't selected rows
       print("uiPlotControl.R - Render b")
-      boxUnselected <- dataExploringCurrentTibble %>%
+      histUnselected <- dataExploringCurrentTibble %>%
         plot_ly(x=~solid_conc,
-                type = "box",
-                color = I('black'),
-                boxpoints = "all",
-                jitter = 0.3,
-                pointpos = -1.5,
-                boxmean = TRUE
+                type = "histogram",
+                mode = "line + markers",
+                line = c(color = "#B40000")
         )
     }
   })

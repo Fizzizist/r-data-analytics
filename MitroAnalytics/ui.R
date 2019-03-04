@@ -137,7 +137,7 @@ ui <- dashboardPage(
           ),
           column(width = 7,
                  plotlyOutput("dataExploreScatter"),
-                 plotlyOutput("dataExploreBox")
+                 plotlyOutput("dataExploreHist")
           )),
                     column(width = 2)
           ),
