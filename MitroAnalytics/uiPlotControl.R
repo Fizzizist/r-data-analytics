@@ -214,16 +214,14 @@ drawDataExploring <- function(input, output, session, data, selectedElement) {
       histSelected <- histData %>%
         plot_ly(x=~solid_conc,
                 type = "histogram",
-                mode = "line + markers",
-                line = c(color= "#B40000")
+                marker=list(color=rep(I('#B40000'), 1000))
         )
     } else { # Renders when there aren't selected rows
       print("uiPlotControl.R - Render b")
       histUnselected <- dataExploringCurrentTibble %>%
         plot_ly(x=~solid_conc,
                 type = "histogram",
-                mode = "line + markers",
-                line = c(color = "#B40000")
+                marker=list(color=rep(I("black"), 1000))
         )
     }
   })
