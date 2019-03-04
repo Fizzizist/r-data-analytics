@@ -25,6 +25,7 @@ ui <- dashboardPage(
       menuItem("File Upload", tabName='fileUpload', icon=icon('file-upload')),
 	    menuItem("File Download", tabName='fileDownload', icon=icon('download')),
       menuItem("Data Cleaning", tabName="statDataCleaning", icon=icon('chart-line')),
+      menuItem("Data Exploring", tabName="statDataExploring", icon=icon('chart-line')),
 	    uiOutput("logout")
     )
   ),
@@ -97,6 +98,46 @@ ui <- dashboardPage(
           column(width = 7,
                  plotlyOutput("dataCleanScatter"),
                  plotlyOutput("dataCleanBox")
+          )),
+                    column(width = 2)
+          ),
+      # Data Exploration Tab
+      tabItem(tabName="statDataExploring",
+        fluidRow(
+          # UI Elements (Reactive Values)
+          column(width=3,
+                 h1('Data Exploration')
+          ),
+          column(width=3,
+                uiOutput('selectDataExploringBurn')
+          ),
+          column(width=3,
+                 uiOutput('selectDataExploringElement')
+          ),
+          column(width=1,
+                actionButton("btnDataExploringSave", "Save")
+          ),
+          column(width=1,
+                actionButton("btnDataExploringLoad", "Load")
+          ),
+          column(width=1,
+                actionButton("btnDataExploringReset", "Reset")
+          )
+        ),
+        # Output to Browswer (~Reactive Observers)
+        fluidRow(
+          column(width=5,
+          useShinyjs(),
+          # code to reset plotlys event_data("plotly_click", source="A") to NULL -> executed upon action button click
+          # note that "A" needs to be replaced with plotly source string if used
+          extendShinyjs(text = "shinyjs.resetSelected = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }"),
+          tags$style(HTML("table.dataTable tbody tr.selected td, table.dataTable td.selected{background-color:#B40000 !important;}")),
+          DTOutput("dataExploreDT"),
+          verbatimTextOutput("dataExploreSaveData")
+          ),
+          column(width = 7,
+                 plotlyOutput("dataExploreScatter"),
+                 plotlyOutput("dataExploreBox")
           )),
                     column(width = 2)
           ),

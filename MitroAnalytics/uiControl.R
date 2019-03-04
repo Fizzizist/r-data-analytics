@@ -9,6 +9,7 @@ loadUI <- function(input, output, session){
     loadedStatHist = FALSE,
     loadedIntPlot = FALSE,
     loadedDataCleaning = FALSE,
+    loadedDataExploring = FALSE,
     loadIntRDS = FALSE,
     authenticated = FALSE
   )
@@ -35,6 +36,21 @@ loadUI <- function(input, output, session){
           names(burnChoices) <- c(c('All'),burns[['burn_id']])
           renderSelectInput(output, 'selectDataCleaningBurn', 'Select burn:', burnChoices , '%')
           observeDataCleaningSelectBurnEvent(input, output, session)
+        }
+      )
+
+  observeEvent(input$sidebarMenu, 
+        {
+          if(input$sidebarMenu != "statDataExploring") return()
+          if(uiReactValues$loadedDataExploring) return()
+          uiReactValues$loadedDataExploring <- TRUE
+          print("uiControl.R - Load statDataExploring")
+          
+          burns <- getBurnList()
+          burnChoices <- c(c('%'),burns[['burn_id']])
+          names(burnChoices) <- c(c('All'),burns[['burn_id']])
+          renderSelectInput(output, 'selectDataExploringBurn', 'Select burn:', burnChoices , '%')
+          observeDataExploringSelectBurnEvent(input, output, session)
         }
       )
   }
