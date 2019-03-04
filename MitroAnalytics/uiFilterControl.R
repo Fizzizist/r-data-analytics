@@ -44,6 +44,7 @@ observeDataCleaningBtnEvent <- function(input, output, session){
    {
      print(session$userData$sampElemDataCleaning)
      saveUserDataset(session$userData$sampElem, session$userData$username)
+     session$userData$solVec <- session$userData$sampElem$solution_id
      drawDataCleaning(input, output, session, session$userData$sampElem, session$userData$elemSelected)
      print("uiFilterControl.R - drawDataCleaning Save")
    }

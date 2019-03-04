@@ -151,15 +151,11 @@ ui <- dashboardPage(
               fluidRow(
                 tags$div(class='center',
                          #Downloader
-                         selectInput("tableChecks", "Choose a dataset:",
-                                     c("Solutions" = "solutions",
-                                       "Elements per solution" = "solution_elements",
-                                       "replicates" = "replicates")),
-                         uiOutput("burnChecks"),
                          selectInput("dlFormat", "Choose a format:",
                                      c("CSV" = "csv",
                                        "Excel" = "xlsx")),
-                         uiOutput("dlButton")
+                         uiOutput("dlButton"),
+                         verbatimTextOutput("dlOut") 
                 )
               )
             )

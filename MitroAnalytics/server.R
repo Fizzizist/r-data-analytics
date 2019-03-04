@@ -6,10 +6,11 @@ source("io.R")
 source("stats.R")
 
 server <- function(input, output, session){
-  #renders most of ui
-  loadUI(input, output, session)
+        #renders most of ui
+        loadUI(input, output, session)
 	
-	#runs the insert function from io.R and outputs success or error statements to the user
+		# runs the insert function from io.R and outputs success or error statements 
+        # to the user
         output$uploaded <- renderText({
                 f1 <- input$file1
 
@@ -21,11 +22,10 @@ server <- function(input, output, session){
                 return("Data successfully inserted into the database!")
         })	
 
-	#render the download button upon the correct conditions
+		#render the download button upon the correct conditions
         output$dlButton <- renderUI({
                 downloadButton("downloadData", "Download")
         })
-
 
         #download handler for download tab - allows for csv/excel optionality
         output$downloadData <- downloadHandler(
@@ -37,12 +37,16 @@ server <- function(input, output, session){
                         }
                 },
                 content = function(file){
-                        dataset <- getDownloadData(input$burns, input$tableChecks)
-                        if(input$dlFormat == "csv") {
-                                write.csv(dataset, file)
-                        } else if(input$dlFormat == "xlsx") {
-                                write.xlsx(dataset, file)
-                        }
+                        #print(session$userData$sampElem$solution_id)
+                        dataset <- getDownloadData(session$userData$solVec)
+						print(dataset)
+						if(is.null(dataset)){
+							output$dlOut <- renderPrint("You need to save data before you can download it.")
+						} else if(input$dlFormat == "csv") {
+								write.csv(dataset, file)
+						} else if(input$dlFormat == "xlsx") {
+								write.xlsx(dataset, file)
+						}
                 }
         )
 
