@@ -55,22 +55,34 @@ observeDataCleaningBtnEvent <- function(input, output, session){
   
   observeEvent(input$btnDataCleaningSave,
    {
-     saveUserDataset(session$userData$sampDataset, session$userData$username)
-     drawDataCleaning(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
-     print("uiFilterControl.R - drawDataCleaning Save")
+     showModal(showSaveDataModal(session$userData$username, session$userData$sampDataset$selectedBurn, session$userData$sampDataset$selectedElement))
+     #saveUserDataset(session$userData$sampDataset, session$userData$username)
+     #drawDataCleaning(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
+     print("uiFilterControl.R - drawDataCleaning Save Prompt")
    }
+  )
+  
+  observeEvent(input$btnSaveExecute,
+    {
+      filename = input$txtSavedDataFileName
+      saveUserDataset(session$userData$sampDataset, session$userData$username, filename)
+      drawDataCleaning(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
+      removeModal()
+      print("uiFilterControl.R - drawDataCleaning Save Execute")
+    }
   )
   
   observeEvent(input$btnDataCleaningLoad,
    {
      filenames <- getSavedDatasetList(session$userData$username)
-     showModal(showloadsavedDataModal(filenames))
+     showModal(showLoadSavedDataModal(filenames))
    }
   )
   
   observeEvent(
     input$btnLoadCleanedData,
     {
+      print(input$selectSavedCleanedData)
       session$userData$sampDataset <- getSavedDataset(session$userData$username, input$selectSavedCleanedData)
       drawDataCleaning(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
       removeModal()
@@ -79,7 +91,20 @@ observeDataCleaningBtnEvent <- function(input, output, session){
   
 }
 
-showloadsavedDataModal <- function(filenames){
+showSaveDataModal <- function(username, burnID, element){
+  if(burnID=="%"){burnID = "All"}
+  defaultFileName <- dataname <- paste0(username, "-", burnID, "-", element, "-", format(Sys.time(), "%Y-%m-%d-%H%M%S"))
+  modalDialog(
+    title = "Save the cleaned data",
+    textInput("txtSavedDataFileName", label='Enter the dataset name: ', value=defaultFileName),
+    footer = tagList(
+      modalButton("Cancel"),
+      actionButton("btnSaveExecute", "OK")
+    )
+  )
+}
+
+showLoadSavedDataModal <- function(filenames){
   modalDialog(
     title = "Select a dataset to load: ",
     selectInput('selectSavedCleanedData', NULL, filenames),
