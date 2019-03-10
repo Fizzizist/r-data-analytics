@@ -1,3 +1,6 @@
+#' Script for storing all IO functions reading data to and from the DBMS
+#'
+#' @authors Peter Vlasveld, Christopher Eeles and Minoru Nakano
 library(DBI)
 library(anytime)
 library(openssl)
@@ -77,13 +80,18 @@ getWholeTable <- function(tblName){
 #' function that returns specific download data for download tab
 #' 
 #' @param solIDs vector of solution IDs
-getDownloadData <- function (solIDs){
+getDownloadData <- function (solIDs, elIDs){
 	print(solIDs)
 	tryCatch({
 		query <- getOneQuery( 
 			paste0("SELECT solution_id, element_id, solid_conc, treatment FROM  
-				filtered_solconc_treatment WHERE solution_id = ", 
-				paste(solIDs, collapse=" or solution_id = "), ";"))
+				filtered_solconc_treatment WHERE (solution_id = ", 
+				paste(solIDs, collapse=" or solution_id = "), ") AND (element_id LIKE '",
+				paste(elIDs, collapse="%' or element_id LIKE '"), "%');"))
+		# print(paste0("SELECT solution_id, element_id, solid_conc, treatment FROM  
+		# 		filtered_solconc_treatment WHERE (solution_id = ", 
+		# 		paste(solIDs, collapse=" or solution_id = "), ") AND (element_id LIKE '",
+		# 		paste(elIDs, collapse="%' or element_id LIKE '"), "%');"))
 	},
 	error = function(cond){
 		message("SQL syntax error.")

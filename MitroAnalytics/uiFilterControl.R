@@ -56,8 +56,6 @@ observeDataCleaningBtnEvent <- function(input, output, session){
   observeEvent(input$btnDataCleaningSave,
    {
      showModal(showSaveDataModal(session$userData$username, session$userData$sampDataset$selectedBurn, session$userData$sampDataset$selectedElement))
-     #saveUserDataset(session$userData$sampDataset, session$userData$username)
-     #drawDataCleaning(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
      print("uiFilterControl.R - drawDataCleaning Save Prompt")
    }
   )
@@ -156,6 +154,7 @@ observeDataExploringBtnEvent <- function(input, output, session){
      print(session$userData$sampElemDataExploring)
      saveUserDataset(session$userData$sampElem, session$userData$username)
      drawDataExploring(input, output, session, session$userData$sampElem, session$userData$elemSelected)
+     updateSelectInput(session, "dlDataset",choices=getSavedDatasetList(session$userData$username))
      print("uiFilterControl.R - drawDataExploring Save")
    }
   )
