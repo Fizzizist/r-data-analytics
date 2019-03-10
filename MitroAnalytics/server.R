@@ -27,6 +27,11 @@ server <- function(input, output, session){
                 downloadButton("downloadData", "Download")
         })
 
+        output$dlMenu <- renderUI({
+                dataList <- getSavedDatasetList(session$userData$username)
+                selectInput("dlDataset", "Choose a dataset:", dataList)
+        })
+
         #download handler for download tab - allows for csv/excel optionality
         output$downloadData <- downloadHandler(
                 filename = function() {
@@ -37,8 +42,13 @@ server <- function(input, output, session){
                         }
                 },
                 content = function(file){
-                        #print(session$userData$sampElem$solution_id)
-                        dataset <- getDownloadData(session$userData$solVec)
+                        savedData <- getSavedDataset(session$userData$username,input$dlDataset)
+                        print(savedData)
+                        solVec <- savedData$sampData$solution_id
+                        elVec <- savedData$sampData$element_id
+                        print(solVec)
+                        print(elVec)
+                        dataset <- getDownloadData(solVec, elVec)
 						print(dataset)
 						if(is.null(dataset)){
 							output$dlOut <- renderPrint("You need to save data before you can download it.")

@@ -145,6 +145,7 @@ ui <- dashboardPage(
               fluidRow(
                 tags$div(class='center',
                          #Downloader
+                         uiOutput("dlMenu"),
                          selectInput("dlFormat", "Choose a format:",
                                      c("CSV" = "csv",
                                        "Excel" = "xlsx")),
