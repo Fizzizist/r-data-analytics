@@ -79,9 +79,6 @@ ui <- dashboardPage(
           ),
           column(width=1,
                 actionButton("btnDataCleaningLoad", "Load")
-          ),
-          column(width=1,
-                actionButton("btnDataCleaningReset", "Reset")
           )
         ),
         # Output to Browswer (~Reactive Observers)
@@ -119,9 +116,6 @@ ui <- dashboardPage(
           ),
           column(width=1,
                 actionButton("btnDataExploringLoad", "Load")
-          ),
-          column(width=1,
-                actionButton("btnDataExploringReset", "Reset")
           )
         ),
         # Output to Browswer (~Reactive Observers)

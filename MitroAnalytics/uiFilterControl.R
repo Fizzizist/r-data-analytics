@@ -1,6 +1,10 @@
 source("uiPlotControl.R")
 source("io.R")
 
+filterReactValues <- reactiveValues(
+  loadingSavedData = FALSE
+)
+
 renderSelectInput <- function(output, id, inputLabel, selectOptions, selected=NULL){
   output[[id]] <- renderUI({
     selectInput(inputId = id, label = inputLabel, choices = selectOptions, selected = selected)
@@ -15,20 +19,28 @@ observeDataCleaningSelectBurnEvent <- function(input, output, session){
     input$selectDataCleaningBurn,
     {
       print("uiFilterControl.R - initialize data")
-      session$userData$sampElem <- getSolConcTreat(input$selectDataCleaningElement,input$selectDataCleaningBurn,'%') # this needs to take in the burn id like getPTValues(input$selectDataCleaningBurn)
-      session$userData$elemNames <- getElemChoices()
-      renderSelectInput(output, 'selectDataCleaningElement', "Select an element:", session$userData$elemNames, 'Zn')
-      observeDataCleaningSelectElemEvent(input, output, session, input$selectDataCleaningElement)
-      observeDataCleaningBtnEvent(input, output, session)
+      
+      # sampDataset object keeps track of any changes in selected burn, element or plotted dataset. 
+      session$userData$sampDataset$selectedBurn <- input$selectDataCleaningBurn
+      
+      session$userData$sampDataset$sampData <- getSolConcTreat(input$selectDataCleaningElement,input$selectDataCleaningBurn,'%')
+
+      drawDataCleaning(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
     }
   )
 }
 
-observeDataCleaningSelectElemEvent <- function(input, output, session, dataset){
+observeDataCleaningSelectElemEvent <- function(input, output, session){ #, dataset){
   observeEvent(
     input$selectDataCleaningElement,
     {
-      drawDataCleaning(input, output, session, getSolConcTreat(input$selectDataCleaningElement,input$selectDataCleaningBurn,'%'), input$selectDataCleaningElement)
+      # sampDataset object keeps track of any changes in selected burn, element or plotted dataset.
+      session$userData$sampDataset$selectedElement <- input$selectDataCleaningElement
+      
+      session$userData$sampDataset$sampData <- getSolConcTreat(input$selectDataCleaningElement,input$selectDataCleaningBurn,'%')
+      
+      drawDataCleaning(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
+      
       print("uiFilterControl.R - drawDataCleaning")
     }
   )
@@ -40,31 +52,41 @@ observeDataCleaningSelectElemEvent <- function(input, output, session, dataset){
 # observeDataCleaningTreatmentEvent <- function(input, output, session, dataset){ }
 
 observeDataCleaningBtnEvent <- function(input, output, session){
+  
   observeEvent(input$btnDataCleaningSave,
    {
-     print(session$userData$sampElemDataCleaning)
-     saveUserDataset(session$userData$sampElem, session$userData$username)
-     session$userData$solVec <- session$userData$sampElem$solution_id
-     drawDataCleaning(input, output, session, session$userData$sampElem, session$userData$elemSelected)
+     saveUserDataset(session$userData$sampDataset, session$userData$username)
+     drawDataCleaning(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
      print("uiFilterControl.R - drawDataCleaning Save")
    }
   )
   
   observeEvent(input$btnDataCleaningLoad,
    {
-     sampElem <- getSampElem(session$userData$username) # Loading sampElem from the save file?
-     drawDataCleaning(input, output, session, sampElem, session$userData$elemSelected)
-    print("uiFilterControl.R - drawDataCleaning Load")
+     filenames <- getSavedDatasetList(session$userData$username)
+     showModal(showloadsavedDataModal(filenames))
    }
   )
   
-  observeEvent(input$btnDataCleaningReset,
-   {
-     session$userData$sampElem <- getSolConcTreat(input$selectDataCleaningElement,input$selectDataCleaningBurn,NULL) # I am not sure if I should be calling the input$variable values here?
-     print(session$userData$sampElem)
-     renderSelectInput(output, 'selectDataCleaningElement', "Select an element:", session$userData$elemNames, session$userData$elemSelected)
-     observeDataCleaningSelectElemEvent(input, output, session, session$userData$sampElem)
-   }
+  observeEvent(
+    input$btnLoadCleanedData,
+    {
+      session$userData$sampDataset <- getSavedDataset(session$userData$username, input$selectSavedCleanedData)
+      drawDataCleaning(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
+      removeModal()
+    }
+  )
+  
+}
+
+showloadsavedDataModal <- function(filenames){
+  modalDialog(
+    title = "Select a dataset to load: ",
+    selectInput('selectSavedCleanedData', NULL, filenames),
+    footer = tagList(
+      modalButton("Cancel"),
+      actionButton("btnLoadCleanedData", "OK")
+    )
   )
 }
 
@@ -118,15 +140,6 @@ observeDataExploringBtnEvent <- function(input, output, session){
      sampElem <- getSampElem(session$userData$username) # Loading sampElem from the save file?
      drawDataExploring(input, output, session, sampElem, session$userData$elemSelected)
     print("uiFilterControl.R - drawDataExploring Load")
-   }
-  )
-  
-  observeEvent(input$btnDataExploringReset,
-   {
-     session$userData$sampElem <- getSolConcTreat(input$selectDataExploringElement,input$selectDataExploringBurn,) # I am not sure if I should be calling the input$variable values here?
-     print(session$userData$sampElem)
-     renderSelectInput(output, 'selectDataExploringElement', "Select an element:", session$userData$elemNames, session$userData$elemSelected)
-     observeDataExploringSelectElemEvent(input, output, session, session$userData$sampElem)
    }
   )
 }

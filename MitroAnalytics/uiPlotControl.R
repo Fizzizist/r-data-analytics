@@ -7,7 +7,7 @@ library(plotly)
 
 # Function to output the plotly plot
 drawDataCleaning <- function(input, output, session, data, selectedElement) {
-  session$userData$elemSelected <- selectedElement
+  #session$userData$elemSelected <- selectedElement
 
   # Initialize data values and reset selections
   observeEvent(selectedElement, {
@@ -114,8 +114,9 @@ drawDataCleaning <- function(input, output, session, data, selectedElement) {
   
   # Pass current selection to save function
   output$dataCleanSaveData <- renderPrint({
-    fromTable <- dataCleaningCurrentTibble[input$dataCleanDT_rows_selected, ] # Selection from data table using 'crosstalk' package.
-    session$userData$sampElem <- fromTable
+    #fromTable <- dataCleaningCurrentTibble[input$dataCleanDT_rows_selected, ] # Selection from data table using 'crosstalk' package.
+    #session$userData$sampElem <- fromTable
+    session$userData$sampDataset$sampData <- dataCleaningCurrentTibble[input$dataCleanDT_rows_selected, ]
   })
   
   observeEvent(dataCleaningCurrentSharedData$selection(),{
@@ -123,7 +124,8 @@ drawDataCleaning <- function(input, output, session, data, selectedElement) {
     updatePlotValues <- event_data("plotly_selected")
     tabSelect <- which(dataCleaningCurrentTibble$solution_id %in% updatePlotValues$y) # Retrieve indices of seleted rows
     dataTableProxy('dataCleanDT') %>% selectRows(as.character(tabSelect))
-  }) 
+  })
+  
 }
 
 ###################################################################################################################################################

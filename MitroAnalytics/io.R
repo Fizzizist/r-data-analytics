@@ -348,7 +348,11 @@ insertCSV <- function (inFile) {
 #'
 #' @return an error or a message indicating dataset has been saved
 saveUserDataset <- function (dataset, username){
-	dataname <- paste0(username, "sampElem")
+  if(dataset$selectedBurn=="%"){burnID = "All"} else {burnID = dataset$selectedBurn}
+  element <- dataset$selectedElement
+  
+  dataname <- paste0(username, "-", burnID, "-", element, "-", format(Sys.time(), "%Y-%m-%d-%H%M%S"))
+
 	tryCatch({
 		dir.create(paste0("data/",username), showWarnings=FALSE, recursive = TRUE)
 		save(dataset, file=paste0("data/",username,"/",dataname,".RData"))
@@ -370,9 +374,19 @@ saveUserDataset <- function (dataset, username){
 #' @param username username to indicate which file to load
 #'
 #' @return saved R user data
-getSampElem <- function (username){
-	sampElem <- get(load(paste0("data/",username,"/",username,"sampElem.RData")))
-	return(sampElem)
+getSavedDataset <- function (username, filename){
+	dataset <- get(load(paste0("data/",username,"/", filename)))
+	return(dataset)
+}
+
+#' returns a list of .RData files saved in the user's directory
+#' 
+#' @param username username to indicate the directory
+#' 
+#' @return list of R user data files.
+getSavedDatasetList <- function(username){
+  files <- list.files(paste0("data/",username,"/"))
+  return(files)
 }
 
 #' write usage data to userlog.log file
