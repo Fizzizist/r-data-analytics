@@ -57,6 +57,7 @@ observeDataCleaningBtnEvent <- function(input, output, session){
    {
      saveUserDataset(session$userData$sampDataset, session$userData$username)
      drawDataCleaning(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
+     updateSelectInput(session, "dlDataset",choices=getSavedDatasetList(session$userData$username))
      print("uiFilterControl.R - drawDataCleaning Save")
    }
   )
@@ -131,6 +132,7 @@ observeDataExploringBtnEvent <- function(input, output, session){
      print(session$userData$sampElemDataExploring)
      saveUserDataset(session$userData$sampElem, session$userData$username)
      drawDataExploring(input, output, session, session$userData$sampElem, session$userData$elemSelected)
+     updateSelectInput(session, "dlDataset",choices=getSavedDatasetList(session$userData$username))
      print("uiFilterControl.R - drawDataExploring Save")
    }
   )
