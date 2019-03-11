@@ -4,6 +4,7 @@ library(shinyjs)
 library(V8)
 library(DT)
 library(plotly)
+library(shinyBS)
 
 source("uiAuthControl.R")
 
@@ -26,7 +27,11 @@ ui <- dashboardPage(
 	    menuItem("File Download", tabName='fileDownload', icon=icon('download')),
       menuItem("Data Cleaning", tabName="statDataCleaning", icon=icon('chart-line')),
       menuItem("Data Exploring", tabName="statDataExploring", icon=icon('chart-line')),
-	    uiOutput("logout")
+      menuItem("User Settings", tabName="userSettings", icon=icon('user')),
+      hidden(
+        menuItem("Manage Users", tabName="userManage", icon=icon('users-cog'))
+      ),
+      uiOutput("logout")
     )
   ),
   dashboardBody(
@@ -137,24 +142,70 @@ ui <- dashboardPage(
           ),
       # File Download Tab
       tabItem(tabName='fileDownload',
-              fluidRow(
-                column(width=3,
-                       h2('Download files')
-                )
-              ),
-              fluidRow(
-                tags$div(class='center',
-                         #Downloader
-                         uiOutput("dlMenu"),
-                         selectInput("dlFormat", "Choose a format:",
-                                     c("CSV" = "csv",
-                                       "Excel" = "xlsx")),
-                         uiOutput("dlButton"),
-                         verbatimTextOutput("dlOut") 
-                )
-              )
-            )
+        fluidRow(
+          column(width=3,
+                  h2('Download files')
+          )
+        ),
+        fluidRow(
+          tags$div(class='center',
+                    #Downloader
+                    uiOutput("dlMenu"),
+                    selectInput("dlFormat", "Choose a format:",
+                                c("CSV" = "csv",
+                                  "Excel" = "xlsx")),
+                    uiOutput("dlButton"),
+                    verbatimTextOutput("dlOut") 
+          )
         )
+      ),
+      #' User settings tab for changing name and password
+      tabItem(tabName='userSettings',
+        fluidRow(
+          column(width=3,
+                  h2('User Settings')
+          )
+        ),
+        fluidRow(
+          tags$div(class='center',
+            bsButton("changePass", "Change Password"),
+            uiOutput("screenMessageUserSettings"),
+            bsModal("changePassForm", "Change Password","changePass",
+              passwordInput("oldPassword","Old Password:"),
+              passwordInput("newUserPassword","New Password:"),
+              passwordInput("newRepeatedUserPassword","Repeat new password:"),
+              actionButton("submitChangePass", "Submit")
+            )
+          )
+        )
+      ),
+      #' Manage users tab for admin only
+      tabItem(tabName='userManage',
+        fluidRow(
+          column(width=3,
+                  h2('Manage User Accounts')
+          )
+        ),
+        fluidRow(
+          tags$div(class='center',  
+            uiOutput("userListMenu"),
+            bsButton("delete", "Delete Account"),
+            bsButton("addUser", "Add new user"),
+            uiOutput("screenMessage"),
+            bsModal("addAccountForm", "Add User Account","addUser",
+              textInput("newUsername","Username:"),
+              passwordInput("newPassword","Password:"),
+              passwordInput("newRepeatedPassword","Repeat password:"),
+              checkboxInput("adminStatus", "Administrator Account"),
+              actionButton("submitNewUser", "Submit")
+            ),
+            bsModal("deleteAlert", "Are you sure you want to delete this account?", "delete",
+              actionButton("yesDelete", "Yes")
+            )
+          )
+        )
+      ) 
     )
+  )
 )
 

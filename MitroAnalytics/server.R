@@ -1,5 +1,6 @@
 library(shiny)
 library(xlsx)
+library(shinyBS)
 
 source("uiControl.R")
 source("io.R")
@@ -59,6 +60,41 @@ server <- function(input, output, session){
 						}
                 }
         )
+
+        #' Select user menu for 'Manage user' tab
+        output$userListMenu <- renderUI({
+                userList <- getUserList()
+                selectInput("userListSelect", "Select a user:", userList)
+        })
+
+        #' Event the 'Delete Account' button in the 'Manage User' tab
+        observeEvent(input$yesDelete,{
+                deletedUser <- input$userListSelect
+                removeUser(deletedUser)
+                output$screenMessage <- renderText(paste0(deletedUser, " deleted Successfully."))
+                toggleModal(session,"deleteAlert",toggle="close")
+                updateSelectInput(session,"userListSelect",choices=getUserList())
+        })
+
+        #' Event for 'Submit' button of the 'Add New User' Form 
+        #' in the 'Manage Users' tab.
+        observeEvent(input$submitNewUser,{
+                output$screenMessage <- renderText(
+                        createUser(input$newUsername, input$newPassword,
+                                input$newRepeatedPassword, input$adminStatus)
+                )
+                toggleModal(session,"addAccountForm",toggle="close")
+                updateSelectInput(session,"userListSelect",choices=getUserList())
+        })
+
+        #' Event for 'Submit' button of the 'Change Password' window in 'User Settings'
+        observeEvent(input$submitChangePass, {
+                output$screenMessageUserSettings <- renderText(
+                        changePass(session$userData$username, input$oldPassword,
+                                input$newUserPassword, input$newRepeatedUserPassword)
+                )
+                toggleModal(session,"changePassForm",toggle="close")
+        })
 
         #collect usage data and push to www/userlog.log file
         IP <- reactive({input$getIP})

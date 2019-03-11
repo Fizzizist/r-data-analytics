@@ -47,7 +47,7 @@ sendOneQuery <- function(str) {
         query <- dbSendQuery(conn, str)
         dbClearResult(query)
         dbDisconnect(conn)
-        return
+        return()
 }
 
 #' get number of burns
@@ -189,6 +189,29 @@ getAuthentication <- function(username, password){
         }
         return
 }
+#' Function for getting a list of users for user management tab
+#' 
+#' @return a list of users currently registered
+getUserList <- function(){
+	query <- getOneQuery("SELECT username FROM usernames");
+	return(query)
+}
+
+#' Function to get the admin status of a user
+#'
+#' @param user username in question
+#' 
+#' @return true or false depending on if the user is or is not admin
+getAdminStatus <- function(user){
+	query <- getOneQuery(paste0("SELECT admin FROM usernames WHERE username = '",
+		user, "';"))
+	if(query == 1){
+		return(TRUE)
+	} else {
+		return(FALSE)
+	}
+}
+
 
 #' getter for solution concentrations based on burn_id
 #' 
@@ -375,6 +398,68 @@ saveUserDataset <- function (dataset, username){
 		return("Dataset was saved to the server successfully!")
 	})
 	return("Dataset has been saved!")
+}
+
+#' Function to remove a user from database
+#'
+#' @param username The username of the user being removed
+removeUser <- function(username){
+	sendOneQuery(paste0("DELETE FROM usernames WHERE username = '", username, "';"))
+	return()
+}
+
+#' Function to create a new user from the 'Manage users' tab
+#' 
+#' @param username New username for the user
+#' @param pass new password for the user
+#' @param repass repeated password of the user
+#' @param admin boolean of admin status
+#' 
+#' @return message indicating success or failure
+createUser <- function(username, pass, repass,admin){
+	#' get list of existing usernames
+	userList <- getUserList()
+	#' check if username already exists
+	for(i in userList){
+		if(i == username){
+			return("Username already exists. Please choose another.")
+		}
+	}
+	#' make sure passwords match
+	if(pass != repass){
+		return("The provided passwords do not match!")
+	}
+	#' if it gets to this point, send the query to the DBMS
+	sendOneQuery(paste0("INSERT INTO usernames (username, password, admin) VALUES ('",
+		username, "',SHA2('", pass,"',512),",admin,");"))
+	return(paste0("Successfully added ",username))
+}
+
+#' Function for changing the user password from the 'Change Password' form in the
+#' 'User Settings' tab
+#'
+#' @param user username of the changing password
+#' @param oldPass Old password of the user
+#' @param newPass New password for the user
+#' @param repNewPass repeated new password for validation
+#'
+#' @return A string indicating success or failure of the operation to be output to the user 
+changePass <- function(user, oldPass, newPass, repNewPass){
+	#' get the old password
+	checkedOldPass <- getOneQuery(paste0("SELECT password FROM usernames WHERE username = '",
+		user, "';"))
+	#' Check if the provided password matches the real one
+	if(checkedOldPass != sha512(oldPass)){
+		return("The old password provided is incorrect.")
+	}
+	#' Check if the new password matches the repeated one
+	if(newPass != repNewPass){
+		return("The new passwords that you have provided do not match!")
+	}
+	#' If it gets to this point, change the password
+	sendOneQuery(paste0("UPDATE usernames SET password = SHA2('", newPass, 
+		"',512) WHERE username = '", user, "';"))
+	return("Password changed successfully.")
 }
 
 #' load data from saved sampElem file back into the app

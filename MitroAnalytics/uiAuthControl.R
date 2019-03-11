@@ -1,3 +1,4 @@
+library(shinyjs)
 source("io.R")
 
 getUIAuthJS <- function(){
@@ -43,6 +44,11 @@ observeUserLogin <- function(input, output, session, authenticated){
       if(auth == TRUE){
         authenticated <- TRUE
         session$userData$username <- user
+        if(getAdminStatus(user)){
+          shinyjs::show(selector = "ul li:eq(6)");
+        } else {
+          shinyjs::hide(selector = "ul li:eq(6)");
+        }
         displayWelcomeView(output, session, authenticated)
       }else{
         displayLoginView(output, session, auth)
