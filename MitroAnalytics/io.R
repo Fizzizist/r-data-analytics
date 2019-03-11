@@ -378,15 +378,15 @@ insertCSV <- function (inFile) {
 #' @param username indicates which user to sabe the data for
 #'
 #' @return an error or a message indicating dataset has been saved
-saveUserDataset <- function (dataset, username){
-  if(dataset$selectedBurn=="%"){burnID = "All"} else {burnID = dataset$selectedBurn}
-  element <- dataset$selectedElement
+saveUserDataset <- function (dataset, username, filename){
+  #if(dataset$selectedBurn=="%"){burnID = "All"} else {burnID = dataset$selectedBurn}
+  #element <- dataset$selectedElement
   
-  dataname <- paste0(username, "-", burnID, "-", element, "-", format(Sys.time(), "%Y-%m-%d-%H%M%S"))
+  #dataname <- paste0(username, "-", burnID, "-", element, "-", format(Sys.time(), "%Y-%m-%d-%H%M%S"))
 
 	tryCatch({
 		dir.create(paste0("data/",username), showWarnings=FALSE, recursive = TRUE)
-		save(dataset, file=paste0("data/",username,"/",dataname,".RData"))
+		save(dataset, file=paste0("data/",username,"/",filename,".RData"))
 	}, warning = function(w){
 		print(w)
 		return("The dataset was saved with warnings")
@@ -468,7 +468,7 @@ changePass <- function(user, oldPass, newPass, repNewPass){
 #'
 #' @return saved R user data
 getSavedDataset <- function (username, filename){
-	dataset <- get(load(paste0("data/",username,"/", filename)))
+  dataset <- get(load(paste0("data/",username,"/", filename)))
 	return(dataset)
 }
 
