@@ -114,8 +114,6 @@ drawDataCleaning <- function(input, output, session, data, selectedElement) {
   
   # Pass current selection to save function
   output$dataCleanSaveData <- renderPrint({
-    #fromTable <- dataCleaningCurrentTibble[input$dataCleanDT_rows_selected, ] # Selection from data table using 'crosstalk' package.
-    #session$userData$sampElem <- fromTable
     session$userData$sampDataset$sampData <- dataCleaningCurrentTibble[input$dataCleanDT_rows_selected, ]
   })
   
@@ -131,7 +129,7 @@ drawDataCleaning <- function(input, output, session, data, selectedElement) {
 ###################################################################################################################################################
 
 drawDataExploring <- function(input, output, session, data, selectedElement) {
-  session$userData$elemSelected <- selectedElement
+  #session$userData$elemSelected <- selectedElement
 
   # Initialize data values and reset selections
   observeEvent(selectedElement, {
@@ -230,8 +228,8 @@ drawDataExploring <- function(input, output, session, data, selectedElement) {
   
   # Pass current selection to save function
   output$dataExploreSaveData <- renderPrint({
-    fromTable <- dataExploringCurrentTibble[input$dataExploreDT_rows_selected, ] # Selection from data table using 'crosstalk' package.
-    session$userData$sampElem <- fromTable
+    # Use sampDatasetExp object to save data saved from the Exploring tab.
+    session$userData$sampDatasetExp$sampData <- dataExploringCurrentTibble[input$dataExploreDT_rows_selected, ] # Selection from data table using 'crosstalk' package.
   })
   
   observeEvent(dataExploringCurrentSharedData$selection(),{

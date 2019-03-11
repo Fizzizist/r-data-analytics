@@ -16,18 +16,23 @@ loadUI <- function(input, output, session){
   
   session$userData$username <- NULL
   
-  session$userData$sampElem <- NULL
-  session$userData$elemSelected <- NULL
-  session$userData$elemNames <- NULL
+  #session$userData$sampElem <- NULL
+  #session$userData$elemSelected <- NULL
+  #session$userData$elemNames <- NULL
   
   
   session$userData$burnChoices <- NULL
   session$userData$elemChoices <- NULL
   
   # sampDataset object keeps track of any changes in selected burn, element or plotted dataset. 
+  # For now, the data is stored in different objects depending on hich tab it comes from, but this could be merged into one set of objects in the future.
   session$userData$sampDataset$selectedBurn <- NULL
   session$userData$sampDataset$selectedElement <- NULL
   session$userData$sampDataset$sampData <- NULL
+  
+  session$userData$sampDatasetExp$selectedBurn <- NULL
+  session$userData$sampDatasetExp$selectedElement <- NULL
+  session$userData$sampDatasetExp$sampData <- NULL
   
   displayLoginView(output, session)
   observeUserLogin(input, output, session, uiReactValues$authenticated)
@@ -44,16 +49,10 @@ loadUI <- function(input, output, session){
           burnChoices <- c(c('%'),burns[['burn_id']])
           names(burnChoices) <- c(c('All'),burns[['burn_id']])
           
-          # burnChoices keeps track of the available burns. This is used when loading the saved dataset.
-          session$userData$burnChoices <- burnChoices
-          
-          # elemChoices keeps track of the available elements. This is used when loading the saved dataset.
-          session$userData$elemChoices <- getElemChoices()
-          
           renderSelectInput(output, 'selectDataCleaningBurn', 'Select burn:', burnChoices , '%')
           observeDataCleaningSelectBurnEvent(input, output, session)
           
-          renderSelectInput(output, 'selectDataCleaningElement', "Select an element:", session$userData$elemChoices, session$userData$sampDataset$selectedElement)
+          renderSelectInput(output, 'selectDataCleaningElement', "Select an element:", getElemChoices(), session$userData$sampDataset$selectedElement)
           observeDataCleaningSelectElemEvent(input, output, session)
           
           observeDataCleaningBtnEvent(input, output, session)
@@ -70,8 +69,14 @@ loadUI <- function(input, output, session){
           burns <- getBurnList()
           burnChoices <- c(c('%'),burns[['burn_id']])
           names(burnChoices) <- c(c('All'),burns[['burn_id']])
+          
           renderSelectInput(output, 'selectDataExploringBurn', 'Select burn:', burnChoices , '%')
           observeDataExploringSelectBurnEvent(input, output, session)
+          
+          renderSelectInput(output, 'selectDataExploringElement', "Select an element:", getElemChoices(), session$userData$sampDatasetExp$selectedElement)
+          observeDataExploringSelectElemEvent(input, output, session)
+          
+          observeDataExploringBtnEvent(input, output, session)
         }
       )
   }
