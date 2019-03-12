@@ -214,6 +214,7 @@ drawDataExploring <- function(input, output, session, data, selectedElement) {
       histSelected <- histData %>%
         plot_ly(x=~solid_conc,
                 type = "histogram",
+                histnorm = "percent",
                 marker=list(color=rep(I('#B40000'), 1000))
         )
     } else { # Renders when there aren't selected rows
@@ -221,9 +222,66 @@ drawDataExploring <- function(input, output, session, data, selectedElement) {
       histUnselected <- dataExploringCurrentTibble %>%
         plot_ly(x=~solid_conc,
                 type = "histogram",
+                histnorm = "percent",
                 marker=list(color=rep(I("black"), 1000))
         )
     }
+  })
+
+  # Renders interactive violin plot
+  output$dataExploreViolin <- renderPlotly({
+
+    violData <- dataExploringCurrentTibble[input$dataExploreDT_rows_selected, ]
+
+    if(length(input$dataExploreDT_rows_selected)){ # Renders when there are selected rows
+      print("uiPlotControl.R - Render boxSelected")
+      violSelected <- violData %>%
+        plot_ly(x=~solid_conc,
+                type = "violin",
+                points="suspectedoutliers",
+                jitter=0.2,
+                pointpos=0,
+                box=list(visible=TRUE),
+                line=list(color="B40000"),
+                meanline=list(visible=TRUE,color="black"),
+                marker=list(color=rep(I('black'), 1000))
+        )
+    } else { # Renders when there aren't selected rows
+      print("uiPlotControl.R - Render b")
+      violUnselected <- dataExploringCurrentTibble %>%
+        plot_ly(x=~solid_conc,
+                type = "violin",
+                points = "suspectedoutliers",
+                jitter=0.2,
+                pointpos=0,
+                box=list(visible=TRUE),
+                line=list(color="black"),
+                meanline=list(visible=TRUE,color="black"),
+                marker=list(color=rep(I("black"), 1000))
+        )
+    }
+  })
+
+  # Renders summary statistics table
+  output$dataExploreStatsDT <- renderDT({
+    
+    if(length(input$dataExploreDT_rows_selected)){
+      dataTibble <- as.vector(dataExploringCurrentTibble[input$dataExploreDT_rows_selected,3])
+    } else {
+      dataTibble <- as.vector(dataExploringCurrentTibble[,3])
+    }
+    dataExploreStatsVector<- c(
+              min(dataTibble),
+              mean(dataTibble),
+              median(dataTibble),
+              max(dataTibble),
+              sd(dataTibble)
+              )
+    dataExploreStatsVector <- formatC(dataExploreStatsVector,digits=3)
+    names(dataExploreStatsVector) <- c("min","mean","median","max","sd")
+    dataExploringSumStats <- rbind(dataExploreStatsVector)
+    dataExploreDTStats <- DT::datatable(dataExploringSumStats,options=list(dom='t'), rownames=FALSE)
+    dataExploreDTStats
   })
   
   # Pass current selection to save function

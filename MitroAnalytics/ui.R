@@ -88,7 +88,7 @@ ui <- dashboardPage(
         ),
         # Output to Browswer (~Reactive Observers)
         fluidRow(
-          column(width=5,
+          column(width=3,
           useShinyjs(),
           # code to reset plotlys event_data("plotly_click", source="A") to NULL -> executed upon action button click
           # note that "A" needs to be replaced with plotly source string if used
@@ -97,11 +97,11 @@ ui <- dashboardPage(
           DTOutput("dataCleanDT"),
           verbatimTextOutput("dataCleanSaveData")
           ),
-          column(width = 7,
+          column(width = 9,
                  plotlyOutput("dataCleanScatter"),
                  plotlyOutput("dataCleanBox")
           )),
-                    column(width = 2)
+          column(width = 2)
           ),
       # Data Exploration Tab
       tabItem(tabName="statDataExploring",
@@ -125,21 +125,33 @@ ui <- dashboardPage(
         ),
         # Output to Browswer (~Reactive Observers)
         fluidRow(
-          column(width=5,
-          useShinyjs(),
-          # code to reset plotlys event_data("plotly_click", source="A") to NULL -> executed upon action button click
-          # note that "A" needs to be replaced with plotly source string if used
-          extendShinyjs(text = "shinyjs.resetSelected = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }"),
-          tags$style(HTML("table.dataTable tbody tr.selected td, table.dataTable td.selected{background-color:#B40000 !important;}")),
-          DTOutput("dataExploreDT"),
-          verbatimTextOutput("dataExploreSaveData")
+          column(width=3,
+            useShinyjs(),
+            # code to reset plotlys event_data("plotly_click", source="A") to NULL -> executed upon action button click
+            # note that "A" needs to be replaced with plotly source string if used
+            extendShinyjs(text = "shinyjs.resetSelected = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }"),
+            tags$style(HTML("table.dataTable tbody tr.selected td, table.dataTable td.selected{background-color:#B40000 !important;}")),
+            DTOutput("dataExploreDT"),
+            verbatimTextOutput("dataExploreSaveData")
           ),
-          column(width = 7,
-                 plotlyOutput("dataExploreScatter"),
-                 plotlyOutput("dataExploreHist")
-          )),
-                    column(width = 2)
-          ),
+          column(width=9,
+            fluidRow(
+              column(width=6,
+                DTOutput("dataExploreStatsDT")
+              ), 
+              column(width=6)
+            ),
+            column(width = 6,
+              plotlyOutput("dataExploreScatter")
+            ),
+            column(width = 6,
+              plotlyOutput("dataExploreHist"),
+              plotlyOutput("dataExploreViolin")
+            )
+        )#,
+          #column(width = 2)
+      )
+      ),
       # File Download Tab
       tabItem(tabName='fileDownload',
         fluidRow(
