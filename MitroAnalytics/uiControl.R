@@ -8,8 +8,9 @@ loadUI <- function(input, output, session){
   uiReactValues <- reactiveValues(
     loadedStatHist = FALSE,
     loadedIntPlot = FALSE,
-    loadedDataCleaning = FALSE,
-    loadedDataExploring = FALSE,
+    loadedDataCleaner = FALSE,
+    loadedDataExplorer = FALSE,
+    loadedDataAnalyzer = FALSE,
     loadIntRDS = FALSE,
     authenticated = FALSE
   )
@@ -33,6 +34,10 @@ loadUI <- function(input, output, session){
   session$userData$sampDatasetExp$selectedBurn <- NULL
   session$userData$sampDatasetExp$selectedElement <- NULL
   session$userData$sampDatasetExp$sampData <- NULL
+
+  session$userData$sampDatasetAlz$selectedBurn <- NULL
+  session$userData$sampDatasetAlz$selectedElement <- NULL
+  session$userData$sampDatasetAlz$sampData <- NULL
   
   displayLoginView(output, session)
   observeUserLogin(input, output, session, uiReactValues$authenticated)
@@ -40,43 +45,64 @@ loadUI <- function(input, output, session){
 
   observeEvent(input$sidebarMenu, 
         {
-          if(input$sidebarMenu != "statDataCleaning") return()
-          if(uiReactValues$loadedDataCleaning) return()
-          uiReactValues$loadedDataCleaning <- TRUE
-          print("uiControl.R - Load statDataCleaning")
+          if(input$sidebarMenu != "statDataCleaner") return()
+          if(uiReactValues$loadedDataCleaner) return()
+          uiReactValues$loadedDataCleaner <- TRUE
+          print("uiControl.R - Load statDataCleaner")
           
           burns <- getBurnList()
           burnChoices <- c(c('%'),burns[['burn_id']])
           names(burnChoices) <- c(c('All'),burns[['burn_id']])
           
-          renderSelectInput(output, 'selectDataCleaningBurn', 'Select burn:', burnChoices , '%')
-          observeDataCleaningSelectBurnEvent(input, output, session)
+          renderSelectInput(output, 'selectDataCleanerBurn', 'Select burn:', burnChoices , '%')
+          observeDataCleanerSelectBurnEvent(input, output, session)
           
-          renderSelectInput(output, 'selectDataCleaningElement', "Select an element:", getElemChoices(), session$userData$sampDataset$selectedElement)
-          observeDataCleaningSelectElemEvent(input, output, session)
+          renderSelectInput(output, 'selectDataCleanerElement', "Select an element:", getElemChoices(), session$userData$sampDataset$selectedElement)
+          observeDataCleanerSelectElemEvent(input, output, session)
           
-          observeDataCleaningBtnEvent(input, output, session)
+          observeDataCleanerBtnEvent(input, output, session)
         }
       )
 
   observeEvent(input$sidebarMenu, 
         {
-          if(input$sidebarMenu != "statDataExploring") return()
-          if(uiReactValues$loadedDataExploring) return()
-          uiReactValues$loadedDataExploring <- TRUE
-          print("uiControl.R - Load statDataExploring")
+          if(input$sidebarMenu != "statDataExplorer") return()
+          if(uiReactValues$loadedDataExplorer) return()
+          uiReactValues$loadedDataExplorer <- TRUE
+          print("uiControl.R - Load statDataExplorer")
           
           burns <- getBurnList()
           burnChoices <- c(c('%'),burns[['burn_id']])
           names(burnChoices) <- c(c('All'),burns[['burn_id']])
           
-          renderSelectInput(output, 'selectDataExploringBurn', 'Select burn:', burnChoices , '%')
-          observeDataExploringSelectBurnEvent(input, output, session)
+          renderSelectInput(output, 'selectDataExplorerBurn', 'Select burn:', burnChoices , '%')
+          observeDataExplorerSelectBurnEvent(input, output, session)
           
-          renderSelectInput(output, 'selectDataExploringElement', "Select an element:", getElemChoices(), session$userData$sampDatasetExp$selectedElement)
-          observeDataExploringSelectElemEvent(input, output, session)
+          renderSelectInput(output, 'selectDataExplorerElement', "Select an element:", getElemChoices(), session$userData$sampDatasetExp$selectedElement)
+          observeDataExplorerSelectElemEvent(input, output, session)
           
-          observeDataExploringBtnEvent(input, output, session)
+          observeDataExplorerBtnEvent(input, output, session)
+        }
+      )
+
+  observeEvent(input$sidebarMenu, 
+        {
+          if(input$sidebarMenu != "statDataAnalyzer") return()
+          if(uiReactValues$loadedDataAnalyzer) return()
+          uiReactValues$loadedDataAnalyzer <- TRUE
+          print("uiControl.R - Load statDataAnalyzer")
+          
+          burns <- getBurnList()
+          burnChoices <- c(c('%'),burns[['burn_id']])
+          names(burnChoices) <- c(c('All'),burns[['burn_id']])
+          
+          renderSelectInput(output, 'selectDataAnalyzerBurn', 'Select burn:', burnChoices , '%')
+          observeDataAnalyzerSelectBurnEvent(input, output, session)
+          
+          renderSelectInput(output, 'selectDataAnalyzerElement', "Select an element:", getElemChoices(), session$userData$sampDatasetAlz$selectedElement)
+          observeDataAnalyzerSelectElemEvent(input, output, session)
+          
+          observeDataAnalyzerBtnEvent(input, output, session)
         }
       )
   }

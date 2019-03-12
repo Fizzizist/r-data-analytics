@@ -12,32 +12,32 @@ renderSelectInput <- function(output, id, inputLabel, selectOptions, selected=NU
 }
 
 #
-# DataCleaning Plot tab UI filter events
+# DataCleaner Plot tab UI filter events
 #
-observeDataCleaningSelectBurnEvent <- function(input, output, session){
+observeDataCleanerSelectBurnEvent <- function(input, output, session){
   observeEvent(
-    input$selectDataCleaningBurn,
+    input$selectDataCleanerBurn,
     {
       print("uiFilterControl.R - initialize data")
       
       # sampDataset object keeps track of any changes in selected burn, element or plotted dataset. 
-      session$userData$sampDataset$selectedBurn <- input$selectDataCleaningBurn
-      session$userData$sampDataset$sampData <- getSolConcTreat(input$selectDataCleaningElement,input$selectDataCleaningBurn,'%')
-      drawDataCleaning(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
+      session$userData$sampDataset$selectedBurn <- input$selectDataCleanerBurn
+      session$userData$sampDataset$sampData <- getSolConcTreat(input$selectDataCleanerElement,input$selectDataCleanerBurn,'%')
+      drawDataCleaner(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
     }
   )
 }
 
-observeDataCleaningSelectElemEvent <- function(input, output, session){ #, dataset){
+observeDataCleanerSelectElemEvent <- function(input, output, session){ #, dataset
   observeEvent(
-    input$selectDataCleaningElement,
+    input$selectDataCleanerElement,
     {
       # sampDataset object keeps track of any changes in selected burn, element or plotted dataset.
-      session$userData$sampDataset$selectedElement <- input$selectDataCleaningElement
-      session$userData$sampDataset$sampData <- getSolConcTreat(input$selectDataCleaningElement,input$selectDataCleaningBurn,'%')
-      drawDataCleaning(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
+      session$userData$sampDataset$selectedElement <- input$selectDataCleanerElement
+      session$userData$sampDataset$sampData <- getSolConcTreat(input$selectDataCleanerElement,input$selectDataCleanerBurn,'%')
+      drawDataCleaner(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
       
-      print("uiFilterControl.R - drawDataCleaning")
+      print("uiFilterControl.R - drawDataCleaner")
     }
   )
 }
@@ -45,14 +45,14 @@ observeDataCleaningSelectElemEvent <- function(input, output, session){ #, datas
 #' Observer for filtering by treatment type
 #'
 
-# observeDataCleaningTreatmentEvent <- function(input, output, session, dataset){ }
+# observeDataCleanerTreatmentEvent <- function(input, output, session, dataset){ }
 
-observeDataCleaningBtnEvent <- function(input, output, session){
+observeDataCleanerBtnEvent <- function(input, output, session){
   
-  observeEvent(input$btnDataCleaningSave,
+  observeEvent(input$btnDataCleanerSave,
    {
      showModal(showSaveDataModal(session$userData$username, session$userData$sampDataset$selectedBurn, session$userData$sampDataset$selectedElement))
-     print("uiFilterControl.R - drawDataCleaning Save Prompt")
+     print("uiFilterControl.R - drawDataCleaner Save Prompt")
    }
   )
   
@@ -60,13 +60,13 @@ observeDataCleaningBtnEvent <- function(input, output, session){
     {
       filename = input$txtSavedDataFileName
       saveUserDataset(session$userData$sampDataset, session$userData$username, filename)
-      drawDataCleaning(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
+      drawDataCleaner(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
       removeModal()
-      print("uiFilterControl.R - drawDataCleaning Save Execute")
+      print("uiFilterControl.R - drawDataCleaner Save Execute")
     }
   )
   
-  observeEvent(input$btnDataCleaningLoad,
+  observeEvent(input$btnDataCleanerLoad,
    {
      filenames <- getSavedDatasetList(session$userData$username)
      showModal(showLoadSavedDataModal(filenames))
@@ -74,11 +74,11 @@ observeDataCleaningBtnEvent <- function(input, output, session){
   )
   
   observeEvent(
-    input$btnLoadCleanedData,
+    input$btnLoadCleaneredData,
     {
-      print(input$selectSavedCleanedData)
-      session$userData$sampDataset <- getSavedDataset(session$userData$username, input$selectSavedCleanedData)
-      drawDataCleaning(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
+      print(input$selectSavedCleaneredData)
+      session$userData$sampDataset <- getSavedDataset(session$userData$username, input$selectSavedCleaneredData)
+      drawDataCleaner(input, output, session, session$userData$sampDataset$sampData, session$userData$sampDataset$selectedElement)
       removeModal()
     }
   )
@@ -101,10 +101,10 @@ showSaveDataModal <- function(username, burnID, element){
 showLoadSavedDataModal <- function(filenames){
   modalDialog(
     title = "Select a dataset to load: ",
-    selectInput('selectSavedCleanedData', NULL, filenames),
+    selectInput('selectSavedCleaneredData', NULL, filenames),
     footer = tagList(
       modalButton("Cancel"),
-      actionButton("btnLoadCleanedData", "OK")
+      actionButton("btnLoadCleaneredData", "OK")
     )
   )
 }
@@ -113,39 +113,39 @@ showLoadSavedDataModal <- function(filenames){
 ###############################################################################################################################
 
 #
-# DataExploring Plot tab UI filter events
+# DataExplorer tab UI filter events
 #
-observeDataExploringSelectBurnEvent <- function(input, output, session){
+observeDataExplorerSelectBurnEvent <- function(input, output, session){
   observeEvent(
-    input$selectDataExploringBurn,
+    input$selectDataExplorerBurn,
     {
       print("uiFilterControl.R - initialize data")
       
       # sampDataset object keeps track of any changes in selected burn, element or plotted dataset. 
-      session$userData$sampDatasetExp$selectedBurn <- input$selectDataExploringBurn
-      session$userData$sampDatasetExp$sampData <- getSolConcTreat(input$selectDataExploringElement,input$selectDataExploringBurn,'%')
-      drawDataCleaning(input, output, session, session$userData$sampDatasetExp$sampData, session$userData$sampDatasetExp$selectedElement)
+      session$userData$sampDatasetExp$selectedBurn <- input$selectDataExplorerBurn
+      session$userData$sampDatasetExp$sampData <- getSolConcTreat(input$selectDataExplorerElement,input$selectDataExplorerBurn,'%')
+      drawDataCleaner(input, output, session, session$userData$sampDatasetExp$sampData, session$userData$sampDatasetExp$selectedElement)
       
-      #session$userData$sampElem <- getSolConcTreat(input$selectDataExploringElement,input$selectDataExploringBurn,'%')
+      #session$userData$sampElem <- getSolConcTreat(input$selectDataExplorerElement,input$selectDataExplorerBurn,'%')
       #session$userData$elemNames <- getElemChoices()
-      #renderSelectInput(output, 'selectDataExploringElement', "Select an element:", session$userData$elemNames, 'Zn')
-      #observeDataExploringSelectElemEvent(input, output, session, input$selectDataExploringElement)
+      #renderSelectInput(output, 'selectDataExplorerElement', "Select an element:", session$userData$elemNames, 'Zn')
+      #observeDataExplorerSelectElemEvent(input, output, session, input$selectDataExplorerElement)
       
     }
   )
 }
 
-observeDataExploringSelectElemEvent <- function(input, output, session, dataset){
+observeDataExplorerSelectElemEvent <- function(input, output, session, dataset){
   observeEvent(
-    input$selectDataExploringElement,
+    input$selectDataExplorerElement,
     {
       # sampDataset object keeps track of any changes in selected burn, element or plotted dataset.
-      session$userData$sampDatasetExp$selectedElement <- input$selectDataExploringElement
-      session$userData$sampDatasetExp$sampData <- getSolConcTreat(input$selectDataExploringElement,input$selectDataBurnExp,'%')
-      drawDataExploring(input, output, session, session$userData$sampDatasetExp$sampData, session$userData$sampDatasetExp$selectedElement)
+      session$userData$sampDatasetExp$selectedElement <- input$selectDataExplorerElement
+      session$userData$sampDatasetExp$sampData <- getSolConcTreat(input$selectDataExplorerElement,input$selectDataBurnExp,'%')
+      drawDataExplorer(input, output, session, session$userData$sampDatasetExp$sampData, session$userData$sampDatasetExp$selectedElement)
       
-      #drawDataExploring(input, output, session, getSolConcTreat(input$selectDataExploringElement,input$selectDataExploringBurn,'%'), input$selectDataExploringElement)
-      print("uiFilterControl.R - drawDataExploring")
+      #drawDataExplorer(input, output, session, getSolConcTreat(input$selectDataExplorerElement,input$selectDataExplorerBurn,'%'), input$selectDataExplorerElement)
+      print("uiFilterControl.R - drawDataExplorer")
     }
   )
 }
@@ -153,17 +153,17 @@ observeDataExploringSelectElemEvent <- function(input, output, session, dataset)
 #' Observer for filtering by treatment type
 #'
 
-# observeDataExploringingTreatmentEvent <- function(input, output, session, dataset){ }
+# observeDataExploreringTreatmentEvent <- function(input, output, session, dataset){ }
 
-observeDataExploringBtnEvent <- function(input, output, session){
-  observeEvent(input$btnDataExploringSave,
+observeDataExplorerBtnEvent <- function(input, output, session){
+  observeEvent(input$btnDataExplorerSave,
    {
-     # print(session$userData$sampElemDataExploring)
+     # print(session$userData$sampElemDataExplorer)
      # saveUserDataset(session$userData$sampElem, session$userData$username)
-     # drawDataExploring(input, output, session, session$userData$sampElem, session$userData$elemSelected)
+     # drawDataExplorer(input, output, session, session$userData$sampElem, session$userData$elemSelected)
      updateSelectInput(session, "dlDataset",choices=getSavedDatasetList(session$userData$username))
      showModal(showSaveDataModalExp(session$userData$username, session$userData$sampDatasetExp$selectedBurn, session$userData$sampDatasetExp$selectedElement))
-     print("uiFilterControl.R - drawDataExploring Save")
+     print("uiFilterControl.R - drawDataExplorer Save")
    }
   )
   
@@ -171,21 +171,21 @@ observeDataExploringBtnEvent <- function(input, output, session){
    {
      filename = input$txtSavedDataFileNameExp
      saveUserDataset(session$userData$sampDatasetExp, session$userData$username, filename)
-     drawDataExploring(input, output, session, session$userData$sampDatasetExp$sampData, session$userData$sampDatasetExp$selectedElement)
+     drawDataExplorer(input, output, session, session$userData$sampDatasetExp$sampData, session$userData$sampDatasetExp$selectedElement)
      removeModal()
-     print("uiFilterControl.R - drawDataCleaning Save Execute")
+     print("uiFilterControl.R - drawDataExplorer Save Execute")
    }
   )
 
-  observeEvent(input$btnDataExploringLoad,
+  observeEvent(input$btnDataExplorerLoad,
    {
      # sampElem <- getSampElem(session$userData$username) # Loading sampElem from the save file?
-     # drawDataExploring(input, output, session, sampElem, session$userData$elemSelected)
+     # drawDataExplorer(input, output, session, sampElem, session$userData$elemSelected)
      
      filenames <- getSavedDatasetList(session$userData$username)
      showModal(showLoadSavedDataModalExp(filenames))
      
-     print("uiFilterControl.R - drawDataExploring Load")
+     print("uiFilterControl.R - drawDataExplorer Load")
    }
   )
   
@@ -194,7 +194,7 @@ observeDataExploringBtnEvent <- function(input, output, session){
     {
       print(input$selectSavedDataExp)
       session$userData$sampDatasetExp <- getSavedDataset(session$userData$username, input$selectSavedDataExp)
-      drawDataExploring(input, output, session, session$userData$sampDatasetExp$sampData, session$userData$sampDatasetExp$selectedElement)
+      drawDataExplorer(input, output, session, session$userData$sampDatasetExp$sampData, session$userData$sampDatasetExp$selectedElement)
       removeModal()
     }
   )
@@ -220,6 +220,121 @@ showLoadSavedDataModalExp <- function(filenames){
     footer = tagList(
       modalButton("Cancel"),
       actionButton("btnLoadDataExp", "OK")
+    )
+  )
+}
+
+
+##########################################################################################################################################################################################
+
+#
+# DataAnalyzer tab UI filter events
+#
+observeDataAnalyzerSelectBurnEvent <- function(input, output, session){
+  observeEvent(
+    input$selectDataAnalyzerBurn,
+    {
+      print("uiFilterControl.R - initialize data")
+      
+      # sampDataset object keeps track of any changes in selected burn, element or plotted dataset. 
+      session$userData$sampDatasetAlz$selectedBurn <- input$selectDataAnalyzerBurn
+      session$userData$sampDatasetAlz$sampData <- getSolConcTreat(input$selectDataAnalyzerElement,input$selectDataAnalyzerBurn,'%')
+      drawDataCleaner(input, output, session, session$userData$sampDatasetAlz$sampData, session$userData$sampDatasetAlz$selectedElement)
+      
+      #session$userData$sampElem <- getSolConcTreat(input$selectDataAnalyzerElement,input$selectDataAnalyzerBurn,'%')
+      #session$userData$elemNames <- getElemChoices()
+      #renderSelectInput(output, 'selectDataAnalyzerElement', "Select an element:", session$userData$elemNames, 'Zn')
+      #observeDataAnalyzerSelectElemEvent(input, output, session, input$selectDataAnalyzerElement)
+      
+    }
+  )
+}
+
+observeDataAnalyzerSelectElemEvent <- function(input, output, session, dataset){
+  observeEvent(
+    input$selectDataAnalyzerElement,
+    {
+      # sampDataset object keeps track of any changes in selected burn, element or plotted dataset.
+      session$userData$sampDatasetAlz$selectedElement <- input$selectDataAnalyzerElement
+      session$userData$sampDatasetAlz$sampData <- getSolConcTreat(input$selectDataAnalyzerElement,input$selectDataBurnAlz,'%')
+      drawDataAnalyzer(input, output, session, session$userData$sampDatasetAlz$sampData, session$userData$sampDatasetAlz$selectedElement)
+      
+      #drawDataAnalyzer(input, output, session, getSolConcTreat(input$selectDataAnalyzerElement,input$selectDataAnalyzerBurn,'%'), input$selectDataAnalyzerElement)
+      print("uiFilterControl.R - drawDataAnalyzer")
+    }
+  )
+}
+#'
+#' Observer for filtering by treatment type
+#'
+
+# observeDataAnalyzeringTreatmentEvent <- function(input, output, session, dataset){ }
+
+observeDataAnalyzerBtnEvent <- function(input, output, session){
+  observeEvent(input$btnDataAnalyzerSave,
+   {
+     # print(session$userData$sampElemDataAnalyzer)
+     # saveUserDataset(session$userData$sampElem, session$userData$username)
+     # drawDataAnalyzer(input, output, session, session$userData$sampElem, session$userData$elemSelected)
+     updateSelectInput(session, "dlDataset",choices=getSavedDatasetList(session$userData$username))
+     showModal(showSaveDataModalAlz(session$userData$username, session$userData$sampDatasetAlz$selectedBurn, session$userData$sampDatasetAlz$selectedElement))
+     print("uiFilterControl.R - drawDataAnalyzer Save")
+   }
+  )
+  
+  observeEvent(input$btnSaveExecuteAlz,
+   {
+     filename = input$txtSavedDataFileNameAlz
+     saveUserDataset(session$userData$sampDatasetAlz, session$userData$username, filename)
+     drawDataAnalyzer(input, output, session, session$userData$sampDatasetAlz$sampData, session$userData$sampDatasetAlz$selectedElement)
+     removeModal()
+     print("uiFilterControl.R - drawDataAnalyzer Save Execute")
+   }
+  )
+
+  observeEvent(input$btnDataAnalyzerLoad,
+   {
+     # sampElem <- getSampElem(session$userData$username) # Loading sampElem from the save file?
+     # drawDataAnalyzer(input, output, session, sampElem, session$userData$elemSelected)
+     
+     filenames <- getSavedDatasetList(session$userData$username)
+     showModal(showLoadSavedDataModalAlz(filenames))
+     
+     print("uiFilterControl.R - drawDataAnalyzer Load")
+   }
+  )
+  
+  observeEvent(
+    input$btnLoadDataAlz,
+    {
+      print(input$selectSavedDataAlz)
+      session$userData$sampDatasetAlz <- getSavedDataset(session$userData$username, input$selectSavedDataAlz)
+      drawDataAnalyzer(input, output, session, session$userData$sampDatasetAlz$sampData, session$userData$sampDatasetAlz$selectedElement)
+      removeModal()
+    }
+  )
+}
+
+showSaveDataModalAlz <- function(username, burnID, element){
+  if(burnID=="%"){burnID = "All"}
+  defaultFileName <- dataname <- paste0(username, "-", burnID, "-", element, "-", format(Sys.time(), "%Y-%m-%d-%H%M%S"))
+  modalDialog(
+    title = "Save the analyzed data",
+    textInput("txtSavedDataFileNameAlz", label='Enter the dataset name: ', value=defaultFileName),
+    footer = tagList(
+      modalButton("Cancel"),
+      actionButton("btnSaveExecuteAlz", "OK")
+    )
+  )
+}
+
+showLoadSavedDataModalAlz <- function(filenames){
+  modalDialog(
+    title = "Select a dataset to load: ",
+    selectInput('selectSavedDataAlz', NULL, filenames),
+    footer = tagList(
+      modalButton("Cancel"),
+      actionButton("btnLoadDataAlz", "OK")
     )
   )
 }

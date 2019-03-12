@@ -115,7 +115,7 @@ getDownloadData <- function (solIDs, elIDs){
 
 ###################
 
-# #' initializes and returns burn choices for selectDataCleaningBurn
+# #' initializes and returns burn choices for selectDataCleanerBurn
 # #'
 # #'@return - named vector of possible burn choices
 # getBurnChoices() <- function(){
@@ -123,7 +123,7 @@ getDownloadData <- function (solIDs, elIDs){
 # 	print(burnOptions)
 # }
 
-#' initializes and returns element choices for selectDataCleaningElement
+#' initializes and returns element choices for selectDataCleanerElement
 #'
 #' @return - vector of possible element choices
 getElemChoices <- function(){

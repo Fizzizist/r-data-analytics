@@ -25,8 +25,9 @@ ui <- dashboardPage(
       menuItem("Home", tabName='home', icon=icon('home')),
       menuItem("File Upload", tabName='fileUpload', icon=icon('file-upload')),
 	    menuItem("File Download", tabName='fileDownload', icon=icon('download')),
-      menuItem("Data Cleaning", tabName="statDataCleaning", icon=icon('chart-line')),
-      menuItem("Data Exploring", tabName="statDataExploring", icon=icon('chart-line')),
+      menuItem("Data Cleaner", tabName="statDataCleaner", icon=icon('chart-line')),
+      menuItem("Data Explorer", tabName="statDataExplorer", icon=icon('chart-line')),
+      menuItem("Data Analyzer", tabName="statDataAnalyzer", icon=icon('chart-line')),
       menuItem("User Settings", tabName="userSettings", icon=icon('user')),
       hidden(
         menuItem("Manage Users", tabName="userManage", icon=icon('users-cog'))
@@ -66,24 +67,24 @@ ui <- dashboardPage(
           )
         )
       ),
-      # DataCleaning Plot Tab
-      tabItem(tabName="statDataCleaning",
+      # DataCleaner Plot Tab
+      tabItem(tabName="statDataCleaner",
         fluidRow(
           # UI Elements (Reactive Values)
           column(width=3,
-                 h1('Data Cleaning')
+                 h1('Data Cleaner')
           ),
           column(width=3,
-                uiOutput('selectDataCleaningBurn')
+                uiOutput('selectDataCleanerBurn')
           ),
           column(width=3,
-                 uiOutput('selectDataCleaningElement')
+                 uiOutput('selectDataCleanerElement')
           ),
           column(width=1,
-                actionButton("btnDataCleaningSave", "Save")
+                actionButton("btnDataCleanerSave", "Save")
           ),
           column(width=1,
-                actionButton("btnDataCleaningLoad", "Load")
+                actionButton("btnDataCleanerLoad", "Load")
           )
         ),
         # Output to Browswer (~Reactive Observers)
@@ -94,33 +95,33 @@ ui <- dashboardPage(
           # note that "A" needs to be replaced with plotly source string if used
           extendShinyjs(text = "shinyjs.resetSelected = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }"),
           tags$style(HTML("table.dataTable tbody tr.selected td, table.dataTable td.selected{background-color:#B40000 !important;}")),
-          DTOutput("dataCleanDT"),
-          verbatimTextOutput("dataCleanSaveData")
+          DTOutput("dataCleanerDT"),
+          verbatimTextOutput("dataCleanerSaveData")
           ),
           column(width = 9,
-                 plotlyOutput("dataCleanScatter"),
-                 plotlyOutput("dataCleanBox")
+                 plotlyOutput("dataCleanerScatter"),
+                 plotlyOutput("dataCleanerBox")
           )),
           column(width = 2)
           ),
       # Data Exploration Tab
-      tabItem(tabName="statDataExploring",
+      tabItem(tabName="statDataExplorer",
         fluidRow(
           # UI Elements (Reactive Values)
           column(width=3,
-                 h1('Data Exploration')
+                 h1('Data Explorer')
           ),
           column(width=3,
-                uiOutput('selectDataExploringBurn')
+                uiOutput('selectDataExplorerBurn')
           ),
           column(width=3,
-                 uiOutput('selectDataExploringElement')
+                 uiOutput('selectDataExplorerElement')
           ),
           column(width=1,
-                actionButton("btnDataExploringSave", "Save")
+                actionButton("btnDataExplorerSave", "Save")
           ),
           column(width=1,
-                actionButton("btnDataExploringLoad", "Load")
+                actionButton("btnDataExplorerLoad", "Load")
           )
         ),
         # Output to Browswer (~Reactive Observers)
@@ -131,26 +132,74 @@ ui <- dashboardPage(
             # note that "A" needs to be replaced with plotly source string if used
             extendShinyjs(text = "shinyjs.resetSelected = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }"),
             tags$style(HTML("table.dataTable tbody tr.selected td, table.dataTable td.selected{background-color:#B40000 !important;}")),
-            DTOutput("dataExploreDT"),
-            verbatimTextOutput("dataExploreSaveData")
+            DTOutput("dataExplorerDT"),
+            verbatimTextOutput("dataExplorerSaveData")
           ),
           column(width=9,
             fluidRow(
               column(width=6,
-                DTOutput("dataExploreStatsDT")
+                DTOutput("dataExplorerStatsDT")
               ), 
               column(width=6)
             ),
             column(width = 6,
-              plotlyOutput("dataExploreScatter")
+              plotlyOutput("dataExplorerScatter")
             ),
             column(width = 6,
-              plotlyOutput("dataExploreHist"),
-              plotlyOutput("dataExploreViolin")
+              plotlyOutput("dataExplorerHist"),
+              plotlyOutput("dataExplorerViolin")
             )
         )#,
           #column(width = 2)
       )
+      ),
+      tabItem(tabName="statDataAnalyzer",
+        fluidRow(
+          # UI Elements (Reactive Values)
+          column(width=3,
+                 h1('Data Analyzer')
+          ),
+          column(width=3,
+                uiOutput('selectDataAnalyzerBurn')
+          ),
+          column(width=3,
+                 uiOutput('selectDataAnalyzerElement')
+          ),
+          column(width=1,
+                actionButton("btnDataAnalyzerSave", "Save")
+          ),
+          column(width=1,
+                actionButton("btnDataAnalyzerLoad", "Load")
+          )
+        ),
+        # Output to Browswer (~Reactive Observers)
+        fluidRow(
+          column(width=3,
+            useShinyjs(),
+            # code to reset plotlys event_data("plotly_click", source="A") to NULL -> executed upon action button click
+            # note that "A" needs to be replaced with plotly source string if used
+            extendShinyjs(text = "shinyjs.resetSelected = function() { Shiny.onInputChange('.clientValue-plotly_selected-A', 'null'); }"),
+            tags$style(HTML("table.dataTable tbody tr.selected td, table.dataTable td.selected{background-color:#B40000 !important;}")),
+            DTOutput("dataAnalyzerDT"),
+            verbatimTextOutput("dataAnalyzerSaveData")
+          ),
+          column(width=9,
+            fluidRow(
+              column(width=6,
+                DTOutput("dataAnalyzerStatsDT")
+              ), 
+              column(width=6)
+            ),
+            column(width = 6,
+              plotlyOutput("dataAnalyzerScatter")
+            ),
+            column(width = 6,
+              plotlyOutput("dataAnalyzerHist"),
+              plotlyOutput("dataAnalyzerViolin")
+            )
+          )#,
+          # column(width = 2)
+        )
       ),
       # File Download Tab
       tabItem(tabName='fileDownload',

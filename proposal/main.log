@@ -710,7 +710,7 @@ Package hyperref Info: Link coloring ON on input line 38.
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 
 (c:/texlive/2018/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
-Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
+Package: gettitlestring 2016/05/16 v1.5 Cleanerup title references (HO)
 )
 \c@section@level=\count149
 )
