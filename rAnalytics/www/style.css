@@ -75,6 +75,13 @@
 	margin-left: auto;
 }
 
+.left{
+	width: 50%;
+	margin-top: 5%;
+	margin-right: auto;
+	margin-left: 5%;
+}
+
 #home-title{
 	font-size: 40px;
 	font-weight: bold;

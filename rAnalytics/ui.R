@@ -12,12 +12,12 @@ jsCode <- getUIAuthJS()
 
 header <- dashboardHeader()
 header$children[[2]]$children <- tags$div(class='header-title', 
-                                          tags$img(class='header-logo', src='favicon.ico', width='50px'),
-                                          "MitroAnalytics")
+                                          tags$img(class='header-logo', src='logo.png', width='50px'),
+                                          "R-Analytics")
 
 ui <- dashboardPage(
   skin="black",
-  title="MitroAnalytics",
+  title="R-Analytics",
   header,
   dashboardSidebar(
     width=150,
@@ -27,7 +27,9 @@ ui <- dashboardPage(
 	    menuItem("File Download", tabName='fileDownload', icon=icon('download')),
       menuItem("Data Cleaner", tabName="statDataCleaner", icon=icon('chart-line')),
       menuItem("Data Explorer", tabName="statDataExplorer", icon=icon('chart-line')),
-      menuItem("Data Analyzer", tabName="statDataAnalyzer", icon=icon('chart-line')),
+      hidden(
+        menuItem("Data Analyzer", tabName="statDataAnalyzer", icon=icon('chart-line'))
+      ),
       menuItem("User Settings", tabName="userSettings", icon=icon('user')),
       hidden(
         menuItem("Manage Users", tabName="userManage", icon=icon('users-cog'))
@@ -39,17 +41,16 @@ ui <- dashboardPage(
     useShinyjs(),
     extendShinyjs(text = jsCode, functions = c("hideMenu")),
     tags$head(
-      tags$title("MitroAnalytics"),
-      tags$link(rel="shortcut icon", type="", href="favicon.ico"),
+      tags$title("R-Analytics"),
+      tags$link(rel="shortcut icon", type="", href="logo.png"),
       tags$link(rel="stylesheet", type="text/css", href="style.css"),
-      tags$script(src="getIP.js"),
       tags$script(src="onClose.js")
     ),
     tabItems(
       tabItem(tabName='home',
         fluidRow(
           tags$div(class='center',
-                   div(id='home-title', img(class='header-logo', src='favicon.ico', width='100px'), "MitroAnalytics"),
+                   div(id='home-title', img(class='header-logo', src='logo.png', width='100px'), "R-Analytics"),
                    uiOutput('authentication')
           )
         )
@@ -228,7 +229,7 @@ ui <- dashboardPage(
           )
         ),
         fluidRow(
-          tags$div(class='center',
+          tags$div(class='left',
             bsButton("changePass", "Change Password"),
             uiOutput("screenMessageUserSettings"),
             bsModal("changePassForm", "Change Password","changePass",

@@ -95,11 +95,4 @@ server <- function(input, output, session){
                 )
                 toggleModal(session,"changePassForm",toggle="close")
         })
-
-        #collect usage data and push to www/userlog.log file
-        IP <- reactive({input$getIP})
-        observe({
-                #cat(capture.output(str(IP()), split=TRUE))
-                logData(capture.output(str(IP()), split=TRUE))
-        })
 }

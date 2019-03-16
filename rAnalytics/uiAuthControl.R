@@ -45,9 +45,9 @@ observeUserLogin <- function(input, output, session, authenticated){
         authenticated <- TRUE
         session$userData$username <- user
         if(getAdminStatus(user)){
-          shinyjs::show(selector = "ul li:eq(6)");
+          shinyjs::show(selector = "ul li:eq(7)");
         } else {
-          shinyjs::hide(selector = "ul li:eq(6)");
+          shinyjs::hide(selector = "ul li:eq(7)");
         }
         displayWelcomeView(output, session, authenticated)
       }else{
