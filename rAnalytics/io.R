@@ -13,10 +13,10 @@ source("queries.R")
 getConnect <- function () {
         conn <- DBI::dbConnect(
                 drv = RMySQL::MySQL(),
-                dbname = "ranalyticsdb",
-                host = "108.162.177.90",
-                username = "test",
-                password = "thispassword",
+                dbname = "databaseName",
+                host = "localhost",
+                username = "username",
+                password = "password",
                 port = 3306
         )   
         return(conn)
