@@ -1,5 +1,6 @@
 # R-Analytics
-A web app written in R Shiny for the purpose of data cleaning and analysis in a graphical environment.
+A web app written in R Shiny for the purpose of data cleaning and analysis in a graphical environment. This was originally was built for analyzing ICP data, but can be altered to perform data cleaning and analysis on any dataset of your choosing.
+A demo version using an example dataset can be viewed at http://108.162.177.90:3838/r-analytics/.
 
 # Installation
 The app can either be run from inside R or on a shiny-server installation.
