@@ -1,6 +1,6 @@
 # R-Analytics
 A web app written in R Shiny for the purpose of data cleaning and analysis in a graphical environment. This was originally was built for analyzing ICP data, but can be altered to perform data cleaning and analysis on any dataset of your choosing.
-A demo version using an example dataset can be viewed at http://108.162.177.90:3838/r-analytics/.
+A [demo](http://108.162.177.90:3838/r-analytics/) version using an example dataset.
 
 # Installation
 The app can either be run from inside R or on a shiny-server installation.
@@ -24,7 +24,7 @@ runApp("rAnalytics")
 ```
 install.packages(c("shiny","shinydashboard","shinyBS","shinyjs","DBI","RMySQL","openssl","anytime","xlsx","dplyr","DT","V8","plotly","ggplot2","crosstalk"))
 ```
-2. Follow the instructions at this url: https://www.rstudio.com/products/shiny/download-server/ to install shiny-server if you haven't already
+2. Follow the [instructions](https://www.rstudio.com/products/shiny/download-server/) to install shiny-server if you haven't already
 3. Clone the repository and transfer the rAnalytics folder and its contents to /srv/shiny-server or wherever you have install shiny-server
 4. Simply point your browser to the server and port of your shiny-server installation
 
