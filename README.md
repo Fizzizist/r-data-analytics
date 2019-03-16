@@ -48,3 +48,8 @@ getConnect <- function () {
 }
 ```
 The app was originally built to work with ICP data, so you will have to go through the io.R file and tailor it to the database that you are using.
+# Using the App
+## File Upload
+The file upload tab on the dashboard allows a user to upload a csv file of data which will then be populated automatically into the DBMS. Users looking to make use of this tab will need to modify the upload algorithm (insertCSV) in the io.R file to suit whatever kind of data columns you are passing in with your csv into your DBMS. 
+## File Download
+The file download tab allows the user to download (as a CSV or xlsx) a data file containing the data points that were saved using either the Data Cleaning or Data Exploration tabs.
