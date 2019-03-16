@@ -29,3 +29,21 @@ install.packages(c("shiny","shinydashboard","shinyBS","shinyjs","DBI","RMySQL","
 
 # Authentication System
 The app comes with a built-in authentication system that is disabled in the demo but is enabled when you install the app.
+Usernames are read from a usernames table in your MySQL DBMS.
+
+# MySQL DBSM setup
+In order to use the app, you will be required to create a MySQL database and update the authentication parameters in the following block of code found in the io.R file:
+```
+getConnect <- function () {
+        conn <- DBI::dbConnect(
+                drv = RMySQL::MySQL(),
+                dbname = "databaseName",
+                host = "localhost",
+                username = "username",
+                password = "password",
+                port = 3306
+        )   
+        return(conn)
+}
+```
+The app was originally built to work with ICP data, so you will have to go through the io.R file and tailor it to the database that you are using.
