@@ -99,12 +99,12 @@ ui <- dashboardPage(
           DTOutput("dataCleanerDT"),
           verbatimTextOutput("dataCleanerSaveData")
           ),
-          column(width = 9,
+          column(width = 8,offset=1,
                  plotlyOutput("dataCleanerScatter"),
                  plotlyOutput("dataCleanerBox")
-          )),
-          column(width = 2)
-          ),
+          )
+        )
+      ),
       # Data Exploration Tab
       tabItem(tabName="statDataExplorer",
         fluidRow(
@@ -136,16 +136,11 @@ ui <- dashboardPage(
             DTOutput("dataExplorerDT"),
             verbatimTextOutput("dataExplorerSaveData")
           ),
-          column(width=9,
-            fluidRow(
+          column(width=8,offset=1,
               column(width=6,
-                DTOutput("dataExplorerStatsDT")
-              ), 
-              column(width=6)
-            ),
-            column(width = 6,
-              plotlyOutput("dataExplorerScatter")
-            ),
+                DTOutput("dataExplorerStatsDT"),
+                plotlyOutput("dataExplorerScatter")
+              ),
             column(width = 6,
               plotlyOutput("dataExplorerHist"),
               plotlyOutput("dataExplorerViolin")
